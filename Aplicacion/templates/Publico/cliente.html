@@ -1,0 +1,85 @@
+{% extends "Publico/header.html" %}
+{% load static %}
+
+{% block title %} Servicio Valmo {% endblock %}
+{% block body %}
+
+<style>
+    .corrales-asignados {
+        width: 48%;
+        justify-content: center;
+        text-align: center;
+        background-color: rgb(241, 244, 247);
+        border: 1px solid rgb(104, 104, 104);
+    }
+</style>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if corrales %}
+<div class="card card-hdr-procesos">
+    <div class="card-header">
+        <h5 class="h6-form">Hola, {{Nombre}} </h5>
+        <label style="text-align: justify;">En la siguiente sección podra visualizar los corrales
+            asiginados y agregar la cantidad por servir al corral seleccionado</label>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <form class="search-form d-flex align-items-center" method="POST" action="{% url 'FP-Cliente'%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{email}}">
+                    <button type="submit" class="btn button-add col-12">
+                        <i class="fa fa-plus"></i> AGREGAR SERVIDOS
+                    </button>
+                </form>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <form class="search-form d-flex align-items-center" method="POST"
+                    action="{% url 'FP-Servidos-Cliente'%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{email}}">
+                    <button type="submit" class="btn button-add col-12">
+                        <i class="fa fa-plus"></i> VER SERVIDOS
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <hr>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item col-12 h6-form" style="text-align: center;"><b>CORRALES
+                    ASIGNADOS</b></li>
+        </ul>
+        <div style="justify-content: center; padding-left: 2%;" class="card-hdr mb-2" >
+            <div class="row">
+                {% for corral in corrales %}
+                <div class="col-sm-5 col-md-4 col-lg-2">
+                    <li class="h6-form">{{corral.Descripcion}}</li>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+
+    </div>
+</div>
+
+{% else %}
+<h5 class="h6-form">Hola, estimado usuario.</h5>
+<label for="">Para poder ver sus datos correspondientes, debera ingresar el email con el que esta
+    registrado en <b>Ganadera Valmo.</b></label>
+<div class="imagen-inicio">
+    <img src="{% static 'assets/img-pages/valmo.png' %}"
+        style="width: 65%; justify-content: center; margin: auto; text-align: center; align-items: center; display: flex; margin-top: 5%;">
+</div>
+{% endif %}
+
+{% endblock %}

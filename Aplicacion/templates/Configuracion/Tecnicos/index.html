@@ -1,0 +1,122 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} TECNICOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>DATOS DE TÉCNICOS</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            {% for item in usuarios_con_grupo %}
+            {% for grupo in item.grupos %}
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="card card-hdr-procesos">
+                    <div class="card-header">
+                        <div class="row centrar">
+                            <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7">
+                                <h5 class="h6-form">{{ grupo.name }}</h5>
+                            </div>
+                            <div class="col-sm-1 col-md-1 col-lg-5 col-xl-5">
+                                {% if perms.auth.change_user %}
+                                <a class="btn btn-success btn-sm" style="display: inline-block;"
+                                    href="EdicionUsuario/{{item.usuario.id}}" role="button"><i
+                                        class="fas fa-pen"></i>Editar usuarios</a>
+                                {% endif %}
+                            </div>
+                            <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                                <form action="/ActualizarUsuario/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="id">
+                                    <input type="hidden" value="{{item.usuario.first_name}}" name="nombre">
+                                    <input type="hidden" value="{{item.usuario.last_name}}" name="apellido">
+                                    <input type="hidden" value="Bloqueado" name="roles">
+                                    <input type="hidden" value="{{item.usuario.username}}" name="email">
+                                    <input type="hidden" value="3" name="vista">
+                                    <button type="submit" name="Bloqueado" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-lock"></i> Bloquear</button>
+                                </form>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Nombre:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> {{ item.usuario.first_name }} </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Apellido:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> {{ item.usuario.last_name }} </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Email:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> {{ item.usuario.username }} </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Fecha creación:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> {{ item.usuario.date_joined }} </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 h6-form">ultima conexión:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> {{ item.usuario.last_login }} </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row centrar">
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <form action="/Agregar-Tecnicos/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                        name="full_name">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-plus"></i>Datos agregados</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <form action="/Editar-Tecnicos/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                        name="full_name">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fa fa-pen"></i>Datos editados</button>
+                                </form>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}
