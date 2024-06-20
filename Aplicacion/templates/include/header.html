@@ -633,10 +633,6 @@
                 themeContainer.classList.toggle("theme-switch--dark", theme === "dark");
                 checkbox.checked = theme === "dark";
                 htmlElement.classList.toggle("dark-theme", theme === "dark");
-            } else {
-                // Si no hay tema guardado, establece el tema oscuro como predeterminado
-                htmlElement.classList.add("dark-theme");
-                localStorage.setItem("theme", "dark-theme");
             }
             // Escucha el evento de cambio en el interruptor
             checkbox.addEventListener("change", function () {

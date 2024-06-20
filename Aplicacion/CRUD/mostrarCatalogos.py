@@ -86,7 +86,7 @@ def TablaProductos(request):
 def TablaCorrales(request):
     grupos = grupo_user(request)
     TCorrales = tblCorrales.objects.values('ID', 'Clave', 'Descripcion', 'IDCliente_id__Nombre',
-                                            'IDEstatus_id__Descripcion','Capacidad','FechaAsigna')
+                                            'IDEstatus_id__Descripcion','Capacidad','FechaAsigna').exclude(IDCliente_id = 1)
     ServiciosWeb = servicioActivo()
     return render(request, 'Catalogos/Corral/index.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb,
     'TCorrales': TCorrales})

@@ -484,15 +484,17 @@ def asignacionCorral(request):
             corral = request.POST['corral']
             capacidad = 0
             clienteAsigna = request.POST['cliente']
+            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
             Clientes_instancia = tblClientes.objects.get(ID=clienteAsigna)
             Nombre = Clientes_instancia.Nombre
             
             corral = tblCorrales.objects.get(ID=id)
             corral.IDCliente = Clientes_instancia
             corral.Capacidad = capacidad
+            corral.FechaAsigna = Fecha
             Corral = corral.Descripcion
             corral.save()
-            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            
             TipoMov = 3
             tblAsignaCorrales.objects.create(
                 Clave = formatoClave, IDCorral_id = id, IDCliente_id = clienteAsigna, Fecha = Fecha, TipoMov_id = TipoMov
@@ -514,7 +516,7 @@ def asignacionCorral(request):
             clienteAsigna = request.POST['cliente']
             corral = request.POST['corral']
             capacidad = request.POST['capacidad']
-
+            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
             Clientes_Cero = tblClientes.objects.get(ID=clienteCero)
             
             Clientes_instancia = tblClientes.objects.get(ID=clienteAsigna)
@@ -523,10 +525,11 @@ def asignacionCorral(request):
             corral = tblCorrales.objects.get(ID=id)
             corral.IDCliente = Clientes_Cero
             corral.Capacidad = capacidad
+            corral.FechaAsigna = Fecha
             Corral = corral.Descripcion
 
             corral.save()
-            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            
             TipoMov = 4
             tblAsignaCorrales.objects.create(
                 Clave = formatoClave, IDCorral_id = id, IDCliente_id = clienteAsigna, Fecha = Fecha, TipoMov_id = TipoMov
