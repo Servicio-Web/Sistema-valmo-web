@@ -1,10 +1,10 @@
 @echo off
 
 rem Activa el entorno virtual
-call "C:\Users\Mariano\Documents\SistemaValmoV5\venv\Scripts\activate"
+call "C:\Users\Servicio Web\Documents\SistemaValmoV5\venv\Scripts\activate"
 
 rem Navega al directorio del proyecto Django
-cd "C:\Users\Mariano\Documents\SistemaValmoV5\Servicio-web-valmo"
+cd "C:\Users\Servicio Web\Documents\SistemaValmoV5\Servicio-web-valmo"
 
 timeout /t 10 > nul
 
