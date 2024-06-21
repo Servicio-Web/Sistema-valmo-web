@@ -478,7 +478,7 @@
 
 
 /* -------------------------------------------------------------------------------- BOTON PARA EDITAR -------------------------------------------------------------------------------- */
-.edit-button {
+/* .edit-button {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -494,10 +494,12 @@
   overflow: hidden;
   position: relative;
   text-decoration: none !important;
-}
+} */
 
 .edit-svgIcon {
   width: 14px;
+
+
   transition-duration: 0.3s;
 }
 
@@ -505,15 +507,20 @@
   fill: white;
 }
 
-.edit-button:hover {
+.edit-button {
   width: 120px;
   border-radius: 50px;
   transition-duration: 0.3s;
   background-color: rgb(0, 176, 26);
   align-items: center;
 }
-
-.edit-button:hover .edit-svgIcon {
+.edit-button:hover {
+  width: 120px;
+  border-radius: 50px;
+  background-color: rgb(2, 110, 18);
+  align-items: center;
+}
+/* .edit-button:hover .edit-svgIcon {
   width: 15px;
   transition-duration: 0.3s;
   transform: translateY(60%);
@@ -522,23 +529,13 @@
   -o-transform: rotate(360deg);
   -ms-transform: rotate(360deg);
   transform: rotate(360deg);
-}
+} */
 
 .edit-button::before {
-  display: none;
   content: "Editar";
   color: white;
   transition-duration: 0.3s;
-  font-size: 2px;
-}
-
-.edit-button:hover::before {
-  display: block;
-  padding-right: 10px;
-  font-size: 13px;
-  opacity: 1;
-  transform: translateY(0px);
-  transition-duration: 0.3s;
+  font-size: 0.8rem;
 }
 
 /* ---------------------------------------------------------------------------------------- BOTON ELIMINAR ---------------------------------------------------------------------------------------- */
@@ -763,8 +760,8 @@
 
 
 .accordion {
-  width: 95%;
-  max-width: 600px;
+  width: 100%;
+  /* max-width: 600px; */
   margin: 10px;
 }
 
@@ -809,3 +806,127 @@
   overflow-y: auto;
   /* Agregar barra de desplazamiento vertical */
 }
+
+
+/* --------------------------------------------------------------- COPIA DE SEGURIDAD --------------------------------------------------------------- */
+/* tooltip settings 👇 */
+
+.copy {
+  /* button */
+  --button-bg: #353434;
+  --button-hover-bg: #464646;
+  --button-text-color: #CCCCCC;
+  --button-hover-text-color: #8bb9fe;
+  --button-border-radius: 10px;
+  --button-diameter: 36px;
+  --button-outline-width: 1px;
+  --button-outline-color: rgb(141, 141, 141);
+  /* tooltip */
+  --tooltip-bg: #f4f3f3;
+  --toolptip-border-radius: 4px;
+  --tooltip-font-family: Menlo, Roboto Mono, monospace;
+  /* 👆 this field should not be empty */
+  --tooltip-font-size: 12px;
+  /* 👆 this field should not be empty */
+  --tootip-text-color: rgb(50, 50, 50);
+  --tooltip-padding-x: 7px;
+  --tooltip-padding-y: 7px;
+  --tooltip-offset: 8px;
+  /* --tooltip-transition-duration: 0.3s; */
+  /* 👆 if you need a transition, 
+  just remove the comment,
+  but I didn't like the transition :| */
+}
+
+.copy {
+  box-sizing: border-box;
+  width: var(--button-diameter);
+  height: var(--button-diameter);
+  border-radius: var(--button-border-radius);
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.tooltip {
+  position: absolute;
+  opacity: 0;
+  visibility: 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font: var(--tooltip-font-size) var(--tooltip-font-family);
+  color: var(--tootip-text-color);
+  background: var(--tooltip-bg);
+  padding: var(--tooltip-padding-y) var(--tooltip-padding-x);
+  border-radius: var(--toolptip-border-radius);
+  pointer-events: none;
+  transition: all var(--tooltip-transition-duration) cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.tooltip::before {
+  content: attr(data-text-initial);
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: calc(var(--tooltip-padding-y) / 2 * -1);
+  width: var(--tooltip-padding-y);
+  height: var(--tooltip-padding-y);
+  background: inherit;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  z-index: -999;
+  pointer-events: none;
+}
+
+.copy svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.checkmark {
+  display: none;
+}
+
+/* actions */
+
+.copy:hover .tooltip,
+.copy:focus:not(:focus-visible) .tooltip {
+  opacity: 1;
+  visibility: visible;
+  top: calc((100% + var(--tooltip-offset)) * -1);
+}
+
+.copy:focus:not(:focus-visible) .tooltip::before {
+  content: attr(data-text-end);
+}
+
+.copy:focus:not(:focus-visible) .clipboard {
+  display: none;
+}
+
+.copy:focus:not(:focus-visible) .checkmark {
+  display: block;
+}
+
+.copy:hover,
+.copy:focus {
+  background-color: var(--button-hover-bg);
+}
+
+.copy:active {
+  outline: var(--button-outline-width) solid var(--button-outline-color);
+}
+
+.copy:hover svg {
+  color: var(--button-hover-text-color);
+}
+
