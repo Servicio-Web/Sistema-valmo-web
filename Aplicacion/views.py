@@ -24,40 +24,45 @@ class CustomLoginView(LoginView):
         return super().form_invalid(form)
 
 # ------------------------------------------------------------REGISTRO-------------------------------------------------------------
-
 def Register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            ultimo_usuario = User.objects.latest('id')
-            default_group = Group.objects.get(name='Usuario')
-            ultimo_usuario.groups.add(default_group)
-            
-            username = form.cleaned_data['username']
-            first_name = request.POST['first_name'].title().strip()
-            last_name = request.POST['last_name'].title().strip()
-            messages.success(request, f'El Usuario con el email "{username}" ha sido creado')
-            return redirect('Login')
-        else:
-            errors = form.errors
-            print(errors) 
-            username_errors = form.errors.get('username')
-            if username_errors:
-                username_error = username_errors[0]
-                messages.error(request, f'Error en el campo "email". Error: Ya existe un usuario con ese email')
+        if form.is_bound:  # Verifica si el formulario está enlazado
+            form.full_clean()
+            data = form.cleaned_data
+            # Realiza tus propias validaciones aquí
+            username = request.POST.get('username')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            print(first_name)
+            print(last_name)
+
+            # Ejemplo de validaciones personalizadas
+            if User.objects.filter(username=username).exists():
+                messages.error(request, f'Error: El nombre de usuario "{username}" ya está en uso.')
+            elif password1 != password2:
+                messages.error(request, 'Error: Las contraseñas no coinciden.')
+            elif len(password1) < 8:
+                messages.error(request, 'Error: La contraseña debe tener al menos 8 caracteres.')
             else:
-                errors = form.errors
-                error_messages = ['{}: {}'.format(field, ', '.join(messages)) for field, messages in errors.items()]
-                error_message = '\n'.join(error_messages)
-                final_message = 'El formulario contiene errores. Por favor, corrígelos:\n{} '.format(error_message)
-                messages.error(request, final_message)
+                # Si todas las validaciones pasan, guarda el usuario
+                user = User.objects.create_user(username=username, password=password1, last_name=last_name, first_name=first_name)
+                ultimo_usuario = User.objects.latest('id')
+                default_group = Group.objects.get(name='Usuario')
+                ultimo_usuario.groups.add(default_group)
+                
+                messages.success(request, f'El Usuario con el nombre de usuario "{username}" ha sido creado')
+                return redirect('Login')
+
+            # Si llega aquí, es porque hubo algún error
+            return render(request, 'Acceso/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()
 
     context = {'form': form}
     return render(request, 'Acceso/register.html', context)
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # Create your views here.
@@ -102,13 +107,14 @@ def servicioActivo():
             ServiciosWeb.FechaVencimiento, datetime.min.time())
         diferencia = FechaDeHoy - fecha_vencimiento.date()
         dias_pasados = diferencia.days
+        print(dias_pasados)
 
         EstadoDePago = False
         save_servicio = tblServiciosWeb.objects.get(ID=1)
         save_servicio.EstadoPago = EstadoDePago
         save_servicio.save()
 
-        if ServiciosWeb.EstadoPago == False and dias_pasados == 5:
+        if ServiciosWeb.EstadoPago == False and dias_pasados >= 5:
             Servicios = False
             save_servicio = tblServiciosWeb.objects.get(ID=1)
             save_servicio.Servicio = Servicios

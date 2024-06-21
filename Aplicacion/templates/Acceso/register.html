@@ -152,11 +152,10 @@
                             class="invalid"
                             style="font-size: 15px"
                           >
-                            ° La contraseña no debe coincidir con los campos
-                            anteriores
+                            ° Las contrseñas deben coincidir
                           </h6>
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                           <h6
                             id="error2"
                             class="invalid"
@@ -164,7 +163,7 @@
                           >
                             ° La contraseña no debe tener números consecutivos
                           </h6>
-                        </div>
+                        </div> -->
                         <div class="col">
                           <h6
                             id="error3"
@@ -225,23 +224,24 @@
   function validatePassword() {
     const password1 = document.getElementById("password1").value;
     const password2 = document.getElementById("password2").value;
-
+    // valida
     if (password1 !== password2) {
-      document.getElementById("error1").classList.add("valid");
-      document.getElementById("error1").classList.remove("invalid");
-    } else {
       document.getElementById("error1").classList.add("invalid");
       document.getElementById("error1").classList.remove("valid");
+      
+    } else {
+      document.getElementById("error1").classList.add("valid");
+      document.getElementById("error1").classList.remove("invalid");
     }
 
-    if (/123|234|345|456|567|678|789|890/.test(password1)) {
-      // Verificamos números consecutivos
-      document.getElementById("error2").classList.add("invalid");
-      document.getElementById("error2").classList.remove("valid");
-    } else {
-      document.getElementById("error2").classList.add("valid");
-      document.getElementById("error2").classList.remove("invalid");
-    }
+    // if (/123|234|345|456|567|678|789|890/.test(password1)) {
+    //   // Verificamos números consecutivos
+    //   document.getElementById("error2").classList.add("invalid");
+    //   document.getElementById("error2").classList.remove("valid");
+    // } else {
+    //   document.getElementById("error2").classList.add("valid");
+    //   document.getElementById("error2").classList.remove("invalid");
+    // }
 
     if (password1.length >= 8) {
       document.getElementById("error3").classList.add("valid");
