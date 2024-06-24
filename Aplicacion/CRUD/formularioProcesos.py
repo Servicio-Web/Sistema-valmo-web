@@ -15,7 +15,7 @@ def FormularioEntradaMateriasPrimas(request):
     else:
         ultimo_folio = 1
     FProveedor = tblProveedores.objects.exclude(ID=0).all().order_by('Nombre')
-    FAlmacen = tblContenedoresMateriaPrima.objects.all()
+    FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
     FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
     FPresentacion= tblTipoPresentacion.objects.all().order_by('Descripcion')
@@ -49,7 +49,7 @@ def FormularioSalidaMateriasPrimas(request):
     else:
         ultimo_folio = 1
     FCliente = tblClientes.objects.exclude(ID=1).all().order_by('Nombre')
-    FAlmacen = tblContenedoresMateriaPrima.objects.all()
+    FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
     FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
     FPresentacion= tblTipoPresentacion.objects.all().order_by('Descripcion')
@@ -84,7 +84,7 @@ def FormularioEntradaProductos(request):
  
     FProveedor = tblProveedores.objects.all().order_by('Nombre')
     FMovimiento = tblTipoMov.objects.all().order_by('Descripcion')
-    FAlmacen = tblContenedoresProductos.objects.all()
+    FAlmacen = tblContenedoresProductos.objects.all().order_by('Proveedor')
     FProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FPresentacion = tblTipoPresentacion.objects.all().order_by('Descripcion')
     FOperadores = tblOperadores.objects.all().order_by('Descripcion')
@@ -118,7 +118,7 @@ def FormularioSalidaProductos(request):
  
     FCliente = tblClientes.objects.exclude(ID = 1).all().order_by('Nombre')
     FMovimiento = tblTipoMov.objects.all().order_by('Descripcion')
-    FAlmacen = tblContenedoresProductos.objects.all()
+    FAlmacen = tblContenedoresProductos.objects.all().order_by('Proveedor')
     FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
     FProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FPresentacion = tblTipoPresentacion.objects.all().order_by('Descripcion')
@@ -151,8 +151,9 @@ def FormularioMovimientoAnimales(request):
     else:
         ultimo_folio = 1
         formatoClave = 'F-{:06d}'.format(ultimo_folio)
-    FCliente = tblClientes.objects.exclude(ID = 1).all()
+    FCliente = tblClientes.objects.exclude(ID = 1).all().order_by('Nombre')
     FCorral = tblCorrales.objects.all().order_by('Descripcion')
+    
     FMovimiento = tblTipoMov.objects.filter(ID__in=[1, 2])
     FTipoAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
@@ -201,7 +202,7 @@ def FormularioServidoAnimales(request):
         ultimo_folio = ultimo_contacto.ID + 1
     else:
         ultimo_folio = 1
-    FClientes = tblClientes.objects.exclude(ID = 1).all()
+    FClientes = tblClientes.objects.exclude(ID = 1).all().order_by('Nombre')
     FECorrales = tblCorrales.objects.exclude(IDCliente = 1).all().order_by('Descripcion')
     FEProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
@@ -218,8 +219,8 @@ def FormularioInventarioMateriaPrima(request):
         ultimo_folio = ultimo_contacto.ID + 1
     else:
         ultimo_folio = 1
-    FMateriaPrima = tblMateriaPrima.objects.all()
-    FAlmacen = tblContenedoresMateriaPrima.objects.all()
+    FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
+    FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
 
     ServiciosWeb = servicioActivo()
@@ -233,8 +234,8 @@ def FormularioInventarioProducto(request):
         ultimo_folio = ultimo_contacto.ID + 1
     else:
         ultimo_folio = 1
-    FProductos= tblProductos.objects.all()
-    FAlmacen = tblContenedoresProductos.objects.all()
+    FProductos= tblProductos.objects.all().order_by('Descripcion')
+    FAlmacen = tblContenedoresProductos.objects.all().order_by('Proveedor')
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
 
     ServiciosWeb = servicioActivo()

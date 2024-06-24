@@ -229,6 +229,7 @@ urlpatterns = [
     # TRAER CORRALES EN TIEMPO REAL
     path('obtener_corrales/<int:id>/', mostrarProcesos.obtener_corrales),
     path('obtener_clientes/<int:id>/', mostrarProcesos.obtener_clientes),
+    path('obtener_corrales_clientes/<int:id>/', mostrarProcesos.obtener_corrales_animales_clientes),
 
     # FORMULARIO SUBTABLA
     path('Guardar-Estatus/', guardarSubTabla.guardarEstatus),

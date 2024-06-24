@@ -330,6 +330,7 @@ def guardarMovimientos(request):
     AgMovimientos = tblMovimientoAnimales.objects.get(ID=clave)
     Cliente = AgMovimientos.IDCliente.ID
     Corral = AgMovimientos.IDCorral.ID
+    #Corral = tblCorrales.objects.get(IDCliente_ID=Cliente).ID
     Movimiento = AgMovimientos.IDMovimiento.ID
     FiltradoCliente = tblClientes.objects.get(ID=Cliente)
     FiltradoCorral = tblCorrales.objects.get(ID=Corral)

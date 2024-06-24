@@ -19,6 +19,15 @@ def obtener_corrales(request, id):
     corrales_data = [{'ID': corral.ID, 'Descripcion': corral.Descripcion} for corral in corrales]
     return JsonResponse({'corrales': corrales_data})
 
+def obtener_corrales_animales_clientes(request, id):
+    try:
+        corrales = tblCorrales.objects.filter(IDCliente_id=id).order_by('Descripcion')
+        corrales_data = [{'ID': corral.ID, 'Descripcion': corral.Descripcion} for corral in corrales]
+        print(corrales_data)
+        return JsonResponse({'corrales': corrales_data})
+    except tblCorrales.DoesNotExist:
+        return JsonResponse({'error': "El cliente no tiene corral"})
+
 def obtener_clientes(request, id):
     try:
         corral = tblCorrales.objects.get(ID=id)

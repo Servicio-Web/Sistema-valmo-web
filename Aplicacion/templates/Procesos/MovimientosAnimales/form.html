@@ -38,7 +38,8 @@
                             <input type="hidden" value="{{Agrego_aniamles.cliente}}" name="cliente">
                             <input type="text" value="{{FiltradoCliente.Nombre}}" class="form-control" readonly>
                             {% else %}
-                            <select class="select2 form-control col-12" name="cliente" required>
+                            <select class="select2 form-control col-12" name="cliente" required id="select-cliente">
+                                <option value="">Selecciona cliente</option>
                                 {% for Clientes in FCliente %}
                                 <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
                                 {% endfor %}
@@ -69,7 +70,8 @@
                             <input type="text"  value="{{FiltradoCorral.Descripcion}}" class="form-control"
                                 readonly>
                             {% else %}
-                            <select class="select2 form-control col-12" name="corral" required>
+                            <select class="select2 form-control col-12" name="corral" required id="select-corral">
+                                <option value="">Selecciona corral</option>
                                 {% for Corral in FCorral %}
                                 <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
                                 {% endfor %}
@@ -228,6 +230,29 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#select-cliente').change(function () {
+            var cliente = $(this).val();
+            var url = '/obtener_corrales_clientes/' + cliente + '/';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('#select-corral').empty();
+                    console.log(data);
+
+                    $.each(data.corrales, function (index, corral) {
+                        $('#select-corral').append('<option value="' + corral.ID + '">' + corral.Descripcion + '</option>');
+                        console.log(corral)
+                    });
+                }
+            });
+        });
+    });
+
+    
+</script>
 
 {% else %}
 <div class="row centrar">
