@@ -12,7 +12,7 @@ import sqlite3
 
 
 def reporteMovEntradaMP(request):
-    FContenedores = tblContenedoresMateriaPrima.objects.all()
+    FContenedores = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FechaDia = datetime.now().strftime('%Y-%m-%d')
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
 
@@ -34,7 +34,7 @@ def reporteMovEntradaMP(request):
         #     Nombre = TEContenedores.Cliente
 
         return render(request, 'Reportes/MovimientosMP/EntradaMP.html', {
-            # 'FContenedores': FContenedores,
+            'FContenedores': FContenedores,
             'reportes': reportes,
             'Nombre': Nombre,
             'Contenedor': Contenedor,
@@ -48,7 +48,7 @@ def reporteMovEntradaMP(request):
         Contenedor = ''
 
         return render(request, 'Reportes/MovimientosMP/EntradaMP.html', {
-            # 'FContenedores': FContenedores,
+            'FContenedores': FContenedores,
             'reportes': reportes,
             'FechaDeHoy': FechaDeHoy,
             'Nombre': Nombre,
@@ -57,12 +57,12 @@ def reporteMovEntradaMP(request):
 
 
 def reporteMovSalidaMP(request):
-    FContenedores = tblContenedoresMateriaPrima.objects.all()
+    FContenedores = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FechaDia = datetime.now().strftime('%Y-%m-%d')
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     if request.method == 'POST':
-        # Contenedor = request.POST.get('contenedor')
+        Contenedor = request.POST.get('contenedor')
         Fecha = request.POST.get('fecha1')
         Fecha2 = request.POST.get('fecha2')
 
@@ -80,8 +80,8 @@ def reporteMovSalidaMP(request):
         #     Nombre = TEContenedores.Cliente
 
         return render(request, 'Reportes/MovimientosMP/SalidaMP.html', {
-            # 'FContenedores': FContenedores,
-            # 'Contenedor': Contenedor,
+            'FContenedores': FContenedores,
+            'Contenedor': Contenedor,
             'reportes': reportes,
             'Nombre': Nombre,
             'Fecha': Fecha,
@@ -96,7 +96,7 @@ def reporteMovSalidaMP(request):
         Contenedor = ''
 
         return render(request, 'Reportes/MovimientosMP/SalidaMP.html', {
-            # 'FContenedores': FContenedores,
+            'FContenedores': FContenedores,
             'reportes': reportes,
             'FechaDeHoy': FechaDeHoy,
             'Nombre': Nombre,
@@ -111,7 +111,7 @@ def reporteMovSalidaMP(request):
 def reporteAnimalesMovimientos(request):
     FechaDia = datetime.now().strftime('%Y-%m-%d')
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
         if 'reportes' in request.POST:
@@ -163,7 +163,7 @@ def reporteAnimalesMovimientos(request):
 
 def reportePorClientes(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
         if 'reportes' in request.POST:
@@ -242,7 +242,7 @@ def reportePorClientes(request):
 
 def reportePorClientesCorrales(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
     print(type(FechaDeHoy))
     if request.method == 'POST':
         if 'reportes' in request.POST:
@@ -335,7 +335,7 @@ def reportePorClientesCorrales(request):
 
 def reporteServidosMovimientos(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
         if 'reportes' in request.POST:
@@ -405,7 +405,7 @@ def reporteServidosMovimientos(request):
 
 def reporteServidosLiquidacion(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).all().order_by('Nombre')
 
     if request.method == 'POST':
         if 'reportes' in request.POST:
@@ -592,7 +592,7 @@ def reporteServidosLiquidacion(request):
 
 def reporteServidosPromedio(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
-    FClientes = tblClientes.objects.exclude(ID=1)
+    FClientes = tblClientes.objects.exclude(ID=1).all().order_by('Nombre')
     ListaForRep = []
     ListaTem = []
 
