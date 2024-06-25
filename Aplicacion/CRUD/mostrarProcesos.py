@@ -23,7 +23,6 @@ def obtener_corrales_animales_clientes(request, id):
     try:
         corrales = tblCorrales.objects.filter(IDCliente_id=id).order_by('Descripcion')
         corrales_data = [{'ID': corral.ID, 'Descripcion': corral.Descripcion} for corral in corrales]
-        print(corrales_data)
         return JsonResponse({'corrales': corrales_data})
     except tblCorrales.DoesNotExist:
         return JsonResponse({'error': "El cliente no tiene corral"})
