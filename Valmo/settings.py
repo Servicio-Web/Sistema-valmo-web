@@ -61,7 +61,7 @@ DATABASES = {
         'NAME': 'valmo',
         'USER': 'root',
         'PASSWORD': '',
-        'HOST': '192.168.0.116',
+        'HOST': '192.168.0.121',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
