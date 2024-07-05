@@ -6,6 +6,8 @@ from datetime import datetime, timedelta, date
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
+#import os
+#from weasyprint import HTML
 
 def cargar_folio(request):
     Folio = tblConfiguracion.objects.get(ID = 1)
@@ -58,3 +60,7 @@ def cargamento_tolva(request):
 
 
     return response
+
+# def descargarPDF(request):
+#     os.add_dll_directory(r"C:\Program Files\GTK3-Runtime Win64\bin")
+#     HTML("Descargas/PDF/indexV3.html").write_pdf("Descargas/PDF/archivo.pdf")

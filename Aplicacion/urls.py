@@ -419,5 +419,9 @@ urlpatterns = [
     path('EXCEL/', DescargaExcel.xlsx, name="Excel"),
 
      # Servidos Materia prima
-     path('Salidas_De_Servidos/', guardarProcesos.salidaMPServidos, name="ServidosSalidas")
+     path('Salidas_De_Servidos/', guardarProcesos.salidaMPServidos, name="ServidosSalidas"),
+
+
+     # Descarga pdf
+     # path('DescargaPDF2/',DescargaPDF.descargarPDF, name="DescargaPDFJorge" )
 ]
