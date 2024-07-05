@@ -8,6 +8,7 @@ class tblConfiguracion(models.Model):
     BaseDeDatos = models.CharField(max_length=150,null=True)
     FechaDescarga = models.DateTimeField(null=True)
     FechaActualizacion = models.DateTimeField(max_length=150, null=True)
+    FolioSalMaquila = models.CharField(max_length=10, null=True)
 
 class tblEventosValmoSys(models.Model):
     ID = models.AutoField(primary_key=True)

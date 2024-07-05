@@ -7,8 +7,20 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
 
+def cargar_folio(request):
+    Folio = tblConfiguracion.objects.get(ID = 1)
+    GFolio = Folio.FolioSalMaquila
+    clave_int = int(GFolio[2:])
+    clave_int += 1  
+    formatoClave = 'F-{:06d}'.format(clave_int)
+    Folio.FolioSalMaquila = formatoClave
+    Folio.save()
+
+    return formatoClave
+
 def cargamento_tolva(request):
-    
+    formatoClave = cargar_folio(request)
+    print(formatoClave)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -23,10 +35,10 @@ def cargamento_tolva(request):
         Filtradounidad= tblUnidades.objects.get(ID=unidad_id)
         TContenido = tblServido.objects.filter(IDEstatus_id = 8, IDTolva_id = tolva).order_by('ID').values('Folio',
         'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','CantidadSolicitada', 'CantidadServida')
-        print(TTolva.IDProducto.ID)
+
         
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/index.html', {'logo_url': logo_url, 'Filtradounidad':Filtradounidad,
+    html_string = render_to_string('Descargas/PDF/index.html', {'logo_url': logo_url, 'Filtradounidad':Filtradounidad, 'folio': formatoClave,
                                    'user': user,  'TContenido': TContenido, 'fecha_actual': fecha_actual, 'FiltradoProducto':FiltradoProducto})
 
     # Create a BytesIO buffer to receive the PDF
@@ -43,5 +55,6 @@ def cargamento_tolva(request):
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
         # response['Content-Disposition'] = 'attachment; filename="Sálida-' + \
     #     Folio+" "+Nombre+'.pdf"'
+
 
     return response

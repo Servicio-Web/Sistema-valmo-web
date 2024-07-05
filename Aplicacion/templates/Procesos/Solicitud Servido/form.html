@@ -68,17 +68,10 @@
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                         <h6 class="h6-form">CLIENTE</h6>
                         <select class="select2 form-control" style="width: 100%;" name="cliente" id="cliente-select">
-                            <!-- {% if SelectCliente %} -->
-                            <!-- <option value="{{ SelectCliente.ID }}">-------{{ SelectCliente.Nombre }}-------</option> -->
-                            <!-- {% for Clientes in FClientes %}
-                            <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
-                            {% endfor %}                            -->
-                            <!-- {% else %}
-                            <option value="">SE OBTIENE AUTOMATICAMENTE</option>
-                            {% for Clientes in FClientes %}
-                            <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
-                            {% endfor %}
-                            {% endif %} -->
+                            {% if SelectCliente %}
+                            <option value="{{ SelectCliente.ID }}">-------{{ SelectCliente.Nombre }}-------</option>
+
+                            {% endif %}
                         </select>
                     </div>
 
@@ -144,3 +137,4 @@
 {% endif %}
 
 {% endblock %}
+
