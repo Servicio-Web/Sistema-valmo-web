@@ -25,7 +25,11 @@
         {% endif %}
 
         <form action="/Guardar-Salidas-Materias-Primas/" method="POST" autocomplete="off">{% csrf_token %}
+            {% if clave is not None %}
+            <input type="hidden" class="form-control" name="clave" value="{{ clave }}">
+            {% else %}
             <input type="hidden" class="form-control" name="clave" value="{{ ultimo_folio }}">
+            {% endif %}
             <input type="hidden" class="form-control" name="tecnico" value="{{ user.first_name }} {{user.last_name}}">
             <div class="centrar" style="justify-content: center; display: flex; text-align: center; width: 100%;">
                 <div class="accordion">
@@ -40,8 +44,13 @@
                                     <div class="row fila">
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                                             <h6 class="h6-form">CHOFER</h6>
+                                            {% if chofer is not None %}
+                                            <input type="text" name="chofer" class="form-control"
+                                                placeholder="Ingrese el chofer" value="{{chofer}}">
+                                            {% else %}
                                             <input type="text" name="chofer" class="form-control"
                                                 placeholder="Ingrese el chofer">
+                                            {% endif %}
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                                             <h6 class="h6-form">PESADOR</h6>
@@ -55,13 +64,23 @@
                                     <div class="row fila">
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                                             <h6 class="h6-form">CAMIÓN</h6>
+                                            {% if camion is not None %}
+                                            <input type="text" name="camion" class="form-control"
+                                                placeholder="Ingrese el camión" value="{{camion}}">
+                                            {% else %}
                                             <input type="text" name="camion" class="form-control"
                                                 placeholder="Ingrese el camión">
+                                            {% endif %}
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                                             <h6 class="h6-form">PLACAS</h6>
+                                            {% if placas is not None %}
                                             <input type="text" name="placas" class="form-control"
-                                                placeholder="Ingrese la placa">
+                                                placeholder="Ingrese las placas" value="{{placas}}">
+                                            {% else %}
+                                            <input type="text" name="placas" class="form-control"
+                                                placeholder="Ingrese las placas">
+                                            {% endif %}
                                         </div>
                                     </div>
 
@@ -76,6 +95,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                         <h6 class="h6-form">CLIENTE <label>*</label></h6>
                         <select class="select2 form-control col-12" name="cliente" required>
+                            {% if cliente is not None %}
+                            <option value="{{cliente.ID}}">
+                                --------{{cliente.Nombre}}--------
+                            </option>
+                            {% endif %}
                             {% for Cliente in FCliente %}
                             <option value="{{ Cliente.ID }}">{{ Cliente.Nombre }}</option>
                             {% endfor %}
@@ -84,6 +108,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                         <h6 class="h6-form">PRESENTACIÓN <label>*</label></h6>
                         <select class="select2 form-control col-12" name="presentacion" required>
+                            {% if presentacion is not None %}
+                            <option value="{{presentacion.ID}}">
+                                --------{{presentacion.Descripcion}}--------
+                            </option>
+                            {% endif %}
                             {% for Presentacion in FPresentacion %}
                             <option value="{{ Presentacion.ID }}">{{ Presentacion.Descripcion }}
                             </option>
@@ -96,6 +125,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                         <h6 class="h6-form">ALMACEN <label>*</label></h6>
                         <select class="select2 form-control col-12" name="almacen" required>
+                            {% if almacen is not None %}
+                            <option value="{{almacen.ID}}">
+                                --------{{almacen.Cliente}}--------
+                            </option>
+                            {% endif %}
                             {% for Almacen in FAlmacen%}
                             <option value="{{ Almacen.ID }}">{{ Almacen.Cliente }}</option>
                             {% endfor %}
@@ -104,6 +138,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                         <h6 class="h6-form">MATERIA PRIMA <label>*</label></h6>
                         <select class="select2 form-control col-12" name="materiaPrima" required>
+                            {% if materiaPrima is not None %}
+                            <option value="{{materiaPrima.ID}}">
+                                --------{{materiaPrima.Descripcion}}--------
+                            </option>
+                            {% endif %}
                             {% for MateriaPrima in FMateriaPrima %}
                             <option value="{{ MateriaPrima.ID }}">{{ MateriaPrima.Descripcion }}
                             </option>

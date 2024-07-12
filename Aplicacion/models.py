@@ -9,6 +9,10 @@ class tblConfiguracion(models.Model):
     FechaDescarga = models.DateTimeField(null=True)
     FechaActualizacion = models.DateTimeField(max_length=150, null=True)
     FolioSalMaquila = models.CharField(max_length=10, null=True)
+    FolioEntProducto = models.CharField(max_length=10, null=True)
+    FolioSalProducto = models.CharField(max_length=10, null=True)
+    FolioEntMatPrima = models.CharField(max_length=10, null=True)
+    FolioSalMatPrima = models.CharField(max_length=10, null=True)
 
 class tblEventosValmoSys(models.Model):
     ID = models.AutoField(primary_key=True)

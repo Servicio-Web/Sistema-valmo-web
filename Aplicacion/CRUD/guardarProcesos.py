@@ -35,14 +35,11 @@ def guardarEntradaMateriaPrima(request):
     if referencia_v == '':
         referencia_v = 0
 
-    chofer_v = request.POST['chofer']      
-    tblEntradaMP.objects.create(
-    IDFolio = formatoClave, IDProveedor_id = proveedor_v, IDAlmacen_id = almacen_v, IDMateriaPrima_id = materiaPrima_v,
-    IDPresentacion_id = presentacion_v, cantidad = cantidad_v, referencia = referencia_v,
-    fecha = fecha_v, notas = notas_v)
-    agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
-    messages.success(request, 'La Entrada de Materias Primas se ha registrado exitosamente')
+    tblEntradaMP.objects.create(IDFolio = formatoClave, IDProveedor_id = proveedor_v, IDAlmacen_id = almacen_v, IDMateriaPrima_id = materiaPrima_v,
+    IDPresentacion_id = presentacion_v, cantidad = cantidad_v, referencia = referencia_v, fecha = fecha_v, notas = notas_v)
 
+    agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
+    chofer_v = request.POST['chofer']
     if chofer_v != '':
         operador_V= request.POST['operador']    
         camion_V= request.POST['camion']    
@@ -56,23 +53,61 @@ def guardarEntradaMateriaPrima(request):
             flete_V = 0.0
         if maniobra_V == '':
             maniobra_V = 0.0
-        tblOtrosDatosMovMP.objects.create(
+    else:
+        operador_V=""
+        camion_V= ""
+        placas_V= ""
+        costo_V=""
+        flete_V=""
+        maniobra_V= ""
+        costo_V = 0.0
+        flete_V = 0.0
+        maniobra_V = 0.0
+        
+    nombre_Existe = tblOtrosDatosMovMP.objects.filter(IDMovMP=formatoClave).exists()
+    if nombre_Existe:
+        print("El folio ya se guardo anteriormente")
+    else:
+        if chofer_v != '':
+            tblOtrosDatosMovMP.objects.create(
             IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = costo_V, Flete = flete_V,
             Maniobra = maniobra_V, Camion = camion_V, Chofer = chofer_v, Placas = placas_V
         )
-        messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
-    else:
-        operador_V= request.POST['operador'] 
-        tblOtrosDatosMovMP.objects.create(
-            IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = 0, Flete = 0,
-            Maniobra = 0, Camion = "", Chofer = "", Placas = ""
-        )
+        else:
+            messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
+            operador_V= request.POST['operador'] 
+            tblOtrosDatosMovMP.objects.create(
+                IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = 0, Flete = 0,
+                Maniobra = 0, Camion = "", Chofer = "", Placas = ""
+            )
+    messages.success(request, 'La Entrada de Materias Primas se ha registrado exitosamente')
+
     if request.method == 'POST':
         if 'salir' in request.POST:
             return redirect('T-Ent-Materia-Prima')
         elif 'agregar' in request.POST:
-            return redirect('F-Ent-Materia-Prima')
+            FProveedor = tblProveedores.objects.exclude(ID=0).all().order_by('Nombre')
+            FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
+            FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
+            FPresentacion= tblTipoPresentacion.objects.all().order_by('Descripcion')
+            FTipoMov= tblTipoMov.objects.all().order_by('Descripcion')
+            FOperadores = tblOperadores.objects.all().order_by('Descripcion')
+            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            proveedor = tblProveedores.objects.get(ID = proveedor_v)
+            almacen = tblContenedoresMateriaPrima.objects.get(ID = almacen_v)
+            materiaprima = tblMateriaPrima.objects.get(ID = materiaPrima_v)
+            presentacion = tblTipoPresentacion.objects.get(ID = presentacion_v)
+
+            context  = {
+                'operador': operador_V, 'camion': camion_V, 'placas': placas_V, 'costo': costo_V, 'chofer': chofer_v,
+                'flete': flete_V, 'maniobra': maniobra_V, 'costo': costo_V, 'flete': flete_V, 'maniobra': maniobra_V,                
+                'proveedor':proveedor,  'almacen':almacen,  'materiaprima':materiaprima,  'presentacion':presentacion,                 
+                'FProveedor':FProveedor, 'FAlmacen':FAlmacen, 'FMateriaPrima':FMateriaPrima, 'FPresentacion':FPresentacion, 
+                'FTipoMov':FTipoMov, 'FOperadores':FOperadores, 'FechaDeHoy':FechaDeHoy, 'clave': clave
+            }
+            return render(request, "Procesos/EntradasMateriasPrimas/form.html", context)
     else:
+        
         return redirect('T-Ent-Materia-Prima')
 
 def guardarSalidasMateriaPrima(request):
@@ -103,17 +138,27 @@ def guardarSalidasMateriaPrima(request):
     if chofer_v != '':
         operador_V= request.POST['operador']    
         camion_V= request.POST['camion']    
-        placas_V= request.POST['placas']    
-        tblOtrosDatosSalXBas.objects.create(
-            IDSalida = formatoClave, IDOperador_id = operador_V, Camion = camion_V, 
-            Chofer = chofer_v, Placas = placas_V
-        )
-        messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
+        placas_V= request.POST['placas']
     else:
-        operador_V= request.POST['operador'] 
-        tblOtrosDatosSalXBas.objects.create(
-            IDSalida = formatoClave, IDOperador_id = operador_V, Camion = "", Chofer = "", Placas = ""
-        )
+        operador_V = ""
+        camion_V = ""
+        placas_V = ""
+
+    nombre_Existe = tblOtrosDatosSalXBas.objects.filter(IDSalida=formatoClave).exists()
+    if nombre_Existe:
+        print("El folio ya se guardo anteriormente")
+    else:
+        if chofer_v != '':
+            tblOtrosDatosSalXBas.objects.create(
+                IDSalida = formatoClave, IDOperador_id = operador_V, Camion = camion_V, 
+                Chofer = chofer_v, Placas = placas_V
+            )
+            messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
+        else:
+            operador_V= request.POST['operador'] 
+            tblOtrosDatosSalXBas.objects.create(
+                IDSalida = formatoClave, IDOperador_id = operador_V, Camion = "", Chofer = "", Placas = ""
+            )
 
     tblSalidaMP.objects.create(
     IDFolio = formatoClave, IDCliente_id = cliente_v, IDAlmacen_id = 3, 
@@ -126,7 +171,22 @@ def guardarSalidasMateriaPrima(request):
         if 'salir' in request.POST:
             return redirect('T-Sal-Materia-Prima')
         elif 'agregar' in request.POST:
-            return redirect('F-Sal-Materia-Prima')
+            FCliente = tblClientes.objects.exclude(ID=1).all().order_by('Nombre')
+            FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
+            FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
+            FPresentacion= tblTipoPresentacion.objects.all().order_by('Descripcion')       
+            cliente = tblClientes.objects.get(ID = cliente_v)
+            almacen = tblContenedoresMateriaPrima.objects.get(ID = 3)
+            materiaPrima = tblMateriaPrima.objects.get(ID = materiaPrima_v)
+            presentacion = tblTipoPresentacion.objects.get(ID = presentacion_v)
+            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            context = {
+                'operador':operador_V, 'camion':camion_V, 'placas':placas_V, 'clave': clave, 'chofer':chofer_v,
+                'FCliente': FCliente, 'FAlmacen': FAlmacen, 'FMateriaPrima': FMateriaPrima, 
+                'FPresentacion': FPresentacion, 'cliente': cliente, 'almacen': almacen, 
+                'materiaPrima': materiaPrima, 'presentacion': presentacion, 'FechaDeHoy': FechaDeHoy
+            }
+            return render(request, "Procesos/SalidasMateriasPrimas/form.html", context)
     else:
         return redirect('T-Sal-Materia-Prima')
 
@@ -159,6 +219,8 @@ def guardarEntradaBasculas(request):
         notas=notas_v
     )
     agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
+
+    # Aqui se valida que el chofer se haya ingresado
     chofer_v = request.POST['chofer']    
     if chofer_v != '':
         operador_V= request.POST['operador']    
@@ -173,24 +235,57 @@ def guardarEntradaBasculas(request):
             flete_V = 0.0
         if maniobra_V == '':
             maniobra_V = 0.0
-        tblOtrosDatosMovMP.objects.create(
-            IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = costo_V, Flete = flete_V,
-            Maniobra = maniobra_V, Camion = camion_V, Chofer = chofer_v, Placas = placas_V
-        )
-        messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
     else:
-        operador_V= request.POST['operador'] 
-        tblOtrosDatosMovMP.objects.create(
-            IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = 0, Flete = 0,
-            Maniobra = 0, Camion = "", Chofer = "", Placas = ""
-        )
+        operador_V=""
+        camion_V= ""
+        placas_V= ""
+        costo_V=""
+        flete_V=""
+        maniobra_V= ""
+        costo_V = 0.0
+        flete_V = 0.0
+        maniobra_V = 0.0
+        
+    # valida que el folio exista en la tabla de los choferes
+    nombre_Existe = tblOtrosDatosMovMP.objects.filter(IDMovMP=formatoClave).exists()
+    if nombre_Existe:
+        print("El folio ya se guardo anteriormente")
+    else:
+        if chofer_v != '':
+            tblOtrosDatosMovMP.objects.create(
+                IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = costo_V, Flete = flete_V,
+                Maniobra = maniobra_V, Camion = camion_V, Chofer = chofer_v, Placas = placas_V
+            )
+            messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
+        else:
+            operador_V= request.POST['operador'] 
+            tblOtrosDatosMovMP.objects.create(
+                IDMovMP = formatoClave, IDOperador_id = operador_V, Costo = 0, Flete = 0,
+                Maniobra = 0, Camion = "", Chofer = "", Placas = ""
+            )
     messages.success(request, 'La Entrada de productos se ha registrado exitosamente')
 
     if request.method == 'POST':
         if 'salir' in request.POST:
             return redirect('T-Ent-Productos')
         elif 'agregar' in request.POST:
-            return redirect('F-Ent-Productos')
+            FProveedor = tblProveedores.objects.all().order_by('Nombre')
+            FMovimiento = tblTipoMov.objects.all().order_by('Descripcion')
+            FAlmacen = tblContenedoresProductos.objects.all().order_by('Proveedor')
+            FProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
+            FPresentacion = tblTipoPresentacion.objects.all().order_by('Descripcion')
+            FOperadores = tblOperadores.objects.all().order_by('Descripcion')            
+            proveedor = tblProveedores.objects.get(ID = proveedor_v)
+            presentacion = tblTipoPresentacion.objects.get(ID = presentacion_v)
+            almacen = tblContenedoresProductos.objects.get(ID = almacen_v)
+            producto = tblProductos.objects.get(ID = productos_v)
+            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            context = { 'operador':operador_V, 'camion': camion_V, 'placas': placas_V, 'costo': costo_V, 'flete': flete_V, 
+                       'maniobra': maniobra_V, 'FechaDeHoy':FechaDeHoy, 'chofer':chofer_v,
+                        'clave': clave_v, 'proveedor':proveedor,  'presentacion': presentacion, 'almacen': almacen, 'producto': producto, 
+                        'FProveedor':FProveedor, 'FMovimiento':FMovimiento, 'FAlmacen':FAlmacen, 'FProductos':FProductos, 'FPresentacion':FPresentacion,
+                        'FOperadores':FOperadores}
+            return render(request, "Procesos/EntradaProductos/form.html", context)
     else:
         return redirect('T-Ent-Productos')
     
@@ -223,45 +318,68 @@ def guardarSalidaBasculas(request):
         notas=notas_v
     )
     agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
-    chofer_v = request.POST['chofer']    
+    chofer_v = request.POST['chofer']
+    nombre_Existe = tblOtrosDatosSalXBas.objects.filter(IDSalida=formatoClave).exists()
     if chofer_v != '':
         operador_V= request.POST['operador']    
         camion_V= request.POST['camion']    
-        placas_V= request.POST['placas']    
-        
-        tblOtrosDatosSalXBas.objects.create(
-            IDSalida = formatoClave, IDOperador_id = operador_V, Camion = camion_V, 
-            Chofer = chofer_v, Placas = placas_V
-        )
-        messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
-        
+        placas_V= request.POST['placas']
     else:
-        operador_V= request.POST['operador'] 
-        tblOtrosDatosSalXBas.objects.create(
-            IDSalida = formatoClave, IDOperador_id = operador_V, Camion = "", Chofer = "", Placas = ""
-        )
-    salidaMP(request, productos_v, cantidad_v, cliente_v, almacen_v, presentacion_v, fecha_v, notas_v, formatoClave, referencia_v)        
+        operador_V = ""
+        camion_V = ""
+        placas_V = ""
+
+    if nombre_Existe:
+        print("El folio ya se guardo anteriormente")
+    else:
+        if chofer_v != '':
+            tblOtrosDatosSalXBas.objects.create(
+                IDSalida = formatoClave, IDOperador_id = operador_V, Camion = camion_V, 
+                Chofer = chofer_v, Placas = placas_V
+            )
+            messages.success(request, f'Se ha añadido el operador "{chofer_v}" correctamente')
+        else:
+            operador_V= request.POST['operador'] 
+            tblOtrosDatosSalXBas.objects.create(
+                IDSalida = formatoClave, IDOperador_id = operador_V, Camion = "", Chofer = "", Placas = ""
+            )
+    salidaMP(request, formatoClave, productos_v, cantidad_v, cliente_v, almacen_v, presentacion_v, fecha_v, notas_v, referencia_v)        
     messages.success(request, 'La Salida de productos se ha registrado exitosamente')
 
     if request.method == 'POST':
         if 'salir' in request.POST:
             return redirect('T-Sal-Productos')
         elif 'agregar' in request.POST:
-            return redirect('F-Sal-Productos')
+            FCliente = tblClientes.objects.all().order_by('Nombre')
+            FPresentacion = tblTipoPresentacion.objects.all().order_by('Descripcion')
+            FProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
+            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            cliente = tblClientes.objects.get(ID = cliente_v)
+            presentacion = tblTipoPresentacion.objects.get(ID = presentacion_v)
+            productos = tblProductos.objects.get(ID = productos_v)
+            context = {'chofer': chofer_v, 'camion': camion_V, 'placas': placas_V,
+                       'cliente': cliente, 'presentacion': presentacion, 'productos': productos,
+                       'FCliente': FCliente, 'FPresentacion': FPresentacion, 'FProductos': FProductos,
+                       'FechaDeHoy': FechaDeHoy, 'clave': clave_v}
+            
+            return render(request, "Procesos/SalidasProductos/form.html", context)
+            #return redirect('F-Sal-Productos')
     else:
         return redirect('T-Sal-Productos')
 
-def salidaMP(request, productos_v, cantidad_v, cliente_v, almacen_v, presentacion_v, fecha_v, notas_v, formatoClave, referencia_v):
+# Funcion referenciada a salidas por bascula
+def salidaMP(request, formatoClave, productos_v, cantidad_v, cliente_v, almacen_v, presentacion_v, fecha_v, notas_v,  referencia_v):
     Recetas = tblProductosMateriaPrima.objects.filter(IDProductos_id = productos_v).values('ID', 'Folio',
     'IDMateriaPrima_id__Descripcion', 'Merma', 'Porcentaje', 'IDMateriaPrima_id')
-    ultimo_id = tblSalidaMP.objects.order_by('-ID').first()       
-    if ultimo_id:
-        ultimo_folio = ultimo_id.ID
-    else:
-        ultimo_folio = 0
+    # ultimo_id = tblSalidaMP.objects.order_by('-ID').first()       
+    # if ultimo_id:
+    #     ultimo_folio = ultimo_id.ID
+    # else:
+    #     ultimo_folio = 0
+
+    # ultimo_folio += 1
+    # formatoClaves = 'B-{:06d}'.format(ultimo_folio)
     for receta in Recetas:
-        ultimo_folio += 1
-        formatoClaves = 'B-{:06d}'.format(ultimo_folio)
         cantidad = float(cantidad_v)    
         # Imprime los valores de cada campo
         proporcion  = cantidad * (receta['Porcentaje'] / 100) * ((receta['Merma'] / 100) + 1)
@@ -269,10 +387,11 @@ def salidaMP(request, productos_v, cantidad_v, cliente_v, almacen_v, presentacio
         Referencia = receta['Folio']
         TEContenedorProductos = tblContenedoresProductos.objects.get(ID=almacen_v)
         Almacen = TEContenedorProductos.IDCliente.ID
-        tblSalidaMP.objects.create( IDFolio = formatoClaves, IDCliente_id = cliente_v, IDAlmacen_id = 3, 
+        tblSalidaMP.objects.create( IDFolio = formatoClave, IDCliente_id = cliente_v, IDAlmacen_id = 3, 
         IDMateriaPrima_id = materia_prima, IDPresentacion_id = presentacion_v, cantidad = proporcion, 
         referencia = 1, fecha = fecha_v, notas = notas_v)
 
+# El boton se encuentra en corrales servidos
 def salidaMPServidos(request):
     # Filtrar los objetos que deseas
     servidos = tblServido.objects.filter(IDEstatus_id=10)
@@ -285,6 +404,9 @@ def salidaMPServidos(request):
             ultimo_folio = ultimo_id.ID
         else:
             ultimo_folio = 0
+        
+        ultimo_folio += 1
+        formatoClave = 'S-{:06d}'.format(ultimo_folio)
         # Ahora tienes un queryset con la suma de CantidadServida agrupada por IDProducto_id
         for item in servidos_agrupados:
             
@@ -305,8 +427,7 @@ def salidaMPServidos(request):
             Recetas = tblProductosMateriaPrima.objects.filter(IDProductos_id = productos_v).values('ID', 'Folio',
             'IDMateriaPrima_id__Descripcion', 'Merma', 'Porcentaje', 'IDMateriaPrima_id')
             for receta in Recetas:
-                ultimo_folio += 1
-                formatoClave = 'S-{:06d}'.format(ultimo_folio)
+
                 cantidad = float(cantidad_v)    
                 # Imprime los valores de cada campo
                 proporcion  = cantidad * (receta['Porcentaje'] / 100) * ((receta['Merma'] / 100) + 1)

@@ -414,7 +414,11 @@ urlpatterns = [
          name='Reportes-Servidos-Promedio'),
 
     # PDF
-    path('Cargamento_tolva/', DescargaPDF.cargamento_tolva, name="C-Tolva"),
+    path('Cargamento_tolva/', DescargaPDF.cargamento_tolva, name="C-Tolva"), # PDF para tolvas
+    path('Descarga_PDF_Entrada_Bascula/', DescargaPDF.entradaBasculas, name="PDF_Entrada_Bascula"), # PDF entrada productos
+    path('Descarga_PDF_Salida_Bascula/', DescargaPDF.salidaBasculas, name="PDF_Salida_Bascula"), # PDF salida productos
+    path('Descarga_PDF_Entrada_Materia_Prima/', DescargaPDF.entradaMateriaPrima, name="PDF_Entrada_Materia_Prima"), # PDF entrada materias primas
+    path('Descarga_PDF_Salida_Materia_Prima/', DescargaPDF.salidaMateriaPrima, name="PDF_Salida_Materia_Prima"), # PDF salida materias primas
     # EXCEL
     path('EXCEL/', DescargaExcel.xlsx, name="Excel"),
 

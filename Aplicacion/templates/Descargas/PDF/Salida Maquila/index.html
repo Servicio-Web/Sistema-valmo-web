@@ -61,22 +61,33 @@
     .imagen {
         position: absolute;
     }
-</style>
 
+    .col-2 {
+        width: 17%;
+    }
+
+    .col-4 {
+        width: 28%;
+    }
+
+    .col-1 {
+        width: 25%;
+    }
+</style>
 
 <body>
     <div class="encabezado">
         <table>
             <thead>
                 <tr>
-                    <th colspan="1" align="left">
+                    <th align="left" colspan="2">
                         <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
                             style="padding-right: 30px;">
                     </th>
-                    <th colspan="3" style="padding-top: 20px;">
-                        <h2 style="font-size: 40px; text-align: right;">SÁLIDAS MAQUILA </h2>
+                    <th colspan="4" style="padding-top: 20px;">
+                        <h2 style="font-size: 35px; text-align: right;">SÁLIDAS MAQUILA </h2>
                     </th>
-
+                    <th colspan="2"></th>
                 </tr>
             </thead>
         </table>
@@ -85,22 +96,27 @@
         <table>
             <thead>
                 <tr>
-                    <th colspan="2" style="padding: 0;">
+                    <th colspan="3" style="padding: 0; ">
                         <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0; padding:0;">
                             Folio:
                             <label style="font-weight: normal; font-size: 14px; ">{{folio}}</label>
                         </h1>
                         <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
                             Producto:
-                            <label style="font-weight: normal; font-size: 14px; ">{{FiltradoProducto.Descripcion}}</label>
+                            <label
+                                style="font-weight: normal; font-size: 14px; ">{{FiltradoProducto.Descripcion}}</label>
                         </h1>
                         <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Tolva No:
-                            <label style="font-weight: normal; font-size: 14px; ">2 </label>
+                            Vehiculo:
+                            <label style="font-weight: normal; font-size: 14px; ">{{alias}} </label>
                         </h1>
                         <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
                             Fecha:
                             <label style="font-weight: normal; font-size: 14px; "> {{fecha_actual}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Peso neto:
+                            <label style="font-weight: normal; font-size: 14px; ">____________Kg</label>
                         </h1>
                     </th>
                     <th colspan="3" style="padding-top: 25px; padding: 0;">
@@ -109,10 +125,11 @@
                         </h1>
                         <h1 class="title"
                             style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
-                            Blvd. de los Ganaderos <br> Vaso de la presa <br> Hermosillo, Sonora
+                            Blvd. de los Ganaderos <br> Vaso de la presa <br> Hermosillo, Sonora 
                         </h1>
-                        <br>
+                        <h1 class="title" style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0"></h1>
                     </th>
+                    <th class="th" colspan="2" style="background: white; border: 0;"></th>
                 </tr>
             </thead>
         </table>
@@ -123,34 +140,37 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="th columna-contenido">A. Pedido Kg</th>
-                        <th class="th columna-contenido">Corral</th>
-                        <th class="th columna-contenido">Cliente</th>
-                        <th class="th columna-contenido">A. Servido Kg</th>
+                        <th class="th columna-contenido" colspan="1">Pedido</th>
+                        <th class="th columna-contenido" colspan="3">Cliente</th>
+                        <th class="th columna-contenido" colspan="1">Corral</th>
+                        <th class="th columna-contenido" colspan="1">Servido</th>
+                        <th class="th" colspan="2" style="display: none;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for Contenido in TContenido %}
                     <tr>
-                        <td class="td columna-base">
+                        <td class="td columna-base" colspan="1">
                             {{ Contenido.CantidadSolicitada }} {{Filtradounidad.Abreviacion}}
                         </td>
-                        <td class="td columna-base">
+                        <td class="td columna-base" colspan="3">
                             {{ Contenido.IDCliente_id__Nombre }}
                         </td>
-                        <td class="td columna-base">
+                        <td class="td columna-base" colspan="1">
                             {{ Contenido.IDCorral_id__Descripcion }}
                         </td>
 
-                        <td class="td columna-base">
+                        <td class="td columna-base" colspan="1">
 
                         </td>
+                        <td colspan="2"></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    <br>
     <br>
     <div class="encabezado">
         <table>
@@ -159,16 +179,8 @@
                     <th colspan="3" style="padding: 0;">
                         <h1 class="title" style="font-size: 14px; text-align: left; margin: 0; padding:0;">
                             Observaciones:
-                            <br><br>__________________________________
-                            <br><br>__________________________________.
-                        </h1>
-                    </th>
-                    <th colspan="2" style="padding-top: 25px;">
-                        <h1 class="title"
-                            style="font-size: 14px; text-align: left; margin: 0; padding:0; text-align: end;">
-                            <label style="color: white;">---------------</label> Peso Tara:_______________Kg. <br><br>
-                            <label style="color: white;">---------------</label> Peso Neto:_______________Kg. <br><br>
-                            <label style="color: white;">-------------</label> Peso Bruto:_______________Kg. <br><br>
+                            <br><br>______________________________________________________________________
+                            <br><br>______________________________________________________________________
                         </h1>
                     </th>
                 </tr>
@@ -180,14 +192,16 @@
         <table>
             <thead>
                 <tr>
-                    <th class="columna-base" style="padding-top: 5px;" colspan="1">
+                    <th class="columna-base" style="padding-top: 5px;" colspan="2">
                         <h1>Firma del que sirvio<br>
-                            <br>_____________________________________
+                            <br>_________________________
                         </h1>
                     </th>
-                    <th style="padding-top: 5px;" colspan="1">
-                        <h1>Firma del pesador: <br> <br> _____________________________________</h1>
+                    <th colspan="2"></th>
+                    <th style="padding-top: 5px;" colspan="2">
+                        <h1>Firma del pesador: <br> <br> ________________________</h1>
                     </th>
+                    <th colspan="2"></th>
                 </tr>
             </thead>
         </table>
