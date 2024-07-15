@@ -137,18 +137,6 @@
                         <td>
                             <h6 class="td-responsive">NOTAS:</h6>
                             {{ SalidaProductos.notas }}
-                            <form action="/Descarga_PDF_Salida_Bascula/" method="POST">{% csrf_token %}
-                                <input type="hidden" value="{{SalidaProductos.IDFolio}}" name="salidaBascula">
-                                <button class="Btn" type="submit">
-                                    <svg class="svgIcon" viewBox="0 0 384 512" height="1em">
-                                        <path
-                                            d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z">
-                                        </path>
-                                    </svg>
-                                    <!-- <span class="icon2"></span>
-                                    <span class="tooltip">PDF</span> -->
-                                </button>
-                            </form>
                         </td>
                         {% if perms.Aplicacion.change_tblsalidaproductos or perms.Aplicacion.delete_tblsalidaproductos %}
                         <td>
@@ -163,11 +151,12 @@
                                     </svg>
                                 </button>
                             </a>
+                            <form action="/Descarga_PDF_Salida_Bascula/" method="POST">{% csrf_token %}
+                                <input type="hidden" value="{{SalidaProductos.IDFolio}}" name="salidaBascula">
+                                <button class="pdf-red-button" type="submit"></button>
+                            </form>
                             {% endif %}
-                            <!-- {% if perms.Aplicacion.delete_tblsalidaproductos %}
-                            <a class="btn btn-danger btn-sm buttonEliminar" style="display: inline-block;"
-                                href="EliminarCliente/{{Cliente.ID}}" role="button"><i class="fas fa-trash-alt"></i></a>
-                            {% endif %} -->
+
                         </td>
                         {% endif %}
                         <td class="td-salto"></td>
