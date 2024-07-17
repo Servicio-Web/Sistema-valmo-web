@@ -13,6 +13,8 @@ class tblConfiguracion(models.Model):
     FolioSalProducto = models.CharField(max_length=10, null=True)
     FolioEntMatPrima = models.CharField(max_length=10, null=True)
     FolioSalMatPrima = models.CharField(max_length=10, null=True)
+    FolioRepServMov = models.CharField(max_length=10, null=True)
+    FolioRepServLiq = models.CharField(max_length=10, null=True)
 
 class tblEventosValmoSys(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -216,6 +218,7 @@ class tblServido(models.Model):
     CantidadServida = models.IntegerField(null=True)
     Prioridad = models.CharField(max_length=100, null=True)
     Fecha = models.DateTimeField(max_length=150, null=True)
+    FechaAServir = models.DateTimeField(max_length=150, null=True)
     FechaServida = models.DateTimeField(max_length=150, null=True)
 
 class tblEntradaProductos(models.Model):

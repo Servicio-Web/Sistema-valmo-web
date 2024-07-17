@@ -160,10 +160,11 @@
   --select-hover-values: #5f5f5f;
   --select-hover-color: #313131;
 }
+
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< INPUT PARA LOS FORMULARIOS <>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-input{
+input {
   background-color: var(--back-input-form);
   color: var(--color-input-form);
   /* border: 1px black solid; */
@@ -179,7 +180,9 @@ input:focus {
   border-color: var(--input-border);
   outline: 0;
   box-shadow: 0 0 0 .15rem var(--input-border)
-} 
+}
+
+
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
@@ -197,7 +200,7 @@ input:focus {
 }
 
 .select2-container--default .select2-selection--single {
-  background-color:  var(--back-input-form);
+  background-color: var(--back-input-form);
   border: 1px solid #aaa;
   border-radius: 4px
 }
@@ -210,11 +213,14 @@ input:focus {
 .select2-container--default .select2-results__option[aria-selected=true] {
   background-color: var(--select-hover-values)
 }
+
 .select2-container--default .select2-results__option[aria-disabled=true] {
   color: var(--select-hover-color);
 }
+
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
 
 .list-group-item {
   background: var(--body);
@@ -331,6 +337,9 @@ label {
   color: var(--text-color);
 }
 
+.dataTable{
+  width: 100% !important;
+}
 .dataTables_info {
   color: var(--text-color);
 }
@@ -343,6 +352,12 @@ label {
 .dataTables_filter input[type="search"] {
   background-color: aliceblue;
   margin-bottom: 3%;
+}
+
+.table-resposive {
+  padding: 0;
+  margin: 0;
+
 }
 
 .card-orden-c {
@@ -631,18 +646,24 @@ p {
   table {
     border-collapse: collapse;
     margin: auto;
+    width: 100%;
   }
 
   td {
     display: block;
     border: 1px solid black;
-    padding: 10px;
-    width: 280px;
+    /* padding: 10px; */
+    /* width: 280px; */
+  }
+  
+  .table-responsive {
+    padding: 0;
+    margin: 0;
   }
 
-  .td-agregar {
+  /* .td-agregar {
     width: 200px;
-  }
+  } */
 
   .agregarBoton {
     width: 100%;

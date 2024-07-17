@@ -38,15 +38,43 @@
     el.addEventListener('scroll', listener)
   }
 
+
+  // document.addEventListener('DOMContentLoaded', function() {
+  // const input = document.getElementById('toggle-input');
+  // const button = document.getElementById('toggle-btn');
+
+  // // Cargar el valor del input desde localStorage al cargar la página
+  // const storedValue = localStorage.getItem('inputValue');
+  // if (storedValue !== null) {
+  //     input.value = storedValue;
+  // } else {
+  //     input.value = '0'; // Valor predeterminado si no hay nada en localStorage
+  // }
+
+
+  // button.addEventListener('click', function() {
+  //     if (input.value === '0') {
+  //     input.value = '1';
+
+  //     } else {
+  //     input.value = '0';
+  //     }
+  //     // Guardar el valor del input en localStorage
+  //     localStorage.setItem('inputValue', input.value);
+  // });
+  // });
+
+
   /**
    * Sidebar toggle
    */
+  // select('body').classList.toggle('toggle-sidebar')
+
   if (select('.toggle-sidebar-btn')) {
     on('click', '.toggle-sidebar-btn', function(e) {
       select('body').classList.toggle('toggle-sidebar')
     })
   }
-
   /**
    * Search bar toggle
    */

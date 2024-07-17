@@ -23,7 +23,7 @@
     .td {
         padding: 5px 5px 0 5px;
         border: 1px solid #ccc;
-        font-size: 14px;
+        font-size: 12px;
         text-align: center;
         border: 1px solid black;
     }
@@ -31,7 +31,6 @@
     .th {
         background-color: #f2f2f2;
         font-weight: bold;
-        font-size: 14px;
         border: 1px solid black;
     }
 
@@ -73,7 +72,14 @@
     .col-1 {
         width: 25%;
     }
-    @page { size: letter; margin-left: 0.5in; margin-right: 0.5in; margin-top: 0.3in; margin-bottom: 0.3in; }
+
+    @page {
+        size: letter;
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+        margin-top: 0.7in;
+        margin-bottom: 0.3in;
+    }
 </style>
 
 <body>
@@ -86,9 +92,8 @@
                             style="padding-right: 30px;">
                     </th>
                     <th colspan="6" style="padding-top: 20px;">
-                        <h2 style="font-size: 35px; text-align: right;">SALIDA PRODUCTOS </h2>
+                        <h2 style="font-size: 35px; text-align: right;">Liquidación Servidos </h2>
                     </th>
-                    <th colspan="2"></th>
                 </tr>
             </thead>
         </table>
@@ -96,55 +101,34 @@
     <div class="encabezado">
         <table>
             <thead>
-                {% for row in chofer%}
+
                 <tr>
                     <th colspan="4" style="padding: 0; ">
                         <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
                             Folio:
                             <label style="font-weight: normal; font-size: 14px;">{{formatoClave}}</label>
                         </h1>
-                        <!-- <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Producto:
-                            <label style="font-weight: normal; font-size: 14px; ">INTERMEDIA</label>
-                        </h1> -->
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Destino:
-                            <label style="font-weight: normal; font-size: 14px; ">{{procedencia}}</label>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
+                            Cliente:
+                            <label style="font-weight: normal; font-size: 14px;">{{Nombre}}</label>
                         </h1>
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Camión:
-                            <label style="font-weight: normal; font-size: 14px; ">{{row.Camion}}</label>
-                        </h1>
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Placas:
-                            <label style="font-weight: normal; font-size: 14px; ">{{row.Placas}}</label>
-                        </h1>
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Chofer:
-                            <label style="font-weight: normal; font-size: 14px; ">{{row.Chofer}}</label>
-                        </h1>
-
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
-                            Neto:
-                            <label style="font-weight: normal; font-size: 14px; ">______________KG.</label>
-                        </h1>
+                        <h1 style="font-size: 14px; font-weight: normal; text-align: left;margin:0; padding:0">
+                            {{fecha_actual}}</h1>
                     </th>
                     <th colspan="4" style="padding-top: 25px; padding: 0;">
                         <h1 class="title" style="font-size: 14px; text-align: right; margin: 0; padding:0">
                             Industrial Agropecuaria Hermosillense
                         </h1>
-                        <h1 style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
-                            {{fecha_actual}}</h1>
+
                         <h1 class="title"
                             style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
-                            Blvd. de los Ganaderos <br> Vaso de la presa <br> Hermosillo, Sonora
+                            Blvd. de los Ganaderos Vaso de la presa <br> Hermosillo, Sonora
                         </h1>
                         <h1 class="title"
                             style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0"></h1>
                     </th>
-                    <th class="th" colspan="2" style="background: white; border: 0;"></th>
                 </tr>
-                {% endfor %}
+
             </thead>
         </table>
     </div>
@@ -153,30 +137,25 @@
         <div class="table">
             <table>
                 <thead>
-                    <tr>
-                        <th class="th columna-contenido" colspan="2">Producto</th>
-                        <th class="th columna-contenido" colspan="2">Cantidad</th>
-                        <th class="th columna-contenido" colspan="2">Precio Unit.</th>
-                        <th class="th columna-contenido" colspan="2">Importe</th>
-                        <th class="th" colspan="2" style="background: white; border: 0;"></th>
+                    <tr style="font-size: 2rem;">
+                        <th class="th columna-contenido" colspan="2">Corral</th>
+                        <th class="th columna-contenido" colspan="1">Producto</th>
+                        <th class="th columna-contenido" colspan="2">Cantidad Servida</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in salidaBascula%}
+                    {% for reporte in reportes %}
                     <tr>
 
                         <td class="td columna-base" colspan="2">
-                            {{ row.IDProductos_id__Descripcion }}
+                            {{ reporte.0 }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.1 }}
                         </td>
                         <td class="td columna-base" colspan="2">
-                            {{ row.cantidad}}
+                            {{ reporte.3 }} {{ reporte.2 }}
                         </td>
-                        <td class="td columna-base" colspan="2">
-                        </td>
-                        <td class="td columna-base" colspan="2">
-                        </td>
-                        <td colspan="2 " style="background: white; border: 0;"></td>
-
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -184,38 +163,76 @@
         </div>
     </div>
     <br>
-    <br>
-    <div class="encabezado">
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="8" style="padding: 0;">
-                        <h1 class="title" style="font-size: 14px; text-align: left; margin: 0; padding:0;">
-                            Observaciones:
-                            <br><br>__________________________________________________________________________
-                            <br><br>__________________________________________________________________________
-                        </h1>
-                    </th>
-                    <th class="th" colspan="2" style="background: white; border: 0;"></th>
-                </tr>
-            </thead>
-        </table>
+    <div class="contenedor cuerpo">
+        <div class="table">
+            <table>
+                <thead>
+                    <tr style="font-size: 2rem;">
+                        <th class="th columna-contenido" colspan="2">Corral</th>
+                        <th class="th columna-contenido" colspan="1">Cantidad</th>
+                        <th class="th columna-contenido" colspan="2">Cantidad total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in DataToRep %}
+                    <tr>
+
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.0 }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.1 }}
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.3 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+    <br>
+    <div class="contenedor cuerpo">
+        <div class="table">
+            <table>
+                <thead>
+                    <tr style="font-size: 2rem;">
+                        <th class="th columna-contenido" colspan="2">Producto</th>
+                        <th class="th columna-contenido" colspan="2">Cantidad servida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in reportes2 %}
+                    <tr>
+
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.0 }}
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.2 }} {{ reporte.1 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
     <div class="pie-pagina">
         <br>
         <table>
             <thead>
                 <tr>
                     <th class="columna-base" style="padding-top: 5px;" colspan="2">
-                        <h1>Firma del que sirvio<br>
+                        <h1>Firma de Entregado<br>
                             <br>_________________________
                         </h1>
                     </th>
                     <th colspan="2"></th>
                     <th style="padding-top: 5px;" colspan="2">
-                        <h1>Firma del pesador: <br> <br>_________________________</h1>
+                        <h1>Firma del recibido: <br> <br>_________________________</h1>
                     </th>
-                    <th colspan="2"></th>
                 </tr>
             </thead>
         </table>

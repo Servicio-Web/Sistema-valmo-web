@@ -15,25 +15,25 @@
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de movimientos de servidos</h5>
-                    <div class="col-12">
-                        <form action="/Reporte-Movimientos-Servidos/" class="pr-5 pl-5" method="POST">
+                    <div class="col-10">
+                        <form action="/Reporte-Movimientos-Servidos/" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-sm-5 col-xl-5">
+                                    <div class="col-sm-12 col-md-12 col-xl-7">
                                         <select name="cliente" class="select2" style="width: 100%;" required>
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">-------{{Nombre}}-------</option>
                                             {% endif %}
                                             <option value="todos">Traer todos los clientes</option>
+
                                             {% for clientes in FClientes%}
-                                            <option value="{{ clientes.ID }}">{{ clientes.Nombre }}
-                                            </option>
+                                            <option value="{{ clientes.ID }}">{{ clientes.Nombre }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-2 p-0 m-0">
                                         {% if Fecha is none %}
                                         <input type="datetime-local" name="fecha1" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -43,7 +43,7 @@
                                         {% endif %}
 
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-2 p-0 m-0">
                                         {% if Fecha2 is none %}
                                         <input type="datetime-local" name="fecha2" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -53,12 +53,21 @@
                                         {% endif %}
 
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-1 col-xl-1 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-1 p-0 m-0">
                                         <button type="submit" class="btn button-add" name="reportes"
                                             style="padding: 5px 14px 7px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Servidos/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Cliente }}" name="cliente">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-movimientos-servidos">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;"></button>
                         </form>
                     </div>
                 </div>
@@ -92,6 +101,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 

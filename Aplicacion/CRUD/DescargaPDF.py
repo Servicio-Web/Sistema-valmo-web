@@ -1,4 +1,5 @@
 from django.template.loader import render_to_string
+from django.shortcuts import redirect, render
 from io import BytesIO
 from xhtml2pdf import pisa
 from django.templatetags.static import static
@@ -6,7 +7,7 @@ from datetime import datetime, timedelta, date
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
-
+from django.db import connection
 # -----------------------------------------------------------INCREMENTADOR DE FOLIOS POR PDF-----------------------------------------------------------
 def cargar_folio(valor):
     Folio = tblConfiguracion.objects.get(ID = 1)
@@ -40,6 +41,18 @@ def cargar_folio(valor):
         clave_int += 1
         formatoClave = 'F-{:06d}'.format(clave_int)
         Folio.FolioSalMatPrima = formatoClave        
+    elif valor == 6:
+        GFolio = Folio.FolioRepServMov
+        clave_int = int(GFolio[2:])
+        clave_int += 1
+        formatoClave = 'F-{:06d}'.format(clave_int)
+        Folio.FolioRepServMov = formatoClave   
+    elif valor == 7:
+        GFolio = Folio.FolioRepServLiq
+        clave_int = int(GFolio[2:])
+        clave_int += 1
+        formatoClave = 'F-{:06d}'.format(clave_int)
+        Folio.FolioRepServLiq = formatoClave      
     Folio.save()
     return formatoClave
 
@@ -240,3 +253,323 @@ def salidaMateriaPrima(request):
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
 
+def reporteMovimientoServidos(request):
+    valor = 6
+    formatoClave = cargar_folio(valor)
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    Cliente = request.POST['cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    
+    reporteMovServidor= request.POST.get('reporte-movimientos-servidos', '')
+    if reporteMovServidor is not None and reporteMovServidor != '':
+        if  Cliente == 'todos':
+            consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
+                Aplicacion_tblcorrales.Descripcion,  Aplicacion_tblproductos.Descripcion,
+                Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
+                Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
+                FROM Aplicacion_tblservido
+                LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+                LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
+                LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
+                LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
+                WHERE Aplicacion_tblservido.Fecha BETWEEN  %s AND  %s and Aplicacion_tblservido.IDCliente_id != 1 and Aplicacion_tblservido.IDEstatus_id = 10 """
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Fecha, Fecha2])
+                reportes = cursor.fetchall()
+            Nombre = 'En general'
+            Cliente = 'todos'
+
+        else:
+            consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
+                Aplicacion_tblcorrales.Descripcion,  Aplicacion_tblproductos.Descripcion,
+                Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
+                Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
+                FROM Aplicacion_tblservido
+                LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+                LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
+                LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
+                LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
+                WHERE  Aplicacion_tblclientes.ID = %s AND  (Aplicacion_tblservido.Fecha BETWEEN  %s AND  %s) and Aplicacion_tblservido.IDCliente_id != 1 and Aplicacion_tblservido.IDEstatus_id = 10 
+                """
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Cliente, Fecha, Fecha2])
+                reportes = cursor.fetchall()
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteMovServidos/index.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,
+                                        'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
+    return response
+
+
+def reporteLiquidacionServidos(request):
+    valor = 7
+    formatoClave = cargar_folio(valor)
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    Cliente = request.POST['Cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    
+    reporteLiqServidor= request.POST.get('reporte-liquidacion-servidos', '')
+    if reporteLiqServidor is not None and reporteLiqServidor != '':
+        if Cliente == 'todos':
+            consulta_sql = """SELECT Aplicacion_tblcorrales.Descripcion, Aplicacion_tblproductos.Descripcion, Aplicacion_tblunidades.Abreviacion, 
+            SUM(Aplicacion_tblservido.CantidadServida)
+            FROM Aplicacion_tblservido
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID 
+            INNER JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+            INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id	= Aplicacion_tblcorrales.ID     
+            INNER JOIN  Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID  
+            WHERE  Aplicacion_tblclientes.ID != 1 AND  (Aplicacion_tblservido.Fecha BETWEEN %s AND %s) and Aplicacion_tblservido.IDEstatus_id = 10 
+            GROUP BY  Aplicacion_tblproductos.Descripcion, Aplicacion_tblservido.IDCorral_id, Aplicacion_tblunidades.Abreviacion
+            ORDER BY Aplicacion_tblcorrales.Descripcion"""
+
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Fecha, Fecha2])
+                reportes = cursor.fetchall()
+
+            consulta2_sql = """
+            SELECT Aplicacion_tblproductos.Descripcion, Aplicacion_tblunidades.Abreviacion, SUM(Aplicacion_tblservido.CantidadServida)
+            FROM Aplicacion_tblservido
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
+            INNER JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+            INNER JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID  
+            WHERE  Aplicacion_tblclientes.ID != 1 AND (Aplicacion_tblservido.Fecha BETWEEN %s AND %s ) and Aplicacion_tblservido.IDEstatus_id = 10 
+            GROUP BY  Aplicacion_tblproductos.ID, Aplicacion_tblunidades.Abreviacion
+            ORDER BY  Aplicacion_tblproductos.Descripcion desc"""
+
+            with connection.cursor() as cursor:
+                cursor.execute(consulta2_sql, [Fecha, Fecha2])
+                reportes2 = cursor.fetchall()
+
+            query = """
+                SELECT  Aplicacion_tblcorrales.Descripcion, SUM(Aplicacion_tblservido.CantidadServida),Aplicacion_tblcorrales.ID
+                FROM Aplicacion_tblservido
+                INNER JOIN 	Aplicacion_tblcorrales ON  Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
+                WHERE  Aplicacion_tblservido.IDCliente_id != 1 AND  (Aplicacion_tblservido.Fecha BETWEEN %s AND %s ) and Aplicacion_tblservido.IDEstatus_id = 10 
+                GROUP BY  Aplicacion_tblservido.IDCorral_id
+                ORDER BY  Aplicacion_tblcorrales.Descripcion
+                        """
+            with connection.cursor() as cursor:
+                cursor.execute(query, [Fecha, Fecha2])
+                Data = cursor.fetchall()
+
+            ListaTem = []
+            Datos = []
+
+            for i in range(0, len(Data)):
+                ListaTem.append(Data[i][0])
+                ListaTem.append(Data[i][1])
+                DiasAnimal = CalculaDiasAnimal(
+                    Cliente, Data[i][2], Fecha, Fecha2)
+                DiasAnimFomated = "{:.0f}".format(DiasAnimal)
+                if DiasAnimal < 1:
+                    DiasAnimal = 1
+                    ToTab = "ND"
+                else:
+                    ToTab = DiasAnimFomated
+
+                ListaTem.append(ToTab)
+                PromDia = int(Data[i][1])/int(DiasAnimal)
+                PromDia = "{:.4f}".format(PromDia)
+                ListaTem.append(PromDia)
+                Datos.append(ListaTem)
+                ListaTem = []
+
+            ListaTem = []
+            DataToRep = []
+            for ren in range(0, len(Datos)):
+                for col in range(0, len(Datos[0])):
+                    DaToTabla = str(Datos[ren][col])
+                    ListaTem.append(DaToTabla)
+                DataToRep.append(ListaTem)
+                ListaTem = []
+
+            Nombre = 'En general'
+            Cliente = 'todos'
+
+        else:
+            consulta_sql = """SELECT Aplicacion_tblcorrales.Descripcion, Aplicacion_tblproductos.Descripcion, Aplicacion_tblunidades.Abreviacion, 
+            SUM(Aplicacion_tblservido.CantidadServida)
+            FROM Aplicacion_tblservido
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID 
+            INNER JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+            INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id	= Aplicacion_tblcorrales.ID     
+            INNER JOIN  Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID  
+            WHERE  Aplicacion_tblclientes.ID = %s AND  (Aplicacion_tblservido.Fecha BETWEEN %s AND %s) and Aplicacion_tblservido.IDEstatus_id = 10 
+            GROUP BY  Aplicacion_tblproductos.Descripcion, Aplicacion_tblservido.IDCorral_id, Aplicacion_tblunidades.Abreviacion
+            ORDER BY Aplicacion_tblcorrales.Descripcion"""
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Cliente, Fecha, Fecha2])
+                reportes = cursor.fetchall()
+            consulta2_sql = """
+            SELECT Aplicacion_tblproductos.Descripcion,Aplicacion_tblunidades.Abreviacion, SUM(Aplicacion_tblservido.CantidadServida)
+            FROM Aplicacion_tblservido
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
+            INNER JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
+            INNER JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID  
+            WHERE  Aplicacion_tblclientes.ID = %s AND (Aplicacion_tblservido.Fecha BETWEEN %s AND %s ) and Aplicacion_tblservido.IDEstatus_id = 10 
+            GROUP BY  Aplicacion_tblproductos.ID, Aplicacion_tblunidades.Abreviacion
+            ORDER BY  Aplicacion_tblproductos.Descripcion desc"""
+            with connection.cursor() as cursor:
+                cursor.execute(consulta2_sql, [Cliente, Fecha, Fecha2])
+                reportes2 = cursor.fetchall()
+            query = """
+                SELECT  Aplicacion_tblcorrales.Descripcion, SUM(Aplicacion_tblservido.CantidadServida),Aplicacion_tblcorrales.ID
+                FROM Aplicacion_tblservido
+                INNER JOIN 	Aplicacion_tblcorrales ON  Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
+                WHERE  Aplicacion_tblservido.IDCliente_id = %s AND  (Aplicacion_tblservido.Fecha BETWEEN %s AND %s ) and Aplicacion_tblservido.IDEstatus_id = 10 
+                GROUP BY  Aplicacion_tblservido.IDCorral_id
+                ORDER BY  Aplicacion_tblcorrales.Descripcion
+                        """
+            with connection.cursor() as cursor:
+                cursor.execute(query, [Cliente, Fecha, Fecha2])
+                Data = cursor.fetchall()
+            ListaTem = []
+            Datos = []
+            for i in range(0, len(Data)):
+                ListaTem.append(Data[i][0])
+                ListaTem.append(Data[i][1])
+                DiasAnimal = CalculaDiasAnimal(
+                    Cliente, Data[i][2], Fecha, Fecha2)
+                DiasAnimFomated = "{:.0f}".format(DiasAnimal)
+                if DiasAnimal < 1:
+                    DiasAnimal = 1
+                    ToTab = "ND"
+                else:
+                    ToTab = DiasAnimFomated
+                ListaTem.append(ToTab)
+                PromDia = int(Data[i][1])/int(DiasAnimal)
+                PromDia = "{:.4f}".format(PromDia)
+                ListaTem.append(PromDia)
+                Datos.append(ListaTem)
+                ListaTem = []
+            ListaTem = []
+            DataToRep = []
+            for ren in range(0, len(Datos)):
+                for col in range(0, len(Datos[0])):
+                    DaToTabla = str(Datos[ren][col])
+                    ListaTem.append(DaToTabla)
+                DataToRep.append(ListaTem)
+                ListaTem = []
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteLiqServidos/index.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,'reportes2': reportes2,
+            'DataToRep':DataToRep, 'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
+    return response
+
+
+
+def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
+    ListaTem = []
+    ListaForRet = []
+    FechasOcupa = RangoFechasOcupaCorral(IDCorral, IDCliente)
+    if FechasOcupa[0][1] == 0:
+        pass
+    elif FechasOcupa[0][1] < FechaFinal:
+        FechaFinal = FechaFinal
+
+    # -----------------------------------------------------------------------
+    ListaFechas = GeneraListaFechas(FechaInicial, FechaFinal)
+    AcuDiasAnimal = 0
+
+    for i, fecha in enumerate(ListaFechas):
+        ListaTem.append(fecha)
+        ListaTem.append(CantidadActualAnimales(IDCorral, fecha))
+        ListaForRet.append(ListaTem)
+        ListaTem = []
+
+    for d, item in enumerate(ListaForRet):
+        if int(item[1]) > -1:
+            AcuDiasAnimal = AcuDiasAnimal+int(item[1])
+
+    return AcuDiasAnimal
+
+
+
+def RangoFechasOcupaCorral(IDCorral, IDCliente):
+    query = """SELECT FECHAS.FECHA_ASIGNA,(SELECT(CASE WHEN FECHAS.FECHA_LIBERA > FECHAS.FECHA_ASIGNA THEN FECHAS.FECHA_LIBERA ELSE 0 END)) AS FECHA_LIBERA
+        FROM ( SELECT 
+        MAX(CASE WHEN Aplicacion_tblasignacorrales.IDCorral_id = %s AND Aplicacion_tblasignacorrales.IDCliente_id= %s  AND Aplicacion_tblasignacorrales.TipoMov_id = 1  
+        THEN Aplicacion_tblasignacorrales.Fecha ELSE 0 END) AS FECHA_ASIGNA,
+        MAX(CASE WHEN Aplicacion_tblasignacorrales.IDCorral_id = %s AND Aplicacion_tblasignacorrales.IDCliente_id= %s  AND Aplicacion_tblasignacorrales.TipoMov_id = 0  
+        THEN Aplicacion_tblasignacorrales.Fecha ELSE 0 END) AS FECHA_LIBERA
+        FROM Aplicacion_tblasignacorrales ) AS FECHAS"""
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [IDCorral, IDCliente, IDCorral, IDCliente])
+        Datos = cursor.fetchall()
+    return Datos
+
+#  Genera una lista de fechas a partir de una inicial y final
+
+
+def GeneraListaFechas(ff, fi):
+    FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
+    FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
+    Fecha = FechaInicial
+    ListaFechas = [Fecha.strftime('%Y-%m-%d %H:%M'), ]
+
+    cnt = 0
+    while Fecha != FechaFinal:
+        cnt += 1
+        if cnt > 30:
+            break
+        Fecha = Fecha + timedelta(days=1)
+        ListaFechas.append(Fecha.strftime('%Y-%m-%d %H:%M'))
+    return ListaFechas
+
+
+#   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
+
+
+def CantidadActualAnimales(IDCorral, fecha):
+    query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
+    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA
+    FROM Aplicacion_tblmovimientoanimales 
+    INNER JOIN Aplicacion_tbldetallemovanimales ON Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+    WHERE Aplicacion_tblmovimientoanimales.IDCorral_id= %s  AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN 
+    (SELECT FechaAsigna FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.ID= %s ) AND %s"""
+
+    with connection.cursor() as cursor:
+        cursor.execute(query, [IDCorral, IDCorral, fecha])
+        Cantidad = cursor.fetchall()
+
+    if Cantidad[0][0] is None:
+        return -1
+    else:
+        return Cantidad[0][0]
