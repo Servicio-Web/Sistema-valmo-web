@@ -492,7 +492,7 @@ def reporteLiquidacionServidos(request):
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
 
-
+# +++++++++++++++++++------------------------------ Funciones referenciadas para los reportes anteriores------------------------------+++++++++++++++++++
 
 def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
     ListaTem = []
@@ -519,8 +519,6 @@ def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
 
     return AcuDiasAnimal
 
-
-
 def RangoFechasOcupaCorral(IDCorral, IDCliente):
     query = """SELECT FECHAS.FECHA_ASIGNA,(SELECT(CASE WHEN FECHAS.FECHA_LIBERA > FECHAS.FECHA_ASIGNA THEN FECHAS.FECHA_LIBERA ELSE 0 END)) AS FECHA_LIBERA
         FROM ( SELECT 
@@ -536,8 +534,6 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
     return Datos
 
 #  Genera una lista de fechas a partir de una inicial y final
-
-
 def GeneraListaFechas(ff, fi):
     FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
     FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
@@ -555,8 +551,6 @@ def GeneraListaFechas(ff, fi):
 
 
 #   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
-
-
 def CantidadActualAnimales(IDCorral, fecha):
     query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
     SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA

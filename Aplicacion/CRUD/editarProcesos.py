@@ -148,7 +148,6 @@ def editarCantidadMovimientosAnimales(request, ID):
     'TCantidadMovimientoAnimales': TCantidadMovimientoAnimales,
     'FiltradoAnimales': FiltradoAnimales, 'FEAnimal': FEAnimal })
 
-
 def editarMovimientosAnimales(request, ID):
     grupos = grupo_user(request)
     TMovimientoAnimales= tblMovimientoAnimales.objects.get(ID=ID)

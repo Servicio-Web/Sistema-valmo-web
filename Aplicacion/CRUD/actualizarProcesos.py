@@ -6,8 +6,6 @@ from Aplicacion.models import *
 from Aplicacion.views import editarDatosTecnicos
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ACTUALIZAR DATOS PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # --------------------------------------------------SERVIDOS MANUALES---------------------------------------------------------
-
-
 def actualizarEntradaMateriaPrima(request):
     tipoMov_v = request.POST['tipoMov']
     if tipoMov_v == '1':
@@ -353,7 +351,6 @@ def actualizarInventatioInicialProducto(request):
         print(e)
     messages.success(request, f'El inventario inicial de productos se ha actualizado exitosamente.')
     return redirect('T-InventarioMP')
-
 
 # << OPERADORES DE MATERIAS PRIMAS Y PRODUCTOS >>
 def actualizarOperadoresEntradaProducto(request):

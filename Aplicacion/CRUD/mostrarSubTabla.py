@@ -44,7 +44,6 @@ def TablaUnidadMedida(request):
     return render(request, 'SubTablas/UnidadMedida/index.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb,
     'TUnidadMedida': TUnidadMedida})
 
-
 def TablaConfiguracion(request):
     grupos = grupo_user(request)
     TConfiguracion = tblConfiguracion.objects.all()

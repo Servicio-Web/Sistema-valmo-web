@@ -93,7 +93,6 @@ def Reporte2(cliente, FechaInicial, FechaFinal):
         print(i)
     return DataToRep
 
-
 # Reporte diario argumentos,  IDCliente,FechaInicial,FechaFinal
 def ReporteDiario(cliente, FechaInicial, FechaFinal):
     ListaForRep = []
@@ -185,8 +184,6 @@ def ProductosQueSeSirven(tipo):
     return Lista
 
 #  Calcula los dias animal en rango de fecha de un solo corral
-
-
 def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
     ListaTem = []
     ListaForRet = []
@@ -211,8 +208,6 @@ def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
 
 #  Saca el rango de fechas de cuando se asigno y libero un corral con un cliente, si el segundo dato es 0 significa que sigue asignado
 #  al cliente. si es diferente de 0 es la ultima fecha cuando se libero a este cliente
-
-
 def RangoFechasOcupaCorral(IDCorral, IDCliente):
     query = """  SELECT FECHAS.FECHA_ASIGNA,(SELECT(CASE WHEN FECHAS.FECHA_LIBERA > FECHAS.FECHA_ASIGNA THEN FECHAS.FECHA_LIBERA ELSE 0 END)) AS FECHA_LIBERA
                 FROM (
@@ -227,9 +222,7 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
     Datos = runMySqlQuery(query, (IDCorral, IDCliente, IDCorral, IDCliente))
     return Datos
 
-#  Genera una lista de fechas a partir de una inicial y final
-
-
+#  Genera una lista de fechas a partir de una inicial y fina
 def GeneraListaFechas(fi, ff):
     from datetime import datetime
     from datetime import timedelta
@@ -247,9 +240,7 @@ def GeneraListaFechas(fi, ff):
         ListaFechas.append(datetime.strftime(Fecha, '%Y-%m-%d'))
     return ListaFechas
 
-#   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
-
-
+#   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionad
 def CantidadActualAnimales(IDCorral, fecha):
     query = """ SELECT  SUM(case WHEN  tblMovimientoAnimales.IDMovimiento = 0  THEN  tblMovimientoAnimales.Cantidad ELSE 0 END) -
                        SUM(case WHEN  tblMovimientoAnimales.IDMovimiento = 1  THEN  tblMovimientoAnimales.Cantidad  ELSE 0 END) AS SUMA
@@ -263,7 +254,6 @@ def CantidadActualAnimales(IDCorral, fecha):
     else:
         return Cantidad[0][0]
 
-
 def run_query2(query, parameters=()):
     conn = sqlite3.connect("respaldo")
     cursor = conn.cursor()
@@ -271,7 +261,6 @@ def run_query2(query, parameters=()):
     result = cursor.fetchall()
     conn.commit()
     return result
-
 
 def runMySqlQuery(query, parameters=()):
     mydb = mysql.connector.connect(

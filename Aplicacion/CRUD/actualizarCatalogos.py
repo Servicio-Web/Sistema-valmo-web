@@ -46,6 +46,7 @@ def actualizarCliente(request):
         messages.success(request, f'El Cliente "{nombre}" se ha actualizado exitosamente.')
 
     return redirect('T-Cliente')
+
 # -------------------------------------------------------PROVEEDORES-------------------------------------------------------
 def actualizarProveedor(request):
     id = request.POST['id']
