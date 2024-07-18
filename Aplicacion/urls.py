@@ -423,6 +423,9 @@ urlpatterns = [
     # PDF Reportes
     path('Descarga_PDF_Reporte_Movimientos_Servidos/', DescargaPDF.reporteMovimientoServidos, name="PDF_Reportes_Mov_Servidos"), # PDF salida materias primas
     path('Descarga_PDF_Reporte_Liquidacion_Servidos/', DescargaPDF.reporteLiquidacionServidos, name="PDF_Reportes_Liq_Servidos"), # PDF salida materias primas
+    path('Descarga_PDF_Reporte_Entrada_Materia_Prima/', DescargaPDF.reporteEntradaMateriaPrima, name="PDF_Reportes_Entrada_Materia_Prima"), # PDF entrada materias primas
+    path('Descarga_PDF_Reporte_Salida_Materia_Prima/', DescargaPDF.reporteSalidaMateriaPrima, name="PDF_Reportes_Salida_Materia_Prima"), # PDF entrada materias primas
+    path('Descarga_PDF_Reporte_Movimientos_Animales_Corral/', DescargaPDF.reporteMovimientoAnimalesCorral, name="PDF_Reportes_Movimiento_Animales_Corral"), # PDF entrada materias primas
 
     # EXCEL
     path('EXCEL/', DescargaExcel.xlsx, name="Excel"),

@@ -20,40 +20,29 @@ def reporteMovEntradaMP(request):
         Contenedor = request.POST.get('contenedor')
         Fecha = request.POST.get('fecha1')
         Fecha2 = request.POST.get('fecha2')
+        print(Contenedor)
+        if Contenedor == 'todos':
 
-        reportes = tblEntradaMP.objects.filter(fecha__range=[Fecha, Fecha2]).values('ID', 'notas',
-                                                                                    'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
-        Nombre = 'Se trajeron todos los clientes'
-        # if Contenedor == 'todos':
-
-        # else:
-        #     # Consulta los registros de tblEntradaMP para un contenedor específico en el rango de fechas
-        #     reportes = tblEntradaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]).values('ID','notas',
-        #         'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
-        #     TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
-        #     Nombre = TEContenedores.Cliente
-
+            reportes = tblEntradaMP.objects.filter(fecha__range=[Fecha, Fecha2]).values('ID', 'notas',
+                    'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
+            Nombre = 'Se trajeron todos los clientes'
+        else:
+            # Consulta los registros de tblEntradaMP para un contenedor específico en el rango de fechas
+            reportes = tblEntradaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]).values('ID','notas',
+                'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
+            TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
+            Nombre = TEContenedores.Cliente
         return render(request, 'Reportes/MovimientosMP/EntradaMP.html', {
-            'FContenedores': FContenedores,
-            'reportes': reportes,
-            'Nombre': Nombre,
-            'Contenedor': Contenedor,
-            'Fecha': Fecha,
-            'Fecha2': Fecha2,
+            'FContenedores': FContenedores, 'reportes': reportes, 'Nombre': Nombre, 'Contenedor': Contenedor, 'Fecha': Fecha, 'Fecha2': Fecha2,
         })
     else:
         reportes = tblEntradaMP.objects.filter(fecha__date=FechaDia).values('ID', 'notas',
                                                                             'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
         Nombre = 'Buscar cliente'
         Contenedor = ''
-
-        return render(request, 'Reportes/MovimientosMP/EntradaMP.html', {
-            'FContenedores': FContenedores,
-            'reportes': reportes,
-            'FechaDeHoy': FechaDeHoy,
-            'Nombre': Nombre,
-            'Contenedor': Contenedor,
-        })
+    print("Hola mundo")
+    return render(request, 'Reportes/MovimientosMP/EntradaMP.html', {'FContenedores': FContenedores, 'reportes': reportes, 'FechaDeHoy': FechaDeHoy, 
+                                                                         'Nombre': Nombre, 'Contenedor': Contenedor})
 
 
 def reporteMovSalidaMP(request):
@@ -65,42 +54,32 @@ def reporteMovSalidaMP(request):
         Contenedor = request.POST.get('contenedor')
         Fecha = request.POST.get('fecha1')
         Fecha2 = request.POST.get('fecha2')
-
-        reportes = tblSalidaMP.objects.filter(fecha__range=[Fecha, Fecha2]) \
-            .values('IDFolio', 'fecha', 'IDMateriaPrima__Descripcion', 'IDAlmacen__Cliente', 'cantidad', 'notas') \
-            .order_by('fecha')
-        Nombre = 'Se trajeron todos los clientes'
-
-        # if Contenedor == 'todos':
-        # else:
-        #     reportes = tblSalidaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]) \
-        #         .values('IDFolio', 'fecha', 'IDMateriaPrima__Descripcion', 'IDAlmacen__Cliente', 'cantidad', 'notas') \
-        #         .order_by('fecha')
-        #     TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
-        #     Nombre = TEContenedores.Cliente
+        print(Contenedor)
+        if Contenedor == 'todos':
+            reportes = tblSalidaMP.objects.filter(fecha__range=[Fecha, Fecha2]) \
+                .values('IDFolio', 'fecha', 'IDMateriaPrima__Descripcion', 'IDAlmacen__Cliente', 'cantidad', 'notas') \
+                .order_by('fecha')
+            Nombre = 'Se trajeron todos los clientes'
+        else:
+            reportes = tblSalidaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]) \
+                .values('IDFolio', 'fecha', 'IDMateriaPrima__Descripcion', 'IDAlmacen__Cliente', 'cantidad', 'notas') \
+                .order_by('fecha')
+            TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
+            Nombre = TEContenedores.Cliente
 
         return render(request, 'Reportes/MovimientosMP/SalidaMP.html', {
-            'FContenedores': FContenedores,
-            'Contenedor': Contenedor,
-            'reportes': reportes,
-            'Nombre': Nombre,
-            'Fecha': Fecha,
-            'Fecha2': Fecha2,
+            'FContenedores': FContenedores, 'Contenedor': Contenedor, 'reportes': reportes, 'Nombre': Nombre, 'Fecha': Fecha, 'Fecha2': Fecha2,
         })
     else:
         # Consulta todos los registros de tblSalidaMP para la fecha actual
         reportes = tblSalidaMP.objects.filter(fecha__date=FechaDia) \
             .values('IDFolio', 'fecha', 'IDMateriaPrima__Descripcion', 'IDAlmacen__Cliente', 'cantidad', 'notas') \
             .order_by('fecha')
-        Nombre = 'Buscar cliente'
+        Nombre = 'Buscar cliente'   
         Contenedor = ''
 
         return render(request, 'Reportes/MovimientosMP/SalidaMP.html', {
-            'FContenedores': FContenedores,
-            'reportes': reportes,
-            'FechaDeHoy': FechaDeHoy,
-            'Nombre': Nombre,
-            'Contenedor': Contenedor,
+            'FContenedores': FContenedores, 'reportes': reportes, 'FechaDeHoy': FechaDeHoy, 'Nombre': Nombre, 'Contenedor': Contenedor,
         })
 
 # ------------------------------------------------REPORTES ANIMALES--------------------------------------------------------------------------
@@ -237,7 +216,6 @@ def reportePorClientes(request):
 def reportePorClientesCorrales(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
-    print(type(FechaDeHoy))
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')

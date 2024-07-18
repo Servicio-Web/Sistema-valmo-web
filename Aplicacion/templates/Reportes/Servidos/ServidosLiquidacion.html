@@ -20,8 +20,8 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-xl-7">
-                                        <select name="cliente" class="select2" style="width: 100%;" required>
+                                    <div class="col-sm-12 col-md-12 col-xl-5">
+                                        <select name="cliente" class="select2" style="width: 100%;" required onchange="ocultarPDF()">
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">-------{{Nombre}}-------</option>
@@ -33,7 +33,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-xl-2 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha is none %}
                                         <input type="datetime-local" name="fecha1" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -43,7 +43,7 @@
                                         {% endif %}
 
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-xl-2 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha2 is none %}
                                         <input type="datetime-local" name="fecha2" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -67,7 +67,7 @@
                             <input type="hidden" value="{{Fecha}}" name="fechaInicial">
                             <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
                             <input type="hidden" value="0" name="reporte-liquidacion-servidos">
-                            <button class="pdf-red-button" type="submit" style="float: inline-end;"></button>
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
                         </form>
                     </div>
                 </div>
@@ -141,6 +141,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    var nombre = "{{Nombre}}";
+
+    if (nombre == "Buscar cliente")
+        window.onload = ocultarPDF();
+
+    function ocultarPDF() {
+        document.getElementById("pdf").style.display = "None"
+    }
+</script>
 
 {% else %}
 <script>

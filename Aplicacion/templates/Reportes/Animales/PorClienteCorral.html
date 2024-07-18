@@ -17,12 +17,12 @@
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de movimientos de animales</h5>
-                    <div class="col-12">
+                    <div class="col-10">
                         <form action="/Reporte-Animales-Clientes-Corrales/" class="pr-5 pl-5" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-sm-5 col-xl-5">
+                                    <div class="col-sm-12 col-md-12 col-xl-5">
                                         <select name="cliente" class="select2" style="width: 100%;" required>
                                             {% if Nombre is none %}
                                             {% else %}
@@ -35,7 +35,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha is none %}
                                         <input type="datetime-local" name="fecha1" class="form-control" style=" border-radius: 0;"
                                             value="{{FechaDeHoy}}">
@@ -45,10 +45,10 @@
                                         {% endif %}
 
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha2 is none %}
                                         <input type="datetime-local" name="fecha2" class="form-control" style=" border-radius: 0;"
-                                            value="{{FechaDeHoy}}">
+                                            value="{{FechaDeHoy}}">     
                                         {% else %}
                                         <input type="datetime-local" name="fecha2" class="form-control" style=" border-radius: 0;"
                                             value="{{Fecha2}}">
@@ -61,6 +61,15 @@
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales_Corral/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Cliente }}" name="cliente">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-movimiento-animales-corral">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
                         </form>
                     </div>
                 </div>

@@ -17,13 +17,13 @@
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de sálidas materias primas</h5>
-                    <div class="col-12">
+                    <div class="col-10">
                         <form action="/Reporte-Movimientos-Salida-Materia-Prima/" class="pr-5 pl-5" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="col-sm-12 col-md-12 col-sm-5 col-xl-5" style="display: none;">
-                                        <select name="" class="select2" style="width: 100%;">
+                                    <div class="col-sm-12 col-md-12 col-xl-5">
+                                        <select name="contenedor" class="select2" style="width: 100%;" onchange="ocultarPDF()" required>
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Contenedor }}">-------{{Nombre}}-------</option>
@@ -36,8 +36,8 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <input type="hidden" value="todos" name="contenedor">
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-5 p-0 m-0">
+                                    <!-- <input type="hidden" value="todos" name="contenedor"> -->
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha is none %}
                                         <input type="datetime-local" name="fecha1" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -46,7 +46,7 @@
                                             style=" border-radius: 0;" value="{{Fecha}}">
                                         {% endif %}
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-5 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha2 is none %}
                                         <input type="datetime-local" name="fecha2" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
@@ -56,12 +56,21 @@
                                         {% endif %}
 
                                     </div>
-                                    <div class="col-sm-12 col-md-12 col-sm-1 col-xl-1 p-0 m-0">
+                                    <div class="col-sm-12 col-md-12 col-xl-1 p-0 m-0">
                                         <button type="submit" class="btn button-add" name="reportes"
                                             style="padding: 5px 14px 7px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Salida_Materia_Prima/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Contenedor }}" name="Contenedor">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-entrada-mp">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
                         </form>
                     </div>
                 </div>
@@ -93,6 +102,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    var nombre = "{{Nombre}}";
+
+    if (nombre == "Buscar cliente")
+        window.onload = ocultarPDF();
+
+    function ocultarPDF() {
+        document.getElementById("pdf").style.display = "None"
+    }
+</script>
 
 {% else %}
 <script>

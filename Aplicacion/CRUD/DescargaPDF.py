@@ -1,5 +1,4 @@
 from django.template.loader import render_to_string
-from django.shortcuts import redirect, render
 from io import BytesIO
 from xhtml2pdf import pisa
 from django.templatetags.static import static
@@ -55,6 +54,9 @@ def cargar_folio(valor):
         Folio.FolioRepServLiq = formatoClave      
     Folio.save()
     return formatoClave
+
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # -------------------------------------------------------------PDF PARA SERVIDOS DE TOLVA--------------------------------------------------------------
 def cargamento_tolva(request):
@@ -211,7 +213,6 @@ def entradaMateriaPrima(request):
     response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
     return response
 
-
 # ---------------------------------------------------------PDF PARA SALIDAS DE MATERIAS PRIMAS---------------------------------------------------------
 def salidaMateriaPrima(request):
     valor = 5
@@ -252,7 +253,15 @@ def salidaMateriaPrima(request):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
+# -----------------------------------------------------------------------------------------------------------------------------------------------------
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# ----------------------------------------------------------- PDF PARA MOVIMIENTOS SERVIDOS -----------------------------------------------------------
 def reporteMovimientoServidos(request):
     valor = 6
     formatoClave = cargar_folio(valor)
@@ -302,7 +311,7 @@ def reporteMovimientoServidos(request):
             Nombre = TECliente.Nombre
 
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteMovServidos/index.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,
+    html_string = render_to_string('Descargas/PDF/ReporteServidos/Movimientos.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,
                                         'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -318,7 +327,7 @@ def reporteMovimientoServidos(request):
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
 
-
+# ----------------------------------------------------------- PDF PARA LIQUIDACION SERVIDOS -----------------------------------------------------------
 def reporteLiquidacionServidos(request):
     valor = 7
     formatoClave = cargar_folio(valor)
@@ -476,7 +485,7 @@ def reporteLiquidacionServidos(request):
             Nombre = TECliente.Nombre
 
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteLiqServidos/index.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,'reportes2': reportes2,
+    html_string = render_to_string('Descargas/PDF/ReporteServidos/Liquidacion.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,'reportes2': reportes2,
             'DataToRep':DataToRep, 'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -492,8 +501,189 @@ def reporteLiquidacionServidos(request):
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
 
-# +++++++++++++++++++------------------------------ Funciones referenciadas para los reportes anteriores------------------------------+++++++++++++++++++
+# ---------------------------------------------------------PDF PARA ENTRADA DE MATERIAS PRIMAS---------------------------------------------------------
+def reporteEntradaMateriaPrima(request):
+    valor = 4
+    # formatoClave = cargar_folio(valor)
+    formatoClave = "F-000001"
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    Contenedor = request.POST['Contenedor']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+    entradaMateriaPrima = request.POST.get('reporte-entrada-mp', '')
+    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+        if Contenedor == 'todos':
+            reportes = tblEntradaMP.objects.filter(fecha__range=[Fecha, Fecha2]).values('ID', 'notas',
+                    'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
+            Nombre = 'En general'
+        else:
+            # Consulta los registros de tblEntradaMP para un contenedor específico en el rango de fechas
+            reportes = tblEntradaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]).values('ID','notas',
+                'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
+            
+            TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
+            Nombre = TEContenedores.Cliente
 
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteMateriaPrima/Entrada.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    return response
+
+# ---------------------------------------------------------PDF PARA SALIDA DE MATERIAS PRIMAS----------------------------------------------------------
+def reporteSalidaMateriaPrima(request):
+    valor = 4
+    # formatoClave = cargar_folio(valor)
+    formatoClave = "F-000001"
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    Contenedor = request.POST['Contenedor']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+    entradaMateriaPrima = request.POST.get('reporte-entrada-mp', '')
+    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+        if Contenedor == 'todos':
+            reportes = tblSalidaMP.objects.filter(fecha__range=[Fecha, Fecha2]) \
+                .values('IDFolio', 'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad', 'notas') \
+                .order_by('fecha')
+            Nombre = 'En general'
+        else:
+            reportes = tblSalidaMP.objects.filter(IDAlmacen__IDCliente=Contenedor, fecha__range=[Fecha, Fecha2]) \
+                .values('IDFolio', 'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad', 'notas') \
+                .order_by('fecha')
+            TEContenedores = tblContenedoresMateriaPrima.objects.get(IDCliente_id=Contenedor)
+            Nombre = TEContenedores.Cliente
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteMateriaPrima/Salida.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    return response
+
+# ---------------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES ---------------------------------------------------------- 
+# ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR CORRAL -----------------------------------------------------
+def reporteMovimientoAnimalesCorral(request):
+    valor = 4
+    # formatoClave = cargar_folio(valor)
+    formatoClave = "F-000001"
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    Cliente = request.POST['cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+    entradaMateriaPrima = request.POST.get('reporte-movimiento-animales-corral', '')
+    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+        if Cliente == 'todos':
+            consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha  
+                BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
+            FROM  Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            WHERE  Aplicacion_tblmovimientoanimales.IDCorral_id IN (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales)
+            GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2])
+                reportes = cursor.fetchall()
+            Nombre = 'En general'
+            Cliente = 'todos'
+           
+        else:
+            consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha  
+                BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha 
+                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
+            FROM  Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            WHERE  Aplicacion_tblmovimientoanimales.IDCorral_id IN 
+                (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
+                            AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+            GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
+                reportes = cursor.fetchall()
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Corral.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    return response
+
+# ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR CLIENTE ---------------------------------------------------- 
+
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# ----------------------------------------------- Funciones referenciadas para los reportes anteriores ------------------------------------------------
 def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
     ListaTem = []
     ListaForRet = []
@@ -519,6 +709,7 @@ def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
 
     return AcuDiasAnimal
 
+# Saca el rango de fechas
 def RangoFechasOcupaCorral(IDCorral, IDCliente):
     query = """SELECT FECHAS.FECHA_ASIGNA,(SELECT(CASE WHEN FECHAS.FECHA_LIBERA > FECHAS.FECHA_ASIGNA THEN FECHAS.FECHA_LIBERA ELSE 0 END)) AS FECHA_LIBERA
         FROM ( SELECT 
@@ -533,7 +724,7 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
         Datos = cursor.fetchall()
     return Datos
 
-#  Genera una lista de fechas a partir de una inicial y final
+# Genera una lista de fechas a partir de una inicial y final
 def GeneraListaFechas(ff, fi):
     FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
     FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
@@ -549,8 +740,7 @@ def GeneraListaFechas(ff, fi):
         ListaFechas.append(Fecha.strftime('%Y-%m-%d %H:%M'))
     return ListaFechas
 
-
-#   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
+# Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
 def CantidadActualAnimales(IDCorral, fecha):
     query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
     SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA
@@ -567,3 +757,7 @@ def CantidadActualAnimales(IDCorral, fecha):
         return -1
     else:
         return Cantidad[0][0]
+# -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
