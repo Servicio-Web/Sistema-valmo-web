@@ -528,27 +528,33 @@ def guardarMovimientoAniamles(request):
     
     if request.method == 'POST':
         if 'salir' in request.POST:
-            tblMovimientoAnimales.objects.create(
+            if folio_Existe:
+                if cantidad != '':
+                    tblDetalleMovAnimales.objects.create(
+                        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad
+                    )
+            else:
+                tblMovimientoAnimales.objects.create(
                 Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
                 Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
             )
-            if cantidad != '':
-                tblDetalleMovAnimales.objects.create(
-                    IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad
-                )
+
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
             messages.success(request, f'El movimiento de animales  ha sido registrado exitosamente')
             return redirect('T-MovAnimales')
         
         elif 'agregar' in request.POST:
-            tblMovimientoAnimales.objects.create(
-                Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
-                Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
-            )
-            if cantidad != '0' or cantidad != 0 or cantidad != '':
-                tblDetalleMovAnimales.objects.create(
+            if folio_Existe:
+                if cantidad != '0' or cantidad != 0 or cantidad != '':
+                    tblDetalleMovAnimales.objects.create(
                     IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad
+                    )
+            else:
+                tblMovimientoAnimales.objects.create(
+                    Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
+                    Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
                 )
+
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
             messages.success(request, f'El movimiento de animales  ha sido registrado exitosamente')
             return redirect('F-MovAnimales')
