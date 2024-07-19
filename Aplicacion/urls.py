@@ -363,6 +363,7 @@ urlpatterns = [
 
     # ACTUALIZAR PROCESOS
     path('ActualizarServidorManual/', actualizarProcesos.actualizarServidosManual),
+    path('ActualizarServidorManualCantidad/', actualizarProcesos.actualizarCantidadServidosManual, name="Cantidad_servidos_manuales"),
     path('ActualizarEntradaMateriasPrimas/',
          actualizarProcesos.actualizarEntradaMateriaPrima),
     path('ActualizarSalidaMateriasPrimas/',

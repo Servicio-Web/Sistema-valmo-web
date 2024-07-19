@@ -177,7 +177,6 @@ def TablaMovimientoAnimales(request):
     'ServiciosWeb':ServiciosWeb, 'TMovimientoEntradaAnimales': TMovimientoEntradaAnimales})
 
 # -----------------------------------------------DETALLES ANIMALES----------------------------------------------------
-
 def TablaDetallesAnimales(request):
     grupos = grupo_user(request)
     TDetallesAniamles = tblDetalleAnimales.objects.all()
@@ -204,7 +203,7 @@ def TablaSolicitudServido(request):
 
 def TablaServidoCorral(request):
     grupos = grupo_user(request)
-    TServidos = tblServido.objects.filter(IDEstatus_id = 10).values('ID', 'Folio',
+    TServidos = tblServido.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
     'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
     )
@@ -255,7 +254,6 @@ def TablaTolvaServidoCorral(request):
         
     return render(request, 'Procesos/ServidosConsolidacion/tolva.html',{'grupos': grupos,
         'ServiciosWeb': ServiciosWeb, 'TServidos':TServidos})
-
 
 def TablaTolva(request):
     tolva = request.POST.get('tolva', '')
@@ -413,24 +411,21 @@ def TablaConsolidacionServido(request):
     'TConsolidacion': TConsolidacion, 'ServiciosWeb': ServiciosWeb, 'TTolva1':TTolva1, 
     'TTolva2':TTolva2, 'TTolva3':TTolva3, 'STolva': STolva, 'FiltroServidos':FiltroServidos})
 
-
 def TablaServidoAnimales(request):
     grupos = grupo_user(request)
     Prioridad = request.POST.get('prioridad', '')
     if Prioridad is not None and Prioridad != '':
-        TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(Prioridad = Prioridad, IDEstatus_id = 3).values('ID', 'Folio',
-        'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
+        TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(Q(Prioridad = Prioridad) & Q(IDEstatus_id = 7)).values('ID', 'Folio',
+        'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion', 'IDTolva_id__Alias',
         'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
     )
     else:
-         TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(IDEstatus_id = 3).values('ID', 'Folio',
+         TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(IDEstatus_id = 7).values('ID', 'Folio','IDTolva_id__Alias',
         'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
         'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
     )
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/Servido Manual/index.html',{'grupos': grupos, 'ServiciosWeb':ServiciosWeb,'TServidos': TServidos })
-
-
 
 def TablaInventarioMateriaPrima(request):
     grupos = grupo_user(request)

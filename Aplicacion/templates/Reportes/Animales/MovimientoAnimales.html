@@ -23,7 +23,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-sm-5 col-xl-5">
-                                        <select name="cliente" class="select2" style="width: 100%;" required>
+                                        <select name="cliente" class="select2" style="width: 100%;" required onchange="ocultarPDF()">
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">-------{{Nombre}}-------</option>

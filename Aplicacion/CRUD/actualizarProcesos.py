@@ -1,5 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib import messages
+from datetime import datetime, timedelta
+from django.utils import timezone
 # LLAMAR ARCHIVOS LOCALES
 from Aplicacion.forms import *
 from Aplicacion.models import *
@@ -241,6 +243,7 @@ def actualizarMovimientosAniamales(request):
     messages.success(request, f'El Movimiento de animales se ha actualizado exitosamente.')
     return redirect('T-MovAnimales')
 
+#   QUEDA INHABILITADO TEMPORALMENTE
 def actualizarServidosManual(request):
     id_v = request.POST['id']
     folio_v = request.POST['folio']
@@ -287,6 +290,44 @@ def actualizarServidosManual(request):
         return redirect('T-Servidos')
     else:
         return redirect('T-Servidos')
+    
+def actualizarCantidadServidosManual(request):
+    if request.method == 'POST':
+        id_v = request.POST.getlist('id[]')
+        cantidadSer_v = request.POST.getlist('cantidadSer[]')
+        estatus_v = 10
+        FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+
+        estatus_instancia = tblEstatus.objects.get(ID = estatus_v)
+        # tecnicos
+        TecnicoEditor_v = request.POST['tecnico'].upper()
+        NombreTabla_v = 'Servidos Manuales'
+        print(cantidadSer_v)
+        
+        solicitudes = []
+        for i in range(len(cantidadSer_v)):
+            if cantidadSer_v[i] and float(cantidadSer_v[i]) != 0:
+                solicitud = {
+                    'id': id_v[i],
+                    'cantidadSer': float(cantidadSer_v[i])
+                }
+                solicitudes.append(solicitud)
+
+        for solicitud in solicitudes:
+            IDFilaTabla_v = solicitud['id']
+            servidos_save = tblServido.objects.get(ID = solicitud['id'])
+            servidos_save.IDEstatus = estatus_instancia
+            servidos_save.CantidadServida = solicitud['cantidadSer']
+            servidos_save.FechaServida = FechaDeHoy
+            servidos_save.save()
+            
+        try:
+            editarDatosTecnicos(request, TecnicoEditor_v, NombreTabla_v, IDFilaTabla_v)
+        except Exception as e:
+            print(e)
+        messages.success(request, f'El Servido se ha actualizado exitosamente.')
+        return redirect('T-Servidos')
+
 
 def actualizarInventatioInicialMateriaPrima(request):
     id_v = request.POST['id']
@@ -502,7 +543,13 @@ def actualizarServidosATolva(request):
 # ------------------------------------------------------TIPO ANIMALES------------------------------------------------------
 def actualizarCancelarTolva(request):
     idTolva = request.POST['id']
-    EstatusServido = 3
+    dataInput = request.POST.get('cargamento-tolva', '')
+    if dataInput == "Terminado":
+        EstatusServido = 7
+    elif dataInput == "Cancelado":
+        EstatusServido = 3
+    else :
+        return redirect('T-Cargamento-Tolva')
     EstatusTolva = 6
     ProductoTolva = 1
     servidotolva = 1

@@ -113,12 +113,16 @@
                                                     </tbody>
                                                 </table>
                                                 <div class="col-12 my-2">
-                                                    <form action="/ActualizarCancelarServidosVehiculos/" method="POST">
+                                                    <form action="/ActualizarCancelarServidosVehiculos/" method="POST"
+                                                        style="display: flex; flex-direction: row; justify-content: center; gap: 5px;">
                                                         {% csrf_token %}
                                                         <input type="hidden" value="{{Tolva.ID}}" name="id">
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-sm col-12">CANCELAR
-                                                            PEDIDO</button>
+                                                        <div class="col-6">
+                                                            <button type="submit" name="cargamento-tolva" value="Cancelado" class="btn btn-danger btn-sm">CANCELAR PEDIDO</button>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <button type="submit" name="cargamento-tolva" value="Terminado" style="background-color: rgb(19, 93, 163); border: 0;" class="btn btn-danger btn-sm">TERMINAR PEDIDO</button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                             </div>

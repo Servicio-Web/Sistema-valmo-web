@@ -26,6 +26,7 @@
             <th class="th-responsive">CLIENTE</th>
             <th class="th-responsive">CORRAL</th>
             <th class="th-responsive">PRODUCTO</th>
+            <th class="th-responsive">ESTATUS</th>
             <th class="th-responsive">CANTIDAD</th>
             <th class="th-responsive">CANTIDAD SERVIDA</th>
             <th class="th-responsive">FECHA</th>
@@ -53,6 +54,11 @@
               <h6 class="td-responsive">PRODUCTO:</h6>
               {{ Servidos.IDProducto_id__Descripcion }}
             </td>
+            <td>
+              <h6 class="td-responsive">ESTATUS:</h6>
+              {{ Servidos.IDEstatus_id__Descripcion }}
+            </td>
+            
             <td>
               <h6 class="td-responsive">CANTIDAD:</h6>
               {{ Servidos.CantidadSolicitada }}
