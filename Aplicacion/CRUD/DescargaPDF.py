@@ -12,52 +12,40 @@ from django.db import connection
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # -----------------------------------------------------------INCREMENTADOR DE FOLIOS POR PDF-----------------------------------------------------------
+def sacarFormatoClave(formatoAnterior):
+    clave_int = int(formatoAnterior[2:])
+    clave_int += 1  
+    return 'F-{:06d}'.format(clave_int)
+
+# ---------------------------------------------------------------CARGAR DE FOLIOS POR PDF--------------------------------------------------------------
 def cargar_folio(valor):
-    Folio = tblConfiguracion.objects.get(ID = 1)
-    if valor == 1:
-        GFolio = Folio.FolioSalMaquila
-        clave_int = int(GFolio[2:])
-        clave_int += 1  
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioSalMaquila = formatoClave
-    elif valor == 2:
-        GFolio = Folio.FolioEntProducto
-        clave_int = int(GFolio[2:])
-        clave_int += 1  
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioEntProducto = formatoClave
-    elif valor == 3:
-        GFolio = Folio.FolioSalProducto
-        clave_int = int(GFolio[2:])
-        clave_int += 1
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioSalProducto = formatoClave
-    elif valor == 4:
-        GFolio = Folio.FolioEntMatPrima
-        clave_int = int(GFolio[2:])
-        clave_int += 1
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioEntMatPrima = formatoClave
-    elif valor == 5:
-        GFolio = Folio.FolioSalMatPrima
-        clave_int = int(GFolio[2:])
-        clave_int += 1
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioSalMatPrima = formatoClave        
-    elif valor == 6:
-        GFolio = Folio.FolioRepServMov
-        clave_int = int(GFolio[2:])
-        clave_int += 1
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioRepServMov = formatoClave   
-    elif valor == 7:
-        GFolio = Folio.FolioRepServLiq
-        clave_int = int(GFolio[2:])
-        clave_int += 1
-        formatoClave = 'F-{:06d}'.format(clave_int)
-        Folio.FolioRepServLiq = formatoClave      
-    Folio.save()
-    return formatoClave
+    Folio = tblConfiguracion.objects.get(ID=1)
+    
+    # Diccionario para mapear valor a los atributos de Folio
+    folio_map = {
+        1: 'FolioSalMaquila',
+        2: 'FolioEntProducto',
+        3: 'FolioSalProducto',
+        4: 'FolioEntMatPrima',
+        5: 'FolioSalMatPrima',
+        6: 'FolioRepServMov',
+        7: 'FolioRepServLiq',
+        8: 'FolioRepMovEntM',
+        9: 'FolioRepMovSalM',
+        10: 'FolioRepMovAnim',
+        11: 'FolioRepMovAnCo',
+        12: 'FolioRepMovAnCl'
+    }
+    
+    if valor in folio_map:
+        nombre_atributo = folio_map[valor]
+        GFolio = getattr(Folio, nombre_atributo)
+        formatoClave = sacarFormatoClave(GFolio)
+        setattr(Folio, nombre_atributo, formatoClave)
+        Folio.save()
+        return formatoClave
+    else:
+        raise ValueError("El valor no corresponde a un caso válido")
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -506,14 +494,13 @@ def reporteLiquidacionServidos(request):
 
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="Servidos Liquidacion {formatted_fecha_actual}.pdf"'
     return response
 
 # ---------------------------------------------------------PDF PARA ENTRADA DE MATERIAS PRIMAS---------------------------------------------------------
 def reporteEntradaMateriaPrima(request):
-    valor = 4
-    # formatoClave = cargar_folio(valor)
-    formatoClave = "F-000001"
+    valor = 8
+    formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -555,9 +542,8 @@ def reporteEntradaMateriaPrima(request):
 
 # ---------------------------------------------------------PDF PARA SALIDA DE MATERIAS PRIMAS----------------------------------------------------------
 def reporteSalidaMateriaPrima(request):
-    valor = 4
-    # formatoClave = cargar_folio(valor)
-    formatoClave = "F-000001"
+    valor = 9
+    formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -594,14 +580,13 @@ def reporteSalidaMateriaPrima(request):
 
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="Salida Materia Prima {formatted_fecha_actual}.pdf"'
     return response
 
 # ---------------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES ---------------------------------------------------------- 
 def reporteMovimientoAnimales(request):
-    valor = 4
-    # formatoClave = cargar_folio(valor)
-    formatoClave = "F-000001"
+    valor = 10
+    formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -644,14 +629,13 @@ def reporteMovimientoAnimales(request):
 
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="Movimientos Animales {formatted_fecha_actual}.pdf"'
     return response
     
 # ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR CORRAL -----------------------------------------------------
 def reporteMovimientoAnimalesCorral(request):
-    valor = 4
-    # formatoClave = cargar_folio(valor)
-    formatoClave = "F-000001"
+    valor = 11
+    formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -726,12 +710,83 @@ def reporteMovimientoAnimalesCorral(request):
 
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="Movimientos Animales Por Corral {formatted_fecha_actual}.pdf"'
     return response
 
 # ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR CLIENTE ---------------------------------------------------- 
+def reporteMovimientoAnimalesCliente(request):
+    valor = 12
+    formatoClave = cargar_folio(valor)
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
 
+    Cliente = request.POST['cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
 
+    dataInput = request.POST.get('reporte-movimiento-animales-cliente', '')
+    if dataInput is not None and dataInput != '':
+        if Cliente == 'todos':
+            consulta_sql = """SELECT TT.CLIENTE, TT.CORRALES, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
+            FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRALES,
+            SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+            AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+            AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS SALIDAS
+            FROM  Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales. IDCliente_id 
+            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id 
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            WHERE  Aplicacion_tblmovimientoanimales. IDCliente_id IN (SELECT Aplicacion_tblcorrales.IDCliente_id FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id  > 1 )
+            GROUP BY Aplicacion_tblmovimientoanimales. IDCliente_id) AS  TT ORDER BY TT.CLIENTE"""
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Fecha, Fecha])
+                reportes = cursor.fetchall()
+            Nombre = 'En general'
+            Cliente = 'todos'
+        
+        else:
+            consulta_sql = """SELECT TT.CLIENTE, TT.CORRAL, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
+            FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL , Aplicacion_tblcorrales.FechaAsigna AS FECHA,
+            SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
+            SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS SALIDAS
+            FROM   Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID =  Aplicacion_tblmovimientoanimales.IDCliente_id 
+            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID =  Aplicacion_tblmovimientoanimales.IDCorral_id
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            WHERE   Aplicacion_tblmovimientoanimales.IDCorral_id IN 
+                (SELECT Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id = %s) 
+                AND  Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+            GROUP BY  Aplicacion_tblmovimientoanimales.IDCorral_id) AS  TT
+            ORDER BY TT.CORRAL"""
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    consulta_sql, [Fecha, Fecha, Cliente, Cliente])
+                reportes = cursor.fetchall()
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Cliente.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Movimientos Animales Por Cliente {formatted_fecha_actual}.pdf"'
+    return response
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

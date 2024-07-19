@@ -17,13 +17,13 @@
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de movimientos de animales</h5>
-                    <div class="col-12">
+                    <div class="col-10">
                         <form action="/Reporte-Animales-Clientes/" class="pr-5 pl-5" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-sm-8 col-xl-8">
-                                        <select name="cliente" class="select2" style="width: 100%;" required>
+                                        <select name="cliente" class="select2" style="width: 100%;" required onchange="ocultarPDF()">
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">
@@ -56,6 +56,15 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales_Cliente/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Cliente }}" name="cliente">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-movimiento-animales-cliente">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,6 +94,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    var nombre = "{{Nombre}}";
+
+    if (nombre == "Buscar cliente")
+        window.onload = ocultarPDF();
+
+    function ocultarPDF() {
+        document.getElementById("pdf").style.display = "None"
+    }
+</script>
 
 {% else %}
 <script>

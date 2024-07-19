@@ -16,6 +16,12 @@ class tblConfiguracion(models.Model):
     FolioRepServMov = models.CharField(max_length=10, null=True)
     FolioRepServLiq = models.CharField(max_length=10, null=True)
 
+    FolioRepMovEntM = models.CharField(max_length=10, null=True)
+    FolioRepMovSalM = models.CharField(max_length=10, null=True)
+    FolioRepMovAnim = models.CharField(max_length=10, null=True)
+    FolioRepMovAnCo = models.CharField(max_length=10, null=True)
+    FolioRepMovAnCl = models.CharField(max_length=10, null=True)
+
 class tblEventosValmoSys(models.Model):
     ID = models.AutoField(primary_key=True)
     Productos = models.BooleanField(null=True)

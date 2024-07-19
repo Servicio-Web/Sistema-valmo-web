@@ -146,8 +146,8 @@ def reportePorClientes(request):
             Fecha = request.POST.get('fecha1')
 
             if Cliente == 'todos':
-                consulta_sql = """SELECT TT.CLIENTE, 0, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
-                FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE,
+                consulta_sql = """SELECT TT.CLIENTE, TT.CORRALES, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
+                FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRALES,
                 SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
                 AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
                 SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
@@ -167,8 +167,8 @@ def reportePorClientes(request):
                 return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,
                                                                                       'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha})
             else:
-                consulta_sql = """SELECT TT.CORRAL, TT.FECHA, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
-                FROM (SELECT Aplicacion_tblcorrales.Descripcion AS CORRAL , Aplicacion_tblcorrales.FechaAsigna AS FECHA,
+                consulta_sql = """SELECT TT.CLIENTE, TT.CORRAL, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
+                FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL , Aplicacion_tblcorrales.FechaAsigna AS FECHA,
                 SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
                     AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
                 SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 

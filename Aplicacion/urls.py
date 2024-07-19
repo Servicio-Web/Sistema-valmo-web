@@ -421,12 +421,13 @@ urlpatterns = [
     path('Descarga_PDF_Salida_Materia_Prima/', DescargaPDF.salidaMateriaPrima, name="PDF_Salida_Materia_Prima"), # PDF salida materias primas
 
     # PDF Reportes
-    path('Descarga_PDF_Reporte_Movimientos_Servidos/', DescargaPDF.reporteMovimientoServidos, name="PDF_Reportes_Mov_Servidos"), # PDF salida materias primas
-    path('Descarga_PDF_Reporte_Liquidacion_Servidos/', DescargaPDF.reporteLiquidacionServidos, name="PDF_Reportes_Liq_Servidos"), # PDF salida materias primas
-    path('Descarga_PDF_Reporte_Entrada_Materia_Prima/', DescargaPDF.reporteEntradaMateriaPrima, name="PDF_Reportes_Entrada_Materia_Prima"), # PDF entrada materias primas
-    path('Descarga_PDF_Reporte_Salida_Materia_Prima/', DescargaPDF.reporteSalidaMateriaPrima, name="PDF_Reportes_Salida_Materia_Prima"), # PDF entrada materias primas
-    path('Descarga_PDF_Reporte_Movimientos_Animales/', DescargaPDF.reporteMovimientoAnimales, name="PDF_Reportes_Movimiento_Animales"), # PDF entrada materias primas
-    path('Descarga_PDF_Reporte_Movimientos_Animales_Corral/', DescargaPDF.reporteMovimientoAnimalesCorral, name="PDF_Reportes_Movimiento_Animales_Corral"), # PDF entrada materias primas
+    path('Descarga_PDF_Reporte_Movimientos_Servidos/', DescargaPDF.reporteMovimientoServidos, name="PDF_Reportes_Mov_Servidos"), # PDF movimientos servidos
+    path('Descarga_PDF_Reporte_Liquidacion_Servidos/', DescargaPDF.reporteLiquidacionServidos, name="PDF_Reportes_Liq_Servidos"), # PDF liquidacion servidos
+    path('Descarga_PDF_Reporte_Entrada_Materia_Prima/', DescargaPDF.reporteEntradaMateriaPrima, name="PDF_Reportes_Entrada_Materia_Prima"), # PDF movimiento entrada materias primas
+    path('Descarga_PDF_Reporte_Salida_Materia_Prima/', DescargaPDF.reporteSalidaMateriaPrima, name="PDF_Reportes_Salida_Materia_Prima"), # PDF movimiento salida materias primas
+    path('Descarga_PDF_Reporte_Movimientos_Animales/', DescargaPDF.reporteMovimientoAnimales, name="PDF_Reportes_Movimiento_Animales"), # PDF movimiento animales
+    path('Descarga_PDF_Reporte_Movimientos_Animales_Corral/', DescargaPDF.reporteMovimientoAnimalesCorral, name="PDF_Reportes_Movimiento_Animales_Corral"), # PDF movimiento aniamles corrales
+    path('Descarga_PDF_Reporte_Movimientos_Animales_Cliente/', DescargaPDF.reporteMovimientoAnimalesCliente, name="PDF_Reportes_Movimiento_Animales_Cliente"), # PDF movimiento animales cliente
 
     # EXCEL
     path('EXCEL/', DescargaExcel.xlsx, name="Excel"),
