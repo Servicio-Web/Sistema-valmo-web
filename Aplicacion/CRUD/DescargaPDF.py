@@ -1,5 +1,6 @@
 from django.template.loader import render_to_string
 from io import BytesIO
+from django.db.models import Q
 from xhtml2pdf import pisa
 from django.templatetags.static import static
 from datetime import datetime, timedelta, date
@@ -7,6 +8,9 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
 from django.db import connection
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # -----------------------------------------------------------INCREMENTADOR DE FOLIOS POR PDF-----------------------------------------------------------
 def cargar_folio(valor):
     Folio = tblConfiguracion.objects.get(ID = 1)
@@ -54,6 +58,10 @@ def cargar_folio(valor):
         Folio.FolioRepServLiq = formatoClave      
     Folio.save()
     return formatoClave
+# -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
 
 #!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -67,15 +75,15 @@ def cargamento_tolva(request):
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    tolva = request.POST.get('tolva', '')
-    if tolva is not None and tolva != '':
-        TTolva = tblTolva.objects.get(ID=tolva)
+    dataInput = request.POST.get('tolva', '')
+    if dataInput is not None and dataInput != '':
+        TTolva = tblTolva.objects.get(ID=dataInput)
         alias = TTolva.Alias
         producto = TTolva.IDProducto.ID
         FiltradoProducto= tblProductos.objects.get(ID=producto)
         unidad_id = FiltradoProducto.IDUnidadMedida.ID
         Filtradounidad= tblUnidades.objects.get(ID=unidad_id)
-        TContenido = tblServido.objects.filter(IDEstatus_id = 8, IDTolva_id = tolva).order_by('ID').values('Folio',
+        TContenido = tblServido.objects.filter(IDEstatus_id = 8, IDTolva_id = dataInput).order_by('ID').values('Folio',
         'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','CantidadSolicitada', 'CantidadServida')
 
     html_string = render_to_string('Descargas/PDF/Salida Maquila/index.html', {'logo_url': logo_url, 'Filtradounidad':Filtradounidad, 'folio': formatoClave,
@@ -106,12 +114,12 @@ def entradaBasculas(request):
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    entradaBascula = request.POST.get('entradaBascula', '')
-    if entradaBascula is not None and entradaBascula != '':
-        chofer = tblOtrosDatosMovMP.objects.filter(IDMovMP = entradaBascula).values('ID', 'IDMovMP', 'Costo', 'Flete',
+    dataInput = request.POST.get('entradaBascula', '')
+    if dataInput is not None and dataInput != '':
+        chofer = tblOtrosDatosMovMP.objects.filter(IDMovMP = dataInput).values('ID', 'IDMovMP', 'Costo', 'Flete',
                                                 'Maniobra', 'Camion', 'Chofer', 'Placas', 'IDOperador_id__first_name')
 
-        entradaBascula = tblEntradaProductos.objects.filter(IDFolio = entradaBascula).values(
+        entradaBascula = tblEntradaProductos.objects.filter(IDFolio = dataInput).values(
                     'ID', 'IDFolio', 'IDProveedor_id__Nombre', 'IDAlmacen_id__Proveedor', 'IDProductos_id__Descripcion', 
                     'IDPresentacion_id__Descripcion', 'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas'
         )
@@ -142,15 +150,15 @@ def salidaBasculas(request):
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    salidaBascula= request.POST.get('salidaBascula', '')
-    if salidaBascula is not None and salidaBascula != '':
-        chofer = tblOtrosDatosSalXBas.objects.filter(IDSalida = salidaBascula).values('ID', 'IDSalida', 'Camion', 'Chofer', 'Placas', 'IDOperador')
+    dataInput= request.POST.get('salidaBascula', '')
+    if dataInput is not None and dataInput != '':
+        chofer = tblOtrosDatosSalXBas.objects.filter(IDSalida = dataInput).values('ID', 'IDSalida', 'Camion', 'Chofer', 'Placas', 'IDOperador')
 
-        clientes = tblSalidaProductos.objects.filter(IDFolio = salidaBascula).values_list('IDCliente__Nombre', flat=True).distinct()
+        clientes = tblSalidaProductos.objects.filter(IDFolio = dataInput).values_list('IDCliente__Nombre', flat=True).distinct()
         for cliente in clientes:
             procedencia = cliente
         
-        salidaBascula = tblSalidaProductos.objects.filter(IDFolio = salidaBascula).values(
+        salidaBascula = tblSalidaProductos.objects.filter(IDFolio = dataInput).values(
                     'ID', 'IDFolio', 'IDCliente__Nombre', 'IDAlmacen__Proveedor', 'IDProductos_id__Descripcion', 
                     'IDPresentacion_id__Descripcion', 'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas'
         )
@@ -183,15 +191,15 @@ def entradaMateriaPrima(request):
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    entradaMateriaPrima = request.POST.get('entradaMateriaPrima', '')
-    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
-        chofer = tblOtrosDatosMovMP.objects.filter(IDMovMP = entradaMateriaPrima).values('ID', 'IDMovMP', 'Costo', 'Flete',
+    dataInput = request.POST.get('entradaMateriaPrima', '')
+    if dataInput is not None and dataInput != '':
+        chofer = tblOtrosDatosMovMP.objects.filter(IDMovMP = dataInput).values('ID', 'IDMovMP', 'Costo', 'Flete',
                                                 'Maniobra', 'Camion', 'Chofer', 'Placas', 'IDOperador_id__first_name')
-        proveedores = tblEntradaMP.objects.filter(IDFolio=entradaMateriaPrima).values_list('IDProveedor_id__Nombre', flat=True).distinct()
+        proveedores = tblEntradaMP.objects.filter(IDFolio=dataInput).values_list('IDProveedor_id__Nombre', flat=True).distinct()
         for proveedor in proveedores:
             procedencia = proveedor
 
-        entradaMatPrima = tblEntradaMP.objects.filter(IDFolio = entradaMateriaPrima).values(
+        entradaMatPrima = tblEntradaMP.objects.filter(IDFolio = dataInput).values(
             'ID', 'IDFolio', 'IDProveedor_id__Nombre', 'IDAlmacen_id__Cliente', 'IDMateriaPrima_id__Descripcion', 'IDPresentacion_id__Descripcion',
             'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas')
         
@@ -222,15 +230,15 @@ def salidaMateriaPrima(request):
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    salidaBascula= request.POST.get('salidaBascula', '')
-    if salidaBascula is not None and salidaBascula != '':
-        chofer = tblOtrosDatosSalXBas.objects.filter(IDSalida = salidaBascula).values('ID', 'IDSalida', 'Camion', 'Chofer', 'Placas', 'IDOperador')
+    dataInput= request.POST.get('salidaBascula', '')
+    if dataInput is not None and dataInput != '':
+        chofer = tblOtrosDatosSalXBas.objects.filter(IDSalida = dataInput).values('ID', 'IDSalida', 'Camion', 'Chofer', 'Placas', 'IDOperador')
 
-        clientes = tblSalidaMP.objects.filter(IDFolio = salidaBascula).values_list('IDCliente__Nombre', flat=True).distinct()
+        clientes = tblSalidaMP.objects.filter(IDFolio = dataInput).values_list('IDCliente__Nombre', flat=True).distinct()
         for cliente in clientes:
             procedencia = cliente
         
-        salidaBascula = tblSalidaMP.objects.filter(IDFolio = salidaBascula).values(
+        salidaBascula = tblSalidaMP.objects.filter(IDFolio = dataInput).values(
             'ID', 'IDFolio', 'IDCliente_id__Nombre', 'IDAlmacen_id__Cliente', 'IDMateriaPrima_id__Descripcion', 
             'IDPresentacion_id__Descripcion',   'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas'
         )
@@ -273,8 +281,8 @@ def reporteMovimientoServidos(request):
     Fecha2 = request.POST['fechaFinal']
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    reporteMovServidor= request.POST.get('reporte-movimientos-servidos', '')
-    if reporteMovServidor is not None and reporteMovServidor != '':
+    dataInput= request.POST.get('reporte-movimientos-servidos', '')
+    if dataInput is not None and dataInput != '':
         if  Cliente == 'todos':
             consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
                 Aplicacion_tblcorrales.Descripcion,  Aplicacion_tblproductos.Descripcion,
@@ -339,8 +347,8 @@ def reporteLiquidacionServidos(request):
     Fecha2 = request.POST['fechaFinal']
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
-    reporteLiqServidor= request.POST.get('reporte-liquidacion-servidos', '')
-    if reporteLiqServidor is not None and reporteLiqServidor != '':
+    dataInput= request.POST.get('reporte-liquidacion-servidos', '')
+    if dataInput is not None and dataInput != '':
         if Cliente == 'todos':
             consulta_sql = """SELECT Aplicacion_tblcorrales.Descripcion, Aplicacion_tblproductos.Descripcion, Aplicacion_tblunidades.Abreviacion, 
             SUM(Aplicacion_tblservido.CantidadServida)
@@ -513,8 +521,8 @@ def reporteEntradaMateriaPrima(request):
     Contenedor = request.POST['Contenedor']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
-    entradaMateriaPrima = request.POST.get('reporte-entrada-mp', '')
-    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+    dataInput = request.POST.get('reporte-entrada-mp', '')
+    if dataInput is not None and dataInput != '':
         if Contenedor == 'todos':
             reportes = tblEntradaMP.objects.filter(fecha__range=[Fecha, Fecha2]).values('ID', 'notas',
                     'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad').order_by('fecha')
@@ -557,8 +565,8 @@ def reporteSalidaMateriaPrima(request):
     Contenedor = request.POST['Contenedor']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
-    entradaMateriaPrima = request.POST.get('reporte-entrada-mp', '')
-    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+    dataInput = request.POST.get('reporte-entrada-mp', '')
+    if dataInput is not None and dataInput != '':
         if Contenedor == 'todos':
             reportes = tblSalidaMP.objects.filter(fecha__range=[Fecha, Fecha2]) \
                 .values('IDFolio', 'fecha', 'IDMateriaPrima_id__Descripcion', 'IDAlmacen_id__Cliente', 'cantidad', 'notas') \
@@ -590,6 +598,55 @@ def reporteSalidaMateriaPrima(request):
     return response
 
 # ---------------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES ---------------------------------------------------------- 
+def reporteMovimientoAnimales(request):
+    valor = 4
+    # formatoClave = cargar_folio(valor)
+    formatoClave = "F-000001"
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+
+    Cliente = request.POST['cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+
+    dataInput = request.POST.get('reporte-movimiento-animales', '')
+    if dataInput is not None and dataInput != '':
+        if Cliente == 'todos':
+            reportes = tblMovimientoAnimales.objects.filter(Fecha__range=[Fecha, Fecha2]) \
+                .exclude(IDCliente=1) \
+                .values('Folio', 'Fecha', 'IDCliente__Nombre', 'IDCorral__Descripcion', 'IDMovimiento__Descripcion') \
+                .order_by('Folio')
+            Nombre = 'En general'
+            Cliente = 'todos'
+        else:
+            reportes = tblMovimientoAnimales.objects.filter(
+                Q(IDCliente=Cliente) & Q(Fecha__range=[
+                    Fecha, Fecha2]) & ~Q(IDCliente=1)
+            ).values('Folio', 'Fecha', 'IDCliente__Nombre', 'IDCorral__Descripcion', 'IDMovimiento__Descripcion') \
+                .order_by('Folio')
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Movimientos.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Entrada Materia Prima {formatted_fecha_actual}.pdf"'
+    return response
+    
 # ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR CORRAL -----------------------------------------------------
 def reporteMovimientoAnimalesCorral(request):
     valor = 4
@@ -602,8 +659,8 @@ def reporteMovimientoAnimalesCorral(request):
     Cliente = request.POST['cliente']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
-    entradaMateriaPrima = request.POST.get('reporte-movimiento-animales-corral', '')
-    if entradaMateriaPrima is not None and entradaMateriaPrima != '':
+    dataInput = request.POST.get('reporte-movimiento-animales-corral', '')
+    if dataInput is not None and dataInput != '':
         if Cliente == 'todos':
             consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
             SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 

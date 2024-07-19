@@ -17,7 +17,7 @@
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de movimientos de animales</h5>
-                    <div class="col-12">
+                    <div class="col-10">
                         <form action="/Reporte-Movimientos-Animales/" class="pr-5 pl-5" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
@@ -63,6 +63,15 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Cliente }}" name="cliente">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-movimiento-animales">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,19 +79,19 @@
             <table class="tabla_id">
                 <thead>
                     <tr>
-                        <th>MOVIMIENTO</th>
-                        <th>FECHA</th>
                         <th>CLIENTE</th>
                         <th>CORRAL</th>
+                        <th>MOVIMIENTO</th>
+                        <th>FECHA</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for reporte in reportes %}
                     <tr>
-                        <td>{{ reporte.IDMovimiento__Descripcion }}</td>
-                        <td>{{ reporte.Fecha }}</td>
                         <td>{{ reporte.IDCliente__Nombre }}</td>
                         <td>{{ reporte.IDCorral__Descripcion }}</td>
+                        <td>{{ reporte.IDMovimiento__Descripcion }}</td>
+                        <td>{{ reporte.Fecha }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
