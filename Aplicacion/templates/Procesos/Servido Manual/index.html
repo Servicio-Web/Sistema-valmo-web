@@ -41,7 +41,7 @@
         {% endif %}
 
         {% if perms.Aplicacion.view_tblservido %}
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-sm-12 col-md-4 col-lg-4 sub-button-col">
                 <form action="/Dato-Servidos-Manuales/" method="POST" style="width: 100%;">{% csrf_token %}
                     <input type="hidden" value="Alta" name="prioridad">
@@ -63,7 +63,7 @@
                         BAJA</button>
                 </form>
             </div>
-        </div>
+        </div> -->
         <div class=" table-responsive py-1">
             <form action="{% url 'Cantidad_servidos_manuales' %}" method="POST">{% csrf_token %}
                 <input type="hidden" class="form-control" name="tecnico"

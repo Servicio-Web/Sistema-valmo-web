@@ -328,7 +328,6 @@ def actualizarCantidadServidosManual(request):
         messages.success(request, f'El Servido se ha actualizado exitosamente.')
         return redirect('T-Servidos')
 
-
 def actualizarInventatioInicialMateriaPrima(request):
     id_v = request.POST['id']
     folio_v = request.POST['clave']

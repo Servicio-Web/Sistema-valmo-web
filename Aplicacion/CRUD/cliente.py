@@ -128,6 +128,8 @@ def guardarSolicitudServidoCliente(request):
         peticiones = request.POST.getlist('peticion[]')
         emails = request.POST.getlist('email[]')
 
+        fechaCheck = request.POST.getlist('checkFecha[]')
+        print(fechaCheck)
         solicitudes = []
 
         for i in range(len(cantidadesSol)):
@@ -161,18 +163,18 @@ def guardarSolicitudServidoCliente(request):
                 ultimo_folio += 1
                 formatoClave = 'F-{:06d}'.format(ultimo_folio)
                 
-                tblServido.objects.create(
-                Folio=formatoClave,
-                IDCliente_id=solicitud['cliente'],
-                IDCorral_id=solicitud['corral'],
-                IDProducto_id=solicitud['producto'],
-                IDEstatus_id=solicitud['estatus'],
-                CantidadSolicitada=solicitud['cantidadSol'],
-                CantidadServida=solicitud['cantidadSer'],
-                Prioridad=solicitud['prioridad'],
-                Fecha=solicitud['fechaSol'],
-                FechaServida=solicitud['fechaSer']
-            )
+            #     tblServido.objects.create(
+            #     Folio=formatoClave,
+            #     IDCliente_id=solicitud['cliente'],
+            #     IDCorral_id=solicitud['corral'],
+            #     IDProducto_id=solicitud['producto'],
+            #     IDEstatus_id=solicitud['estatus'],
+            #     CantidadSolicitada=solicitud['cantidadSol'],
+            #     CantidadServida=solicitud['cantidadSer'],
+            #     Prioridad=solicitud['prioridad'],
+            #     Fecha=solicitud['fechaSol'],
+            #     FechaServida=solicitud['fechaSer']
+            # )
     peticion = 2
 
     if request.method == 'POST':
