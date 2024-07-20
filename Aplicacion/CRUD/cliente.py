@@ -76,7 +76,7 @@ def servidos(request):
             cliente = tblClientes.objects.get(Email=email_v)
             idCliente = cliente.ID
             Nombre = cliente.Nombre
-            servidos = tblServido.objects.filter(IDCliente_id=idCliente).values('Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id',
+            servidos = tblServido.objects.filter(IDCliente_id=idCliente).values('Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id', 'FechaAServir', 'FechaServida',
                                                                                 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 'Fecha')
         except ObjectDoesNotExist:
             print("Error")
@@ -130,11 +130,7 @@ def guardarSolicitudServidoCliente(request):
         emails = request.POST.getlist('email[]')
 
         fechaCheck = request.POST.getlist('checkFecha[]')
-        if fechaCheck == 'hoy':
-            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
-        elif fechaCheck == 'mañana':
-            fechaMañana = timezone.localtime(timezone.now()) + timedelta(days=1)
-            fechaMañana_str = fechaMañana.strftime('%Y-%m-%d')
+
 
         solicitudes = []
 
@@ -151,6 +147,7 @@ def guardarSolicitudServidoCliente(request):
                     'prioridad': prioridades[i],
                     'fechaSol': fechasSol[i],
                     'fechaSer': fechasSer[i],
+                    'fechasPet': fechaCheck[i],
                     'peticion': peticiones[i],
                     'email': emails[i],
                 }
@@ -168,7 +165,14 @@ def guardarSolicitudServidoCliente(request):
                 # Incrementar el folio
                 ultimo_folio += 1
                 formatoClave = 'F-{:06d}'.format(ultimo_folio)
-                
+
+                if solicitud['fechasPet'] == 'hoy':
+                    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
+                elif solicitud['fechasPet'] == 'mañana':
+                    fechaMañana = timezone.localtime(timezone.now()) + timedelta(days=1)
+                    FechaDeHoy = fechaMañana.strftime('%Y-%m-%d')       
+                print(FechaDeHoy)                                 
+
                 tblServido.objects.create(
                 Folio=formatoClave,
                 IDCliente_id=solicitud['cliente'],
@@ -178,6 +182,7 @@ def guardarSolicitudServidoCliente(request):
                 CantidadSolicitada=solicitud['cantidadSol'],
                 CantidadServida=solicitud['cantidadSer'],
                 Prioridad=solicitud['prioridad'],
+                FechaAServir = FechaDeHoy,
                 Fecha=solicitud['fechaSol'],
                 FechaServida=solicitud['fechaSer']
             )

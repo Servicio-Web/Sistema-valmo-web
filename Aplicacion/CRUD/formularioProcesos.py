@@ -186,7 +186,7 @@ def FormularioSolicitudServido(request):
     else:
         ultimo_folio = 1
     FClientes = tblClientes.objects.exclude(ID = 1).all().order_by('Nombre')
-    FECorrales = tblCorrales.objects.exclude(Q(IDCliente= 1) | (Q(ID =1))).order_by('Descripcion')
+    FECorrales = tblCorrales.objects.exclude(Q(IDCliente= 1)).order_by('Descripcion')
     FEProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')

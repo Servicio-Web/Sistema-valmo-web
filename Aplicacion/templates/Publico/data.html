@@ -18,14 +18,13 @@
         <form method="POST" action="{% url 'Cliente'%}" class="mt-2">
             {% csrf_token %}
             <div class="row">
-                <div class="col-sm-3 col-md-3 col-lg-1">
-                    <button type="submit" class="btn btn-danger col-12">
-                        Volver atras
+                <div class="col-12">
+                    <button type="submit" class="btn" style="font-size: 20px; font-weight: bold; font-family: Arial, Helvetica, sans-serif">
+                        <i class="fa-solid fa-arrow-left"><</i> Hola, {{Nombre}}
                     </button>
+
                 </div>
-                <div class="col-sm-8 col-md-9 col-lg-11">
-                    <h5 class="h6-form">Hola, {{Nombre}} </h5>
-                </div>
+
                 <input type="hidden" name="email" value="{{email}}">
             </div>
         </form>
@@ -44,13 +43,16 @@
                         <th class="th-responsive">ESTATUS</th>
                         <th class="th-responsive">CANTIDAD SOLICITADA</th>
                         <th class="th-responsive">CANTIDAD SERVIDA</th>
-                        <th class="th-responsive">FECHA</th>
+                        <th class="th-responsive">FECHA PETICION</th>
+                        <th class="th-responsive">FECHA A SERVIR</th>
+                        <th class="th-responsive">FECHA SERVIDO</th>
                         <th class="th-responsive dnone"></th>
                         <th class="th-responsive dnone"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for Servidos in corrales %}
+
                     <tr>
                         <td>
                             <h6 class="td-responsive">FOLIO:</h6>
@@ -76,25 +78,32 @@
                             <h6 class="td-responsive">CANTIDAD SOLICITADA:</h6>
                             {{ Servidos.CantidadSolicitada }}
                             {% if Servidos.IDProducto_id == 14 %}
-                                Paca
+                            Paca
                             {% else %}
-                                Kg
+                            Kg
                             {% endif %}
                         </td>
                         <td>
                             <h6 class="td-responsive">CANTIDAD SERVIDA:</h6>
-                            {{ Servidos.CantidadServida}} 
+                            {{ Servidos.CantidadServida}}
                             {% if Servidos.IDProducto_id == 14 %}
-                                Paca
+                            Paca
                             {% else %}
-                                Kg
+                            Kg
                             {% endif %}
                         </td>
                         <td>
-                            <h6 class="td-responsive">FECHA:</h6>
+                            <h6 class="td-responsive">FECHA PETICION:</h6>
                             {{ Servidos.Fecha }}
                         </td>
-
+                        <td>
+                            <h6 class="td-responsive">FECHA A SERVIR:</h6>
+                            {{ Servidos.FechaAServir }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA SERVIDO:</h6>
+                            {{ Servidos.FechaServida }}
+                        </td>
                         <td class="td-salto"></td>
                         <td class="td-salto"></td>
                     </tr>

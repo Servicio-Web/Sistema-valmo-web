@@ -33,26 +33,22 @@ class tblEstatus(models.Model):
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150,null=True)
     
-
 class tblUnidades(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150,null=True)
     Abreviacion = models.CharField(max_length=150,null=True)
     
-
 class tblTipoMov(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150,null=True)
     
-
 class tblTipoMaterial(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150,null=True)
     
-
 class tblTipoPresentacion(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
@@ -61,7 +57,6 @@ class tblTipoPresentacion(models.Model):
     Cantidad = models.FloatField(null=True)
     Visible = models.CharField(max_length=15, null=True)
     
-
 class tblTecnicos(models.Model):
     ID = models.AutoField(primary_key=True)
     Tecnico = models.CharField(max_length=150,null=True)
@@ -90,7 +85,6 @@ class tblClientes(models.Model):
     Contacto = models.CharField(max_length=150,null=True)
     TelefonoContacto = models.CharField(max_length=150,null=True)
     
-
 class tblProveedores(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
@@ -102,13 +96,11 @@ class tblProveedores(models.Model):
     Contacto = models.CharField(max_length=150,null=True)
     TelefonoContacto = models.CharField(max_length=150,null=True)
     
-
 class tblOperadores(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150, null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
-
 
 class tblMateriaPrima(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -119,7 +111,6 @@ class tblMateriaPrima(models.Model):
     PrecioUnitario = models.FloatField(null=True)
     Merma = models.FloatField(null=True)
     
-
 class tblProductos(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
@@ -129,7 +120,6 @@ class tblProductos(models.Model):
     PrecioUnitario = models.FloatField(null=True)
     SeSirve = models.CharField(max_length=15, null=True)
     
-
 class tblCorrales(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=150, null=True)
@@ -138,16 +128,13 @@ class tblCorrales(models.Model):
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     Capacidad = models.FloatField(null=True)
     FechaAsigna = models.DateTimeField(max_length=150, null=True)
-    
-
-    
+       
 class tblAnimalesTipo(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Descripcion = models.CharField(max_length=150,null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     
-
 class tblContenedoresMateriaPrima(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
@@ -156,7 +143,6 @@ class tblContenedoresMateriaPrima(models.Model):
     Capacidad = models.FloatField(max_length=150,null=True)
     IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
     
-
 class tblContenedoresProductos(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
@@ -186,7 +172,6 @@ class tblAsignaCorrales(models.Model):
     TipoMov = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
 
 # -------------------------------------------------------PROCESOS-------------------------------------------------------
-
 class tblEntradaMP(models.Model):
     ID = models.AutoField(primary_key=True)
     IDFolio = models.CharField(max_length=15, null=True)
@@ -199,7 +184,6 @@ class tblEntradaMP(models.Model):
     fecha = models.DateTimeField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
-
 class tblSalidaMP(models.Model):
     ID = models.AutoField(primary_key=True)
     IDFolio = models.CharField(max_length=15, null=True)
@@ -240,7 +224,6 @@ class tblEntradaProductos(models.Model):
     fecha = models.DateTimeField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
-
 class tblSalidaProductos(models.Model):
     ID = models.AutoField(primary_key=True)
     IDFolio = models.CharField(max_length=15, null=True)
@@ -254,7 +237,6 @@ class tblSalidaProductos(models.Model):
     fecha = models.DateTimeField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
-
 class tblDetalleAnimales(models.Model):
     ID = models.AutoField(primary_key=True)
     Folio = models.CharField(max_length=15, null=True)
@@ -266,14 +248,12 @@ class tblDetalleAnimales(models.Model):
     NoPartida = models.IntegerField(null=True)
     No_Guia = models.IntegerField(null=True)
     
-
 class tblDetalleMovAnimales(models.Model):
     ID = models.AutoField(primary_key=True)
     IDFolio = models.CharField(max_length=150,null=True)
     IDAnimales = models.ForeignKey(tblAnimalesTipo, on_delete=models.DO_NOTHING, null=True)
     Cantidad = models.IntegerField(null=True)
     
-
 class tblMovimientoAnimales(models.Model):
     ID = models.AutoField(primary_key=True)
     Folio = models.CharField(max_length=15, null=True)
@@ -284,12 +264,8 @@ class tblMovimientoAnimales(models.Model):
     Peso = models.FloatField(null=True)
     NoPartida = models.IntegerField(null=True)
     No_Guia = models.IntegerField(null=True)
-    Notas = models.CharField(max_length=150, null=True)
-    
-
-
-    
-
+    Notas = models.CharField(max_length=150, null=True)  
+   
 class tblInventarioInicialesMP(models.Model):
     ID = models.AutoField(primary_key=True)
     Folio = models.CharField(max_length=15, null=True)
@@ -299,7 +275,6 @@ class tblInventarioInicialesMP(models.Model):
     Fecha = models.DateTimeField(max_length=150, null=True)
     Notas = models.CharField(max_length=150, null=True)
     
-
 class tblInventarioInicialesProductos(models.Model):
     ID = models.AutoField(primary_key=True)
     Folio = models.CharField(max_length=15, null=True)
@@ -308,8 +283,7 @@ class tblInventarioInicialesProductos(models.Model):
     Cantidad = models.FloatField(null=True)
     Fecha = models.DateTimeField(max_length=150, null=True)
     Notas = models.CharField(max_length=150, null=True)
-    
-    
+     
 # -------------------------------------------------------SUBTABLAS-------------------------------------------------------
 class tblProductosMateriaPrima(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -319,7 +293,6 @@ class tblProductosMateriaPrima(models.Model):
     Porcentaje = models.FloatField(null=True)
     Merma = models.FloatField(null=True)
     
-
 class tblOtrosDatosMovMP(models.Model):
     ID = models.AutoField(primary_key=True)
     IDMovMP = models.CharField(max_length=15, null=True)
@@ -331,7 +304,6 @@ class tblOtrosDatosMovMP(models.Model):
     Chofer = models.CharField(max_length=150, null=True)
     Placas = models.CharField(max_length=150, null=True)
     
-
 class tblOtrosDatosSalXBas(models.Model):
     ID = models.AutoField(primary_key=True)
     IDSalida = models.CharField(max_length=15, null=True)
@@ -340,7 +312,6 @@ class tblOtrosDatosSalXBas(models.Model):
     Chofer = models.CharField(max_length=150, null=True)
     Placas = models.CharField(max_length=150, null=True)
     
-
 class tblServiciosWeb(models.Model):
     ID = models.AutoField(primary_key=True)
     Servicio = models.BooleanField(True, null=True)
