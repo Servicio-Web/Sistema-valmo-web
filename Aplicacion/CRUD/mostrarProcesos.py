@@ -191,12 +191,12 @@ def TablaSolicitudServido(request):
     if Prioridad is not None and Prioridad != '':
         TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(Prioridad = Prioridad, IDEstatus_id = 7).values('ID', 'Folio',
         'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
-        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
+        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'FechaAServir'
     )
     else:
          TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(Q(IDEstatus_id =3) | Q(IDEstatus_id=9)).values('ID', 'Folio',
         'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
-        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
+        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'FechaAServir'
     )
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/Solicitud Servido/index.html',{'grupos': grupos, 'ServiciosWeb':ServiciosWeb,'TServidos': TServidos })
@@ -205,7 +205,7 @@ def TablaServidoCorral(request):
     grupos = grupo_user(request)
     TServidos = tblServido.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDCliente_id__Nombre', 'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
-    'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida'
+    'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'FechaAServir'
     )
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/ServidosConsolidacion/servido.html',{'grupos': grupos, 'ServiciosWeb':ServiciosWeb,'TServidos': TServidos })
@@ -289,7 +289,7 @@ def TablaFiltroServido(request):
         FiltroServidos = tblServido.objects.filter(Q(IDProducto_id= producto) & (Q(IDEstatus_id =3) | Q(IDEstatus_id=9))).values('ID', 'Folio',
             'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion',
             'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 'Prioridad',
-            'Fecha', 'FechaServida','IDProducto_id'
+            'Fecha', 'FechaServida','IDProducto_id', 'FechaAServir'
         )
         FiltradoProducto= tblProductos.objects.get(ID=producto)
         unidad_id = FiltradoProducto.IDUnidadMedida.ID
@@ -339,7 +339,7 @@ def TablaFiltroServido(request):
         FiltroServidos = tblServido.objects.filter(IDProducto_id= 1, IDEstatus_id =3).values('ID', 'Folio',
             'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 
             'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 'Prioridad',
-            'Fecha', 'FechaServida','IDProducto_id' )
+            'Fecha', 'FechaServida','IDProducto_id', 'FechaAServir' )
     resultados = tblServido.objects.exclude(IDCliente_id=1).filter(Q(IDEstatus_id =3) | Q(IDEstatus_id=9)).values('IDProducto_id__Descripcion','IDProducto_id').annotate(total_cantidad=Sum('CantidadSolicitada')).order_by('IDProducto_id__Descripcion')
 
     TConsolidacion = []  # Crear una lista vacía para almacenar los resultados

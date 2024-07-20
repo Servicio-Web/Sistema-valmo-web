@@ -139,8 +139,8 @@
                             <th class="th-responsive">CORRAL</th>
                             <th class="th-responsive">CANT. SOL.</th>
                             <th class="th-responsive">CANT. SER.</th>
-                            <th class="th-responsive">FECHA SOLICITADA</th>
-
+                            <th class="th-responsive">FECHA PETICION</th>
+                            <th class="th-responsive">FECHA A SERVIR</th>
                             <th class="th-responsive dnone"></th>
                             <th class="th-responsive dnone"></th>
                         </tr>
@@ -181,7 +181,10 @@
                                 <input type="hidden" value="{{Servidos.ID}}" name="id">
                                 <input type="hidden" value="{{Servidos.IDProducto_id}}" name="idproducto">
                             </td>
-
+                            <td>
+                                <h6 class="td-responsive">FECHA:</h6>
+                                {{ Servidos.FechaAServir }}
+                            </td>
                             <td class="td-salto"></td>
                             <td class="td-salto"></td>
                         </tr>

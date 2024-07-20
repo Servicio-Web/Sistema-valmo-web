@@ -51,7 +51,8 @@
                         <th class="th-responsive">PRODUCTO</th>
                         <!-- <th class="th-responsive">ESTATUS</th> -->
                         <th class="th-responsive">CANTIDAD</th>
-                        <th class="th-responsive">FECHA</th>
+                        <th class="th-responsive">FECHA PETICION</th>
+                        <th class="th-responsive">FECHA A SERVIR</th>
                         {% if perms.Aplicacion.change_tblservido or perms.Aplicacion.delete_tblservido %}
                         <th class="th-responsive">ACCIÓN</th>
                         {% endif %}
@@ -89,6 +90,10 @@
                         <td>
                             <h6 class="td-responsive">FECHA:</h6>
                             {{ Servidos.Fecha }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA A SERVIR:</h6>
+                            {{ Servidos.FechaAServir }}
                         </td>
                         {% if perms.Aplicacion.change_tblservido or perms.Aplicacion.delete_tblservido %}
                         <td>
