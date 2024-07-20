@@ -224,7 +224,7 @@ class tblServido(models.Model):
     CantidadServida = models.IntegerField(null=True)
     Prioridad = models.CharField(max_length=100, null=True)
     Fecha = models.DateTimeField(max_length=150, null=True)
-    FechaAServir = models.DateTimeField(max_length=150, null=True)
+    FechaAServir = models.DateField(max_length=150, null=True)
     FechaServida = models.DateTimeField(max_length=150, null=True)
 
 class tblEntradaProductos(models.Model):

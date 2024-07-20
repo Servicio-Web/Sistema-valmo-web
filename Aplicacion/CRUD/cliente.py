@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from django.utils import timezone
+from datetime import timedelta
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE CATALOGOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # --------------------------------------------------------CLIENTES---------------------------------------------------------
@@ -129,7 +130,12 @@ def guardarSolicitudServidoCliente(request):
         emails = request.POST.getlist('email[]')
 
         fechaCheck = request.POST.getlist('checkFecha[]')
-        print(fechaCheck)
+        if fechaCheck == 'hoy':
+            FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
+        elif fechaCheck == 'mañana':
+            fechaMañana = timezone.localtime(timezone.now()) + timedelta(days=1)
+            fechaMañana_str = fechaMañana.strftime('%Y-%m-%d')
+
         solicitudes = []
 
         for i in range(len(cantidadesSol)):
@@ -163,18 +169,18 @@ def guardarSolicitudServidoCliente(request):
                 ultimo_folio += 1
                 formatoClave = 'F-{:06d}'.format(ultimo_folio)
                 
-            #     tblServido.objects.create(
-            #     Folio=formatoClave,
-            #     IDCliente_id=solicitud['cliente'],
-            #     IDCorral_id=solicitud['corral'],
-            #     IDProducto_id=solicitud['producto'],
-            #     IDEstatus_id=solicitud['estatus'],
-            #     CantidadSolicitada=solicitud['cantidadSol'],
-            #     CantidadServida=solicitud['cantidadSer'],
-            #     Prioridad=solicitud['prioridad'],
-            #     Fecha=solicitud['fechaSol'],
-            #     FechaServida=solicitud['fechaSer']
-            # )
+                tblServido.objects.create(
+                Folio=formatoClave,
+                IDCliente_id=solicitud['cliente'],
+                IDCorral_id=solicitud['corral'],
+                IDProducto_id=solicitud['producto'],
+                IDEstatus_id=solicitud['estatus'],
+                CantidadSolicitada=solicitud['cantidadSol'],
+                CantidadServida=solicitud['cantidadSer'],
+                Prioridad=solicitud['prioridad'],
+                Fecha=solicitud['fechaSol'],
+                FechaServida=solicitud['fechaSer']
+            )
     peticion = 2
 
     if request.method == 'POST':
