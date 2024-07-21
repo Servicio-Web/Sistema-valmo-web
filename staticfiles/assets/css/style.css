@@ -87,6 +87,16 @@
   --select-hover-option: #5897fb;
   --select-hover-values: #b3afaf;
   --select-hover-color: #313131;
+  --custom-box-shadow:
+    rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset,
+    rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px,
+    rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+
 }
 
 /* Tema oscuro */
@@ -159,11 +169,41 @@
   --select-hover-option: #fb5858;
   --select-hover-values: #5f5f5f;
   --select-hover-color: #313131;
+  --custom-box-shadow:
+    rgba(255, 255, 255, 0.17) 0px -23px 25px 0px inset,
+    rgba(255, 255, 255, 0.15) 0px -36px 30px 0px inset,
+    rgba(255, 255, 255, 0.1) 0px -79px 40px 0px inset,
+    rgba(255, 255, 255, 0.06) 0px 2px 1px,
+    rgba(255, 255, 255, 0.09) 0px 4px 2px,
+    rgba(255, 255, 255, 0.09) 0px 8px 4px,
+    rgba(255, 255, 255, 0.09) 0px 16px 8px,
+    rgba(255, 255, 255, 0.09) 0px 32px 16px;
+
+}
+
+/* estilos para la presentacion de servidos */
+.card-servidos {
+  margin-bottom: 15%;
+  background: var(--card-header-procesos);
+  border-radius: 50px;
+
+  box-shadow: var(--custom-box-shadow);
+}
+
+.titulo-servidos-card {
+  text-align: center;
+  font-size: 24px;
+  padding: 25px 0;
+  background-color: transparent;
 }
 
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< INPUT PARA LOS FORMULARIOS <>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+
+
+
 input {
   background-color: var(--back-input-form);
   color: var(--color-input-form);
@@ -335,6 +375,10 @@ td {
 /* jquery tablas */
 label {
   color: var(--text-color);
+}
+
+.dataTable {
+  width: 100% !important;
 }
 
 .dataTables_info {

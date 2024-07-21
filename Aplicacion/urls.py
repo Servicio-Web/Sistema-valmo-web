@@ -6,6 +6,7 @@ from Aplicacion.CRUD import mostrarCatalogos, mostrarProcesos, mostrarSubTabla
 from Aplicacion.CRUD import guardarCatalogos, guardarProcesos, guardarSubTabla
 from Aplicacion.CRUD import editarCatalogos, editarProcesos, editarSubTabla
 from Aplicacion.CRUD import reportes, DescargaPDF, DescargaExcel, CopiaDeSeguridad, CopiaAMysql, cliente
+from Aplicacion.CRUD import presentacion
 
 # from .views import PDFView formularioCatalogos
 from django.contrib.auth.views import LoginView, LogoutView
@@ -16,6 +17,9 @@ from .views import CustomLoginView
 
 
 urlpatterns = [
+     #  Presentacion
+    path('Servidos_presentacion/', presentacion.PresentacionServidos, name='Servidos_Presentacion'),
+     
     # Vistas para el cliente
     path('Agregar_Servidos_Cliente/', cliente.formulario, name='FP-Cliente'),
     path('Ver_Servidos_Cliente/', cliente.servidos, name='FP-Servidos-Cliente'),
