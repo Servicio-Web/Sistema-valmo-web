@@ -341,11 +341,18 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-servidos" data-bs-toggle="collapse" href="#">
+                <li class="nav-item">
+                    {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
+                    <a class="nav-link collapsed" href="{% url 'Servidos_Presentacion' %}">
+                        <span>Servidos</span>
+                    </a>
+                    {% endif %}
+                </li>
+                <a class="nav-link collapsed" data-bs-target="#forms-servidos" data-bs-toggle="collapse" href="#" style="display: none;">
                     <span>Servidos</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="forms-servidos" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
+                <ul id="forms-servidos" class="nav-content collapse " data-bs-parent="#sidebar-nav" style="display: none;">
+                    
                     <li>
                         <a href="{% url 'T-Solicitud-Servidos' %}">
                             <span>Solicitud Servido</span>
@@ -356,20 +363,16 @@
                             <span>Servido Manual</span>
                         </a>
                     </li>
-                    <!-- <hr> -->
                     <li>
                         <a href="{% url 'T-Corrales-Servidos' %}">
                             <span>Corrales Servidos</span>
                         </a>
                     </li>
-                    <!-- <hr> -->
                     <li>
                         <a href="{% url 'FT-Consolidacion' %}">
                             <span>Consolidación Servido</span>
                         </a>
                     </li>
-
-                    {% endif %}
                 </ul>
             </li>
             <li class="nav-item">
@@ -503,12 +506,8 @@
                     <span>Página</span>
                 </a>
             </li>
-            <li class="nav-heading">Presentacion</li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{% url 'Servidos_Presentacion' %}">
-                    <span>SERVIDOS</span>
-                </a>
-            </li>
+            <!-- <li class="nav-heading">Presentacion</li> -->
+
         </ul>
     </aside>
     <main id="main" class="main">

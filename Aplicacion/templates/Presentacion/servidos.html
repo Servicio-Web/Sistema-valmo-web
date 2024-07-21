@@ -15,7 +15,18 @@
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
-                        <h1 class="h6-form">CORRALES <br> PENDIENTES</h1>
+                        <div class="row">
+                            <div class="col-3 explicacion comodin">
+                                <h1 class="h6-form">?</h1>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="h6-form">CORRALES <br> PENDIENTES</h5>
+
+                            </div>
+                            <div class="col-3 comodin">
+                                <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">></a></h5>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class='porcentajes' style="--porcentaje: {{pendientes}}; --color: red">
@@ -25,6 +36,7 @@
                             </svg>
                             <span id="pendientes" class="h6-form" data-target="{{pendientes}}">0</span>
                         </div>
+
                     </div>
                     <div class="card-footer">
                         <div class="animacion">
@@ -39,17 +51,21 @@
                 <div class="face back">
 
                 </div>
+
             </div>
 
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
                         <div class="row">
-                            <div class="col-8">
-                                <h1 class="h6-form">CARGAR <br> EN TOLVA</h1>
-                            </div>
-                            <div class="col-4 explicacion">
+                            <div class="col-3 explicacion comodin">
                                 <h1 class="h6-form">?</h1>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="h6-form">CARGAR <br> EN TOLVA</h5>
+                            </div>
+                            <div class="col-3 comodin">
+                                <h5 class="h6-form"><a href="{% url 'FT-Consolidacion' %}">></a></h5>
                             </div>
                         </div>
                     </div>
@@ -61,6 +77,7 @@
                             </svg>
                             <span id="tolva" class="h6-form" data-target="{{tolva}}">0</span>
                         </div>
+
                     </div>
                     <div class="card-footer">
                         <div class="animacion">
@@ -122,7 +139,7 @@
                     <div class="card-header titulo-servidos-card">
                         <div class="row">
                             <div class="col-8">
-                                <h1 class="h6-form">CARGAR <br> EN TOLVA</h1>
+                                <h5 class="h6-form">CARGAR <br> EN TOLVA</h5>
                             </div>
                             <div class="col-4 explicacion">
                                 <h1 class="h6-form">?</h1>
@@ -130,13 +147,24 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card card-hdr-procesos card-servidos1">
                         <div class="card-header titulo-servidos-card">
-                            <h1 class="h6-form">CAPTURA <br> MANUAL</h1>
+                            <div class="row">
+                                <div class="col-3 explicacion comodin">
+                                    <h1 class="h6-form">?</h1>
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="h6-form">CAPTURA <br> MANUAL</h5>
+                                </div>
+                                <div class="col-3 comodin">
+                                    <h5 class="h6-form"><a href="{% url 'T-Servidos' %}">></a></h5>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class='porcentajes' style="--porcentaje: {{manuales}}; --color: blue">
@@ -146,6 +174,7 @@
                                 </svg>
                                 <span id="manuales" class="h6-form" data-target="{{manuales}}">0</span>
                             </div>
+
                         </div>
                         <div class="card-footer">
                             <div class="animacion">
@@ -161,12 +190,23 @@
                 <div class="face back">
 
                 </div>
+
             </div>
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card card-hdr-procesos  card-servidos1">
                         <div class="card-header titulo-servidos-card">
-                            <h1 class="h6-form">CORRALES <br> SERVIDOS</h1>
+                            <div class="row">
+                                <div class="col-3 explicacion comodin">
+                                    <h1 class="h6-form">?</h1>
+                                </div>
+                                <div class="col-6">
+                                    <h5 class="h6-form">CORRALES <br> SERVIDOS</h5>
+                                </div>
+                                <div class="col-3 comodin">
+                                    <h5 class="h6-form"><a href="{% url 'T-Corrales-Servidos' %}">></a></h5>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class='porcentajes' style="--porcentaje: {{servidos}}; --color: forestgreen">
@@ -176,6 +216,7 @@
                                 </svg>
                                 <span id="servidos" class="h6-form" data-target="{{servidos}}">0</span>
                             </div>
+
                         </div>
                         <div class="card-footer">
                             <div class="animacion">
@@ -187,8 +228,9 @@
                 <div class="face back">
 
                 </div>
+
             </div>
-            
+
         </div>
     </div>
 </div>
