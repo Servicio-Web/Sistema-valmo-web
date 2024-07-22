@@ -79,7 +79,7 @@
   --tolva-text: white;
   --tolva-backg: black;
 
-  --back-input-form: rgb(235, 235, 235);
+  --back-input-form: rgb(252, 252, 252);
   --color-input-form: rgb(27, 27, 27);
   --placeholder-input-form: rgb(65, 65, 65);
   --input-border: rgba(135, 255, 255, 0.747);
@@ -161,10 +161,10 @@
   --tolva-text: black;
   --tolva-backg: white;
 
-  --back-input-form: rgb(39, 39, 42);
+  --back-input-form: rgb(49, 49, 49);
   --color-input-form: rgb(255, 255, 255);
-  --placeholder-input-form: rgb(177, 177, 177);
-  --input-border: rgba(255, 114, 114, 0.747);
+  --placeholder-input-form: rgb(255, 255, 255);
+  --input-border: rgb(255, 255, 255);
 
   --select-hover-option: #fb5858;
   --select-hover-values: #5f5f5f;
@@ -318,17 +318,14 @@
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< INPUT PARA LOS FORMULARIOS <>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
-
-
-
 input {
   background-color: var(--back-input-form);
-  color: var(--color-input-form);
+  color: var(--color-input-form) !important;
   /* border: 1px black solid; */
 }
 
 input::placeholder {
-  color: var(--placeholder-input-form);
+  color: var(--placeholder-input-form) !important;
 }
 
 input:focus {

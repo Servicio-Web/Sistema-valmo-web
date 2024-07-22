@@ -1056,8 +1056,8 @@
 /* animnacion para servidos manuales */
 /* servidos manuales */
 .typewriter {
-  --blue: #5C86FF;
-  --blue-dark: #275EFE;
+  --blue: forestgreen;
+  --blue-dark: #007a00;
   --key: #fff;
   --paper: #EEF0FD;
   --text: #D3D4EC;
@@ -1432,14 +1432,15 @@
 .loaderTime {
   width: 65px;
   height: 65px;
-  border: 8px solid #ee9b00a6;
+  background-color: rgb(220, 220, 220);
+  border: 8px solid #ee0000a6;
   border-radius: 50px;
   position: relative;
 }
 
 .loaderTime span {
   display: block;
-  background: #ee9b00;
+  background: #ee0000;
 }
 
 .loaderTime .hour,
