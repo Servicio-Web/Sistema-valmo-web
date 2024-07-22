@@ -13,11 +13,11 @@
         <h1 class="mt-2 mb-5">PROCESOS - CONTROL DE SERVIDOS</h1>
         <div class="servidos-card">
             <div class="card-servidos">
-                <div class="face front">
+                <div class="face front" id="card-front">
                     <div class="card-header titulo-servidos-card">
                         <div class="row">
                             <div class="col-3 explicacion comodin">
-                                <h1 class="h6-form">?</h1>
+                                <h1 class="h6-form" onmouseover="voltearCarta(0)">?</h1>
                             </div>
                             <div class="col-6">
                                 <h5 class="h6-form">CORRALES <br> PENDIENTES</h5>
@@ -48,18 +48,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="face back">
-
+                <div class="face back" id="card-back">
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <h5 class="h6-form">CORRALES <br> PENDIENTES</h5>
+                            </div>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(0)">X</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
+                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
+                            delectus, possimus quo quia.</h4>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                    </div>
                 </div>
-
             </div>
-
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
                         <div class="row">
                             <div class="col-3 explicacion comodin">
-                                <h1 class="h6-form">?</h1>
+                                <h1 class="h6-form" onmouseover="voltearCarta(1)">?</h1>
                             </div>
                             <div class="col-6">
                                 <h5 class="h6-form">CARGAR <br> EN TOLVA</h5>
@@ -77,7 +93,6 @@
                             </svg>
                             <span id="tolva" class="h6-form" data-target="{{tolva}}">0</span>
                         </div>
-
                     </div>
                     <div class="card-footer">
                         <div class="animacion">
@@ -138,25 +153,32 @@
                 <div class="face back">
                     <div class="card-header titulo-servidos-card">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-3"></div>
+                            <div class="col-6">
                                 <h5 class="h6-form">CARGAR <br> EN TOLVA</h5>
                             </div>
-                            <div class="col-4 explicacion">
-                                <h1 class="h6-form">?</h1>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(1)">X</h1>
                             </div>
                         </div>
                     </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
+                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
+                            delectus, possimus quo quia.</h5>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                    </div>
                 </div>
-
             </div>
-
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card card-hdr-procesos card-servidos1">
                         <div class="card-header titulo-servidos-card">
                             <div class="row">
                                 <div class="col-3 explicacion comodin">
-                                    <h1 class="h6-form">?</h1>
+                                    <h1 class="h6-form" onmouseover="voltearCarta(2)">?</h1>
                                 </div>
                                 <div class="col-6">
                                     <h5 class="h6-form">CAPTURA <br> MANUAL</h5>
@@ -167,7 +189,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class='porcentajes' style="--porcentaje: {{manuales}}; --color: blue">
+                            <div class='porcentajes' style="--porcentaje: {{manuales}}; --color: forestgreen">
                                 <svg width="180" height="180">
                                     <circle class="circleGrafica" r="65" cx="50%" cy="50%" pathlength="{{registros}}" />
                                     <circle class="circleGrafica" r="65" cx="50%" cy="50%" pathlength="{{registros}}" />
@@ -188,9 +210,26 @@
                     </div>
                 </div>
                 <div class="face back">
-
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <h5 class="h6-form">CAPTURA <br> MANUAL</h5>
+                            </div>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(2)">X</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
+                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
+                            delectus, possimus quo quia.</h5>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                    </div>
                 </div>
-
             </div>
             <div class="card-servidos">
                 <div class="face front">
@@ -198,7 +237,7 @@
                         <div class="card-header titulo-servidos-card">
                             <div class="row">
                                 <div class="col-3 explicacion comodin">
-                                    <h1 class="h6-form">?</h1>
+                                    <h1 class="h6-form" onmouseover="voltearCarta(3)">?</h1>
                                 </div>
                                 <div class="col-6">
                                     <h5 class="h6-form">CORRALES <br> SERVIDOS</h5>
@@ -209,7 +248,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class='porcentajes' style="--porcentaje: {{servidos}}; --color: forestgreen">
+                            <div class='porcentajes' style="--porcentaje: {{servidos}}; --color: #006eff">
                                 <svg width="180" height="180">
                                     <circle class="circleGrafica" r="65" cx="50%" cy="50%" pathlength="{{registros}}" />
                                     <circle class="circleGrafica" r="65" cx="50%" cy="50%" pathlength="{{registros}}" />
@@ -226,11 +265,27 @@
                     </div>
                 </div>
                 <div class="face back">
-
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <h5 class="h6-form">CORRALES <br> SERVIDOS</h5>
+                            </div>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(3)">X</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
+                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
+                            delectus, possimus quo quia.</h5>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                    </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
@@ -384,9 +439,22 @@
             </div>
         </div>
     </div>
-
 </div>
-<script>document.addEventListener("DOMContentLoaded", function () {
+<script>
+    // document.getElementById("icono-voltear-carta").addEventListener("mouseover", function() {
+    //     document.getElementById("card-front").classList.add("cardVolteadaFront")
+    //     document.getElementById("card-back").classList.add("cardVolteadaBack")
+    // })
+
+    const cartasFront = document.querySelectorAll('.front');
+    const cartasBack = document.querySelectorAll(".back");
+
+    function voltearCarta(numero) {
+        cartasFront[numero].classList.toggle("cardVolteadaFront")
+        cartasBack[numero].classList.toggle("cardVolteadaBack")
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
         const counters = document.querySelectorAll('span[id]'); // Selecciona todos los spans con un ID
 
         counters.forEach(counter => {
