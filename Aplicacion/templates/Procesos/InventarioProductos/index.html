@@ -11,7 +11,10 @@
     <div class="card-body">
         <div class="row">
             <div class="col-10">
-                <h1>PROCESOS - INVENTARIO INICIAL PRODUCTOS </h1>
+                <h1>
+                    <a href="{% url 'Inventario_Presentacion' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+                    PROCESOS - INVENTARIO INICIAL PRODUCTOS 
+                </h1>
             </div>
             <div class="col-2">
                 {% if perms.Aplicacion.add_tblinventarioinicialesproductos %}

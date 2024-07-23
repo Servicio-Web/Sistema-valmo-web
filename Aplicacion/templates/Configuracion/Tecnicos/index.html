@@ -30,7 +30,7 @@
                                 <h5 class="h6-form">{{ grupo.name }}</h5>
                             </div>
                             <div class="col-sm-1 col-md-1 col-lg-5 col-xl-5">
-                                {% if perms.auth.change_user %}
+                                {% if perms.Aplicacion.change_tbltecnicos %}
                                 <a class="btn btn-success btn-sm" style="display: inline-block;"
                                     href="EdicionUsuario/{{item.usuario.id}}" role="button"><i
                                         class="fas fa-pen"></i>Editar usuarios</a>
@@ -100,10 +100,7 @@
                                         <i class="fa fa-pen"></i>Datos editados</button>
                                 </form>
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
             </div>

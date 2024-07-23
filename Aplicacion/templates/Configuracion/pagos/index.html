@@ -67,19 +67,19 @@
             <thead>
                 <tr>
                     {% if perms.Aplicacion.add_tblserviciosweb %}
-                    {% for Servicio in TServicio %}
-                    {% if Servicio.EstadoPago == False %}
-                    <th class="th-responsive">APLAZAR</th>
-                    {% else %}
-                    <th class="th-responsive">CANCELAR SERVICIO</th>
-                    {% endif %}
-                    {% endfor %}
+                        {% for Servicio in TServicio %}
+                            {% if Servicio.EstadoPago == False %}
+                            <th class="th-responsive">APLAZAR</th>
+                            {% else %}
+                            <th class="th-responsive">CANCELAR SERVICIO</th>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
 
                     {% for Servicio in TServicio %}
-                    {% if Servicio.EstadoPago == False %}
-                    <th class="th-responsive">NOTIFICACIONES</th>
-                    {% endif %}
+                        {% if Servicio.EstadoPago == False %}
+                        <th class="th-responsive">NOTIFICACIONES</th>
+                        {% endif %}
                     {% endfor %}
 
                     <th class="th-responsive">SERVICIO</th>

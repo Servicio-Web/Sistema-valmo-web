@@ -11,6 +11,7 @@
     <div class="card-body">
         <h1 class="mt-2 mb-5">PROCESOS - INVENTARIO</h1>
         <div class="servidos-card">
+            {% if perms.Aplicacion.add_tblinventarioinicialesmp or perms.Aplicacion.view_tblinventarioinicialesmp %}
             <div class="card-servidos">
                 <div class="face front" id="card-front">
                     <div class="card-header titulo-servidos-card">
@@ -62,6 +63,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% if perms.Aplicacion.add_tblinventarioinicialesproductos or perms.Aplicacion.view_tblinventarioinicialesproductos %}
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
@@ -112,7 +115,7 @@
                     </div>
                 </div>
             </div>
-
+            {% endif %}
         </div>
     </div>
 </div>

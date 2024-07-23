@@ -11,6 +11,7 @@
     <div class="card-body">
         <h1 class="mt-2 mb-5">PROCESOS - BÁSCULAS</h1>
         <div class="servidos-card">
+            {% if perms.Aplicacion.add_tblentradamp or perms.Aplicacion.view_tblentradamp %}
             <div class="card-servidos">
                 <div class="face front" id="card-front">
                     <div class="card-header titulo-servidos-card">
@@ -102,6 +103,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}            
+            {% if perms.Aplicacion.add_tblsalidamp or perms.Aplicacion.view_tblsalidamp %}
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
@@ -192,6 +195,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}            
+            {% if perms.Aplicacion.add_tblentradaproductos or perms.Aplicacion.view_tblentradaproductos %}
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
@@ -281,6 +286,8 @@
                     </div>
                 </div>
             </div>
+            {% endif %}            
+            {% if perms.Aplicacion.add_tblsalidaproductos or perms.Aplicacion.view_tblsalidaproductos %}
             <div class="card-servidos">
                 <div class="face front">
                     <div class="card-header titulo-servidos-card">
@@ -370,6 +377,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}            
         </div>
     </div>
 </div>

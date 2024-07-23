@@ -11,7 +11,10 @@
 {% if perms.Aplicacion.add_tblinventarioinicialesproductos %}
 <div class="card card-hdr">
     <div class="card-body">
-        <h1>AGREGAR INVENTARIO INICIAL PRODUCTOS</h1>
+        <h1>
+            <a href="{% url 'T-InventarioProductos' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+            AGREGAR INVENTARIO INICIAL PRODUCTOS
+        </h1>
 
         {% if messages %}
         {% for message in messages %}

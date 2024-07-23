@@ -11,7 +11,10 @@
 {% if perms.Aplicacion.add_tblinventarioinicialesmp %}
 <div class="card card-hdr">
     <div class="card-body">
-        <h1>AGREGAR INVENTARIO INICIAL MATERIA PRIMA</h1>
+        <h1>
+            <a href="{% url 'T-InventarioMP' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+            AGREGAR INVENTARIO INICIAL MATERIA PRIMA
+        </h1>
 
         {% if messages %}
         {% for message in messages %}
