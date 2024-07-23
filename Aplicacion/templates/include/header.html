@@ -195,7 +195,6 @@
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'Sistema' %}">
-
                     <span>Inicio</span>
                 </a>
             </li>
@@ -294,14 +293,24 @@
                         <span>Asignacion Corral</span>
                     </a>
                 {% endif %}
-                {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
+                {% if perms.Aplicacion.add_tblentradamp or perms.Aplicacion.view_tblentradamp or perms.Aplicacion.add_tblsalidamp or perms.Aplicacion.view_tblsalidamp or perms.Aplicacion.add_tblentradaproductos or perms.Aplicacion.view_tblentradaproductos or perms.Aplicacion.add_tblsalidaproductos or perms.Aplicacion.view_tblsalidaproductos %}
                 <a class="nav-link collapsed" href="{% url 'Bascula_Presentacion' %}">
                     <span>Báscula</span>
+                </a>
+                {% endif %}
+                {% if perms.Aplicacion.add_tblinventarioinicialesmp or perms.Aplicacion.view_tblinventarioinicialesmp or perms.Aplicacion.add_tblinventarioinicialesproductos or perms.Aplicacion.view_tblinventarioinicialesproductos %}
+                <a class="nav-link collapsed" href="{% url 'Inventario_Presentacion' %}">
+                    <span>Inventario</span>
                 </a>
                 {% endif %}
                 {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
                 <a class="nav-link collapsed" href="{% url 'Servidos_Presentacion' %}">
                     <span>Servidos</span>
+                </a>
+                {% endif %}
+                {% if perms.Aplicacion.add_tbltolva or perms.Aplicacion.view_tbltolva %}
+                <a class="nav-link collapsed" href="{% url 'T-Cargamento-Tolva' %}">
+                    <span>Vehiculos</span>
                 </a>
                 {% endif %}
             </li>

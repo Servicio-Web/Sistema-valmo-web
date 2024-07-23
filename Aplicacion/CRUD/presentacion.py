@@ -8,6 +8,17 @@ from django.db.models import Q
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE CATALOGOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # --------------------------------------------------------CLIENTES---------------------------------------------------------
+
+def presentacionBascula(request):
+    grupos = grupo_user(request)
+    ServiciosWeb = servicioActivo()
+    return render(request, 'Presentacion/basculas.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb})    
+
+def presentacionInventario(request):
+    grupos = grupo_user(request)
+    ServiciosWeb = servicioActivo()
+    return render(request, 'Presentacion/inventario.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb})    
+
 def presentacionServidos(request):
     grupos = grupo_user(request)
     ServiciosWeb = servicioActivo()
@@ -30,8 +41,3 @@ def presentacionServidos(request):
 
     return render(request, 'Presentacion/servidos.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb, 'manuales':manuales, 
                                             'registros':registros, 'pendientes':pendientes, 'servidos':servidos, 'tolva':tolva})
-
-def presentacionBascula(request):
-    grupos = grupo_user(request)
-    ServiciosWeb = servicioActivo()
-    return render(request, 'Presentacion/basculas.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb})    
