@@ -284,6 +284,29 @@
             </li>
             <li class="nav-heading">Contenido-Procesos</li>
             <li class="nav-item">
+                {% if perms.Aplicacion.add_tblmovimientoanimales or perms.Aplicacion.view_tblmovimientoanimales %}
+                    <a class="nav-link collapsed" href="{% url 'T-MovAnimales' %}">
+                        <span>Animales</span>
+                    </a>
+                {% endif %}
+                {% if perms.Aplicacion.add_tblasignacorrales or perms.Aplicacion.view_tblasignacorrales %}
+                    <a class="nav-link collapsed" href="{% url 'T-Asignacion' %}">
+                        <span>Asignacion Corral</span>
+                    </a>
+                {% endif %}
+                {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
+                <a class="nav-link collapsed" href="{% url 'Bascula_Presentacion' %}">
+                    <span>Báscula</span>
+                </a>
+                {% endif %}
+                {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
+                <a class="nav-link collapsed" href="{% url 'Servidos_Presentacion' %}">
+                    <span>Servidos</span>
+                </a>
+                {% endif %}
+            </li>
+            <!-- <li class="nav-item"> -->
+            <li class="nav-item" style="display: none;">
                 <a class="nav-link collapsed" data-bs-target="#forms-bascula" data-bs-toggle="collapse" href="#">
                     <span>Báscula</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -319,7 +342,7 @@
                     {% endif %}
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="display: none;">
                 <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
                     <span>Movimiento animales y corrales</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -340,18 +363,11 @@
                     {% endif %}
                 </ul>
             </li>
-            <li class="nav-item">
-                <li class="nav-item">
-                    {% if perms.Aplicacion.add_tblservido or perms.Aplicacion.view_tblservido %}
-                    <a class="nav-link collapsed" href="{% url 'Servidos_Presentacion' %}">
-                        <span>Servidos</span>
-                    </a>
-                    {% endif %}
-                </li>
-                <a class="nav-link collapsed" data-bs-target="#forms-servidos" data-bs-toggle="collapse" href="#" style="display: none;">
+            <li class="nav-item"  style="display: none;">
+                <a class="nav-link collapsed" data-bs-target="#forms-servidos" data-bs-toggle="collapse" href="#">
                     <span>Servidos</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="forms-servidos" class="nav-content collapse " data-bs-parent="#sidebar-nav" style="display: none;">
+                <ul id="forms-servidos" class="nav-content collapse " data-bs-parent="#sidebar-nav" >
                     
                     <li>
                         <a href="{% url 'T-Solicitud-Servidos' %}">
@@ -375,7 +391,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="display: none;">
                 <a class="nav-link collapsed" data-bs-target="#forms-tolva" data-bs-toggle="collapse" href="#">
                     <span>Cargamento de vehiculos</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -389,7 +405,7 @@
                     {% endif %}
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="display: none;">
                 <a class="nav-link collapsed" data-bs-target="#forms-inventario" data-bs-toggle="collapse" href="#">
                     <span>Inventario</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>

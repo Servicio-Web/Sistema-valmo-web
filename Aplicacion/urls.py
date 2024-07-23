@@ -18,7 +18,8 @@ from .views import CustomLoginView
 
 urlpatterns = [
      #  Presentacion
-    path('Servidos_presentacion/', presentacion.PresentacionServidos, name='Servidos_Presentacion'),
+    path('Servidos_presentacion/', presentacion.presentacionServidos, name='Servidos_Presentacion'),
+    path('Bascula_presentacion/', presentacion.presentacionBascula, name='Bascula_Presentacion'),
      
     # Vistas para el cliente
     path('Agregar_Servidos_Cliente/', cliente.formulario, name='FP-Cliente'),

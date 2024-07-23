@@ -1,4 +1,7 @@
-/* estilos para los circulos de servidos  */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< estilos para los circulos de servidos >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
 @keyframes rellenar {
   to {
     stroke-dasharray: var(--porcentaje) 100;
@@ -14,7 +17,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* margin-bottom: 15%; */
 }
 
 .porcentajes span {
@@ -46,7 +48,10 @@
   animation: rellenar 1s linear forwards;
 }
 
-
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+ 
 /* checkbox modo de vista */
 .theme-switch {
   --toggle-size: 16px;
@@ -982,24 +987,6 @@
 }
 
 /* -------------------------------------------------------------------------------- BOTON PARA EDITAR -------------------------------------------------------------------------------- */
-/* .pdf-red-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: rgba(21, 115, 71);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 255, 8, 0.416);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-  text-decoration: none !important;
-} */
-
 .edit-svgIcon {
   width: 14px;
 
@@ -1028,17 +1015,6 @@
 
   align-items: center;
 }
-
-/* .pdf-red-button:hover .edit-svgIcon {
-  width: 15px;
-  transition-duration: 0.3s;
-  transform: translateY(60%);
-  -webkit-transform: rotate(360deg);
-  -moz-transform: rotate(360deg);
-  -o-transform: rotate(360deg);
-  -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
-} */
 
 .pdf-red-button::before {
   content: "PDF";
@@ -1313,6 +1289,25 @@
 }
 
 /* animacion para tolva */
+.loaderTolvaBasculaEntrada {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scaleX(-1);
+}
+
+.truckWrapperBascula{
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  overflow-x: hidden;
+}
 .loaderTolva {
   width: fit-content;
   height: fit-content;
@@ -1490,6 +1485,4 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  /* height: 100vh; */
-  /* Ajusta según sea necesario */
 }

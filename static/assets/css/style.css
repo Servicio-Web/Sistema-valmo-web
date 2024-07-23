@@ -268,22 +268,6 @@
   cursor: pointer;
 }
 
-/* .card-servidos:hover .front {
-  transform: perspective(600px) rotateY(180deg);
-}
-
-.card-servidos:hover .back {
-  transform: perspective(600px) rotateY(360deg);
-} */
-
-/* .card-servidos .front {
-  transform: perspective(600px) rotateY(180deg);
-}
-
-.card-servidos .back {
-  transform: perspective(600px) rotateY(360deg);
-} */
-
 .cardVolteadaFront {
   transform: perspective(600px) rotateY(180deg) !important;
 }
@@ -297,7 +281,6 @@
   text-align: center;
   margin: auto;
 }
-
 
 .card-servidos1 {
   margin-bottom: 15%;
