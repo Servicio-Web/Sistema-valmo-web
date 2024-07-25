@@ -6,6 +6,7 @@ from django.utils import timezone
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from Aplicacion.views import editarDatosTecnicos
+from django.db.models import Sum
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ACTUALIZAR DATOS PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # --------------------------------------------------SERVIDOS MANUALES---------------------------------------------------------
 def actualizarEntradaMateriaPrima(request):
@@ -177,11 +178,20 @@ def actualizarSalidaProductos(request):
     messages.success(request, f'La Sálida de productos "{folio_v}" se ha actualizado exitosamente.')
     return redirect('T-Sal-Productos')
 
+def actualizarPeso(peso, folio):
+    suma_peso_total = tblDetalleMovAnimales.objects.filter(IDFolio = folio).aggregate(Sum('PesoTotal'))['PesoTotal__sum']
+    # print(suma_peso_total)
+    guardarPeso = tblMovimientoAnimales.objects.get(Folio = folio)
+    guardarPeso.Peso = suma_peso_total
+    guardarPeso.save()
+
 def actualizarCantidadAnimales(request):
     id_v = request.POST['id']
     folio_v = request.POST['folio']
     animal_v = request.POST['animal']
     cantidad_v = request.POST['cantidad']
+    pesoTotal_v = request.POST['pesoTotal']
+    pesoPromedio = round(float(pesoTotal_v) / float(cantidad_v), 2)
 
     # tecnicos
     TecnicoEditor_v = request.POST['tecnico'].upper()
@@ -193,7 +203,12 @@ def actualizarCantidadAnimales(request):
    
     cantidadAnimales.IDAnimales = animal_instancia
     cantidadAnimales.Cantidad = cantidad_v
+    cantidadAnimales.PesoPromedio = pesoPromedio
+    cantidadAnimales.PesoTotal = pesoTotal_v
     cantidadAnimales.save()
+
+    actualizarPeso(pesoTotal_v, folio_v)
+
     try:
         editarDatosTecnicos(request, TecnicoEditor_v, NombreTabla_v, IDFilaTabla_v)
     except Exception as e:

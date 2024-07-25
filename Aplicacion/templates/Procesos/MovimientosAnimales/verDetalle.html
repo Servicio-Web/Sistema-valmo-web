@@ -32,6 +32,8 @@
                         <th scope="col">FOLIO</th>
                         <th scope="col">Animal</th>
                         <th scope="col">Cantidad</th>
+                        <th scope="col">Peso promedio</th>
+                        <th scope="col">Peso total</th>
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <th scope="col">Acciones</th>
                         {% endif %}
@@ -43,6 +45,8 @@
                         <th scope="row">{{ animales.IDFolio }}</th>
                         <td>{{ animales.IDAnimales_id__Descripcion}}</td>
                         <td>{{ animales.Cantidad }}</td>
+                        <td>{{ animales.PesoPromedio }} Kg</td>
+                        <td>{{ animales.PesoTotal }} Kg</td>
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <td>
                             {% if perms.Aplicacion.change_tbldetallemovanimales %}

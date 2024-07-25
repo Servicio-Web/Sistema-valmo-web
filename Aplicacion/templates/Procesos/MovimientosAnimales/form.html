@@ -33,8 +33,8 @@
                     <div class="row mr-1 ml-1 fila">
                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
                             <h6 class="h6-form">CLIENTE <label>*</label></h6>
-                            {% if Agrego_aniamles %}         
-                                               
+                            {% if Agrego_aniamles %}
+
                             <input type="hidden" value="{{Agrego_aniamles.cliente}}" name="cliente">
                             <input type="text" value="{{FiltradoCliente.Nombre}}" class="form-control" readonly>
                             {% else %}
@@ -50,8 +50,7 @@
                             <h6 class="h6-form">TIPO DE MOVIMIENTO <label>*</label></h6>
                             {% if Agrego_aniamles %}
                             <input type="hidden" value="{{Agrego_aniamles.movimiento}}" name="movimiento">
-                            <input type="text"  value="{{FiltradoMovimiento.Descripcion}}"
-                                class="form-control" readonly>
+                            <input type="text" value="{{FiltradoMovimiento.Descripcion}}" class="form-control" readonly>
                             {% else %}
                             <select class="select2 form-control col-12" name="movimiento" required>
                                 {% for Movimiento in FMovimiento %}
@@ -67,8 +66,7 @@
                             <h6 class="h6-form">CORRAL <label>*</label></h6>
                             {% if Agrego_aniamles %}
                             <input type="hidden" value="{{Agrego_aniamles.corral}}" name="corral">
-                            <input type="text"  value="{{FiltradoCorral.Descripcion}}" class="form-control"
-                                readonly>
+                            <input type="text" value="{{FiltradoCorral.Descripcion}}" class="form-control" readonly>
                             {% else %}
                             <select class="select2 form-control col-12" name="corral" required id="select-corral">
                                 <option value="">Selecciona corral</option>
@@ -99,13 +97,13 @@
                     <br>
                     <div class="row mr-1 ml-1 fila">
                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
-                            <h6 class="h6-form">PESO <label>*</label></h6>
+                            <h6 class="h6-form">PESO POR LOTE<label>*</label></h6>
                             {% if Agrego_aniamles %}
                             <input type="text" name="peso" value="{{Agrego_aniamles.peso}}" class="form-control"
                                 readonly>
                             {% else %}
-                            <input type="number" name="peso" step="0.01" class="form-control"
-                                placeholder="Ingrese el peso" required>
+                            <input type="number" name="peso" step="0.01" class="form-control" value="0"
+                                placeholder="Ingrese el peso" readonly>
                             {% endif %}
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
@@ -168,8 +166,8 @@
                                 <h6 class="h6-form">Agregar cantidad y tipo de animal</h6>
                             </div>
                             <div class="col-4">
-                                <button type="submit" class="btn btn-sm btn-primary agregarBoton px-5" name="guardarAnimal"
-                                    id="agregarBoton"><i class="fa fa-plus"></i> Agregar</button>
+                                <button type="submit" class="btn btn-sm btn-primary agregarBoton px-5"
+                                    name="guardarAnimal" id="agregarBoton"><i class="fa fa-plus"></i> Agregar</button>
                             </div>
                         </div>
 
@@ -177,8 +175,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col" class="th-responsive col-2">FOLIO</th>
-                                    <th scope="col" class="th-responsive col-4">TIPO ANIMAL</th>
-                                    <th scope="col" class="th-responsive col-4">CANTIDAD</th>
+                                    <th scope="col" class="th-responsive col-3">TIPO ANIMAL</th>
+                                    <th scope="col" class="th-responsive col-3">CANTIDAD</th>
+                                    <th scope="col" class="th-responsive col-3">PESO TOTAL</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,6 +203,11 @@
                                             No se permiten puntos decimales.
                                         </div>
                                     </td>
+                                    <td class="td-agregar">
+                                        <h6 class="td-responsive">PESO TOTAL:</h6>
+                                        <input type="text" name="pesoTotal" class="form-control"
+                                            placeholder="Ingrese el peso" required step="1">
+                                    </td>
                                 </tr>
                                 {% for animales in Detalle%}
 
@@ -218,6 +222,10 @@
                                     <td class="td-agregar">
                                         <h6 class="td-responsive">CANTIDAD:</h6>
                                         {{ animales.Cantidad }}
+                                    </td>
+                                    <td class="td-agregar">
+                                        <h6 class="td-responsive">PESO TOTAL:</h6>
+                                        {{ animales.PesoTotal }}
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -251,7 +259,7 @@
         });
     });
 
-    
+
 </script>
 
 {% else %}

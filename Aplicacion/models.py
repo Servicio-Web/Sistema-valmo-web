@@ -253,6 +253,8 @@ class tblDetalleMovAnimales(models.Model):
     IDFolio = models.CharField(max_length=150,null=True)
     IDAnimales = models.ForeignKey(tblAnimalesTipo, on_delete=models.DO_NOTHING, null=True)
     Cantidad = models.IntegerField(null=True)
+    PesoTotal = models.FloatField(null=True)
+    PesoPromedio = models.FloatField(null=True)
     
 class tblMovimientoAnimales(models.Model):
     ID = models.AutoField(primary_key=True)

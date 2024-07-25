@@ -39,6 +39,7 @@
                     <div class="row mr-1 ml-1 fila">
                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
                             <h6 class="h6-form">PESO:</h6>
+                            <input type="hidden" value="{{AgMovimientos.Peso}}" name="peso">
                             <label> {{AgMovimientos.Peso}}</label>
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
@@ -61,7 +62,6 @@
                             <label>{{AgMovimientos.Notas}}</label>
                         </div>
                     </div>
-
             </div>
             <div class="col-sm-12 col-md col-sm" style="border: 1px rgb(124, 124, 124) solid;">
                 <div class="row mr-1 ml-1 pt-3">
@@ -76,11 +76,16 @@
                     <div class="col-sm-12 col-md-12 col-lg col-xl columna">
                         <h6 class="h6-form">CANTIDAD ANIMAL<label>*</label></h6>
                         <input type="text" name="cantidad" autofocus class="form-control"
-                            placeholder="Ingrese la cantidad (obligatorio)" required step="1"
+                            placeholder="Ingrese la cantidad" required step="1"
                             oninput="checkInputValidity(this, 'partidaErrorMessage', 'agregarBoton', 'salirBoton')">
                         <div class="invalid-feedback" id="partidaErrorMessage" style="display: none;">
                             No se permiten puntos decimales.
                         </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">PESO TOTAL<label>*</label></h6>
+                        <input type="text" name="pesoTotal" class="form-control" value="0" placeholder="Ingrese el peso"
+                            required step="1">
                     </div>
                 </div>
                 <div class="form-group fila mt-3 mb-3">
@@ -109,10 +114,12 @@
                             <th scope="col" class="th-responsive">FOLIO</th>
                             <th scope="col" class="th-responsive">Animal</th>
                             <th scope="col" class="th-responsive">Cantidad</th>
+                            <th scope="col" class="th-responsive">Peso Promedio</th>
+                            <th scope="col" class="th-responsive">Peso Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for animales in Detalle%}
+                        {% for animales in Detalle %}
                         <tr>
                             <th scope="row" style="border-bottom: 1px white solid;">
                                 <h6 class="td-responsive">ID:</h6>{{ animales.IDFolio }}
@@ -124,6 +131,14 @@
                             <td class="td-agregar">
                                 <h6 class="td-responsive">CANTIDAD:</h6>
                                 {{ animales.Cantidad }}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO PROMEDIO:</h6>
+                                {{ animales.PesoPromedio }} KG
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO TOTAL:</h6>
+                                {{ animales.PesoTotal }} KG
                             </td>
                         </tr>
                         {% endfor %}

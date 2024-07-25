@@ -21,7 +21,7 @@
                 <input type="hidden" class="form-control" name="tecnico"
                     value="{{ user.first_name }} {{user.last_name}}">
                 <div class="row mr-1 ml-1 fila">
-                    <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 columna">
+                    <div class="col-sm-12 col-md-12 col-lg-9 col-xl-6 columna">
                         <h6 class="h6-form">TIPO ANIMAL <label>*</label></h6>
                         <select class="select2 form-control col-12" name="animal" required>
                             <option value="{{FiltradoAnimales.ID}}">
@@ -35,6 +35,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
                         <h6 class="h6-form">CANTIDAD <label>*</label></h6>
                         <input type="tel" name="cantidad" value="{{TCantidadMovimientoAnimales.Cantidad}}"
+                            class="form-control" placeholder="Ingrese la cantidad" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">PESO TOTAL <label>*</label></h6>
+                        <input type="tel" name="pesoTotal" value="{{TCantidadMovimientoAnimales.PesoTotal}}"
                             class="form-control" placeholder="Ingrese la cantidad" required>
                     </div>
                 </div>

@@ -139,7 +139,7 @@ def editarOperadoresSalidaProductos(request, ID):
 
 def editarCantidadMovimientosAnimales(request, ID):
     grupos = grupo_user(request)
-    TCantidadMovimientoAnimales= tblDetalleMovAnimales.objects.get(ID=ID)
+    TCantidadMovimientoAnimales = tblDetalleMovAnimales.objects.get(ID=ID)
     animal = TCantidadMovimientoAnimales.IDAnimales.ID
     FiltradoAnimales = tblAnimalesTipo.objects.get(ID=animal)
     FEAnimal = tblAnimalesTipo.objects.all()
