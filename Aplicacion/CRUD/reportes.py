@@ -87,7 +87,7 @@ def reporteMovSalidaMP(request):
 # REPORTES DE ANIMALES
 def reporteAnimalesMovimientos(request):
     FechaDia = datetime.now().strftime('%Y-%m-%d')
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
@@ -113,12 +113,7 @@ def reporteAnimalesMovimientos(request):
                 Nombre = TECliente.Nombre
 
             return render(request, 'Reportes/Animales/MovimientoAnimales.html', {
-                'reportes': reportes,
-                'FClientes': FClientes,
-                'Nombre': Nombre,
-                'Cliente': Cliente,
-                'Fecha': Fecha,
-                'Fecha2': Fecha2,
+                'reportes': reportes, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2,
             })
     else:
         reportes = tblMovimientoAnimales.objects.filter(Fecha__date=FechaDia).exclude(IDCliente=1) \
@@ -128,16 +123,12 @@ def reporteAnimalesMovimientos(request):
         Cliente = ''
 
         return render(request, 'Reportes/Animales/MovimientoAnimales.html', {
-            'reportes': reportes,
-            'FechaDeHoy': FechaDeHoy,
-            'FClientes': FClientes,
-            'Nombre': Nombre,
-            'Cliente': Cliente,
+            'reportes': reportes, 'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente,
         })
 
 # REPORTES ANIMALES
 def reportePorClientes(request):
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
@@ -148,9 +139,9 @@ def reportePorClientes(request):
             if Cliente == 'todos':
                 consulta_sql = """SELECT TT.CLIENTE, TT.CORRALES, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
                 FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRALES,
-                SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
                 AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
                 AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS SALIDAS
                 FROM  Aplicacion_tblmovimientoanimales
                 INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales. IDCliente_id 
@@ -168,10 +159,10 @@ def reportePorClientes(request):
                                                                                       'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha})
             else:
                 consulta_sql = """SELECT TT.CLIENTE, TT.CORRAL, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
-                FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL , Aplicacion_tblcorrales.FechaAsigna AS FECHA,
-                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL , DATE(Aplicacion_tblcorrales.FechaAsigna) AS FECHA,
+                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
                     AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
-                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
                     AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS SALIDAS
                 FROM   Aplicacion_tblmovimientoanimales
                 INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID =  Aplicacion_tblmovimientoanimales.IDCliente_id 
@@ -194,9 +185,9 @@ def reportePorClientes(request):
     else:
         consulta_sql = """SELECT TT.CLIENTE, 0, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
         FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE,
-        SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+        SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
         AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
-        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN Aplicacion_tblcorrales.FechaAsigna 
+        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
         AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS SALIDAS
         FROM  Aplicacion_tblmovimientoanimales
         INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales. IDCliente_id 
@@ -214,24 +205,22 @@ def reportePorClientes(request):
 
 # REPORTES DE ANIMALES
 def reportePorClientesCorrales(request):
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')
             Fecha = request.POST.get('fecha1')
             Fecha2 = request.POST.get('fecha2')
-            print(type(Fecha))
-            print(type(Fecha2))
             if Cliente == 'todos':
                 consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
-                    BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha  
-                    BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
                     BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
                     BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
                 FROM  Aplicacion_tblmovimientoanimales
                 INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
@@ -250,13 +239,13 @@ def reportePorClientesCorrales(request):
                                                                                    'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
             else:
                 consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
-                    BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha  
-                    BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
                     BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
-                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
                     BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
                 FROM  Aplicacion_tblmovimientoanimales
                 INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
@@ -277,13 +266,13 @@ def reportePorClientesCorrales(request):
                                                                                    'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
     else:
         consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
-        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
-            BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
-        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha  
-            BETWEEN Aplicacion_tblcorrales.FechaAsigna AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
-        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0 AND Aplicacion_tblmovimientoanimales.Fecha 
+        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+            BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+            BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
             BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
-        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND Aplicacion_tblmovimientoanimales.Fecha 
+        SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
             BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
         FROM  Aplicacion_tblmovimientoanimales
         INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
@@ -875,8 +864,8 @@ def GeneraListaFechas(ff, fi):
 
 #   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
 def CantidadActualAnimales(IDCorral, fecha):
-    query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
-    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA
+    query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
+    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA
     FROM Aplicacion_tblmovimientoanimales 
     INNER JOIN Aplicacion_tbldetallemovanimales ON Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
     WHERE Aplicacion_tblmovimientoanimales.IDCorral_id= %s  AND Aplicacion_tblmovimientoanimales.Fecha BETWEEN 

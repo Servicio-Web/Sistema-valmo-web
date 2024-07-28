@@ -11,7 +11,7 @@
     <div class="card-body">
         <h1>
             <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
-            REPORTES - MOVIMIENTOS DE ANIMALES - POR CLIENTE CORRAL
+            REPORTES - MOVIMIENTOS DE ANIMALES - POR CLIENTE
         </h1>
         <div class="card card-hdr-procesos">
             <div class="card-header">
@@ -40,10 +40,10 @@
                                     </div>
                                     <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
                                         {% if Fecha is none %}
-                                        <input type="datetime-local" name="fecha1" class="form-control" style=" border-radius: 0;"
+                                        <input type="date" name="fecha1" class="form-control" style=" border-radius: 0;"
                                             value="{{FechaDeHoy}}">
                                         {% else %}
-                                        <input type="datetime-local" name="fecha1" class="form-control" style=" border-radius: 0;"
+                                        <input type="date" name="fecha1" class="form-control" style=" border-radius: 0;"
                                             value="{{Fecha}}">
                                         {% endif %}
 
@@ -85,8 +85,8 @@
                         <td>{{ reporte.0 }}</td>
                         <td>{{ reporte.1 }}</td>
                         <td>{{ reporte.2 }}</td>
-                        <td>{{ reporte.3 }}</td>
                         <td>{{ reporte.4 }}</td>
+                        <td>{{ reporte.3 }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
