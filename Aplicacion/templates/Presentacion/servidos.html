@@ -61,9 +61,12 @@
                         </div>
                     </div>
                     <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
-                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
-                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
-                            delectus, possimus quo quia.</h4>
+                        <h6 style="font-size: 18px;"><b>Agregar:</b> Esta opción permite añadir más corrales a la lista
+                            de espera para ser servidos.<br>
+                            <b>Mostrar y editar:</b> Aquí se muestra la lista de corrales pendientes por servir y la
+                            opción de corregir datos erróneos.
+
+                        </h6>
                     </div>
                     <div class="card-footer pt-4">
                         <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
@@ -163,12 +166,14 @@
                         </div>
                     </div>
                     <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
-                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
-                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
-                            delectus, possimus quo quia.</h5>
+                        <h6 style="font-size: 18px;"><b>Asginar corral a la tolva:</b> Esta opción permite asignar los
+                            corrales agrupados por productos a un vehículo específico, con la posibilidad de editar los
+                            corrales asignados por defecto
+
+                        </h6>
                     </div>
                     <div class="card-footer pt-4">
-                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                        <h5 class="h6-form"><a href="{% url 'FT-Consolidacion' %}">Ver detalles</a></h5>
                     </div>
                 </div>
             </div>
@@ -222,12 +227,11 @@
                         </div>
                     </div>
                     <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
-                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
-                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
-                            delectus, possimus quo quia.</h5>
+                        <h6 style="font-size: 18px;"><b>Captura manual de corrales:</b> Para los corrales servidos en vehículos sin tablets, el peso deberá ser capturado manualmente. 
+                        </h6>
                     </div>
                     <div class="card-footer pt-4">
-                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                        <h5 class="h6-form"><a href="{% url 'T-Servidos' %}">Ver detalles</a></h5>
                     </div>
                 </div>
             </div>
@@ -277,12 +281,12 @@
                         </div>
                     </div>
                     <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
-                        <h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti quas alias, quod autem
-                            ullam quo rerum sapiente quos debitis labore soluta nostrum! Iste ad provident fuga
-                            delectus, possimus quo quia.</h5>
+
+                        <h6 style="font-size: 18px;"><b>Corrales servidos:</b>Aquí se muestran los corrales que ya han sido servidos y cuyo peso ha sido capturado.
+                        </h6>
                     </div>
                     <div class="card-footer pt-4">
-                        <h5 class="h6-form"><a href="{% url 'T-Solicitud-Servidos' %}">Ver detalles</a></h5>
+                        <h5 class="h6-form"><a href="{% url 'T-Corrales-Servidos' %}">Ver detalles</a></h5>
                     </div>
                 </div>
             </div>

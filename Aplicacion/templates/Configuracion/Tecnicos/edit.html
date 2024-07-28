@@ -8,7 +8,7 @@
 {% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
 <div class="card card-hdr">
     <div class="card-body">
-        <h1>EDITAR USUARIO #{{TEUser.id}}</h1>
+        <h1><a href="{% url 'TUsuarios' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>EDITAR USUARIO #{{TEUser.id}}</h1>
 
         <form action="/ActualizarUsuario/" method="POST" autocomplete="off">{% csrf_token %}
             <div class="form-group">

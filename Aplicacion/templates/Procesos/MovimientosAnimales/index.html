@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-10">
-                <h1>PROCESOS - MOVIMIENTOS ANIMALES</h1>
+                <h1>PROCESOS - MOVIMIENTOS ANIMALES ({{Movimiento}})</h1>
             </div>
             <div class="col-2">
                 {% if perms.Aplicacion.add_tblmovimientoanimales %}
@@ -63,9 +63,9 @@
                         <th class="th-responsive">CLAVES
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th>
-                        <th class="th-responsive">MOVIMIENTO
+                        <!-- <th class="th-responsive">MOVIMIENTO
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
+                        </th> -->
                         <th class="th-responsive">CLIENTE
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th>
@@ -112,10 +112,10 @@
                             <h6 class="td-responsive">CLAVES:</h6>
                             {{ Moviemientos.Folio}}
                         </td>
-                        <td>
+                        <!-- <td>
                             <h6 class="td-responsive">MOVIMIENTO:</h6>
                             {{ Moviemientos.IDMovimiento_id__Descripcion}}
-                        </td>
+                        </td> -->
                         <td>
                             <h6 class="td-responsive">CLIENTE:</h6>
                             {{ Moviemientos.IDCliente_id__Nombre}}
@@ -157,11 +157,11 @@
                                     </svg>
                                 </button>
                             </a>
-                            {% endif %}
-                            <!-- {% if perms.Aplicacion.delete_tblmovimientoanimales %}
-                            <a class="btn btn-danger btn-sm buttonEliminar" style="display: inline-block;"
-                                href="EliminarCliente/{{Cliente.ID}}" role="button"><i class="fas fa-trash-alt"></i></a>
-                            {% endif %} -->
+                            <form action="/Descarga_PDF_Movimiento_Animales/" method="POST">{% csrf_token %}
+                                <input type="hidden" value="{{Moviemientos.Folio}}" name="movimientoAnimales">
+                                <button class="pdf-red-button" type="submit"></button>
+                            </form>
+                            {% endif %}                            
                         </td>
                         {% endif %}
                         <td class="td-salto"></td>

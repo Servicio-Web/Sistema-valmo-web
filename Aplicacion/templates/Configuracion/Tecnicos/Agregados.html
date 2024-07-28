@@ -9,14 +9,18 @@
 {% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
 <div class="card card-hdr">
     <div class="card-body">
-        <h1 style="display: inline-block;">DATOS AGREGADOS POR EL TÉCNICO </h1>
-        <h5 class="h6-form" style="display: inline-block;"> - {{usuario.first_name}} {{usuario.last_name}}</h5>
+        <div class="row">
+            <div class="col-10">
+                <h1 style="display: inline-block;">
+                    <a href="{% url 'TUsuarios' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+                    DATOS AGREGADOS POR EL TÉCNICO - {{usuario.first_name}}
+                    {{usuario.last_name}} </h1>
+            </div>
+        </div>
+
+        <h5 class="h6-form" style="display: inline-block;"> </h5>
         <div class="row centrar">
-            <a href="{% url 'TUsuarios' %}">
-                <button type="button" class="btn button-add col-12">
-                    <i class="fa fa-arrow-left"></i> VOLVER A LOS USUARIOS
-                </button>
-            </a>
+
         </div>
 
         <div class="row">

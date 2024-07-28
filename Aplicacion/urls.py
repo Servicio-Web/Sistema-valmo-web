@@ -426,6 +426,7 @@ urlpatterns = [
     path('Descarga_PDF_Salida_Bascula/', DescargaPDF.salidaBasculas, name="PDF_Salida_Bascula"), # PDF salida productos
     path('Descarga_PDF_Entrada_Materia_Prima/', DescargaPDF.entradaMateriaPrima, name="PDF_Entrada_Materia_Prima"), # PDF entrada materias primas
     path('Descarga_PDF_Salida_Materia_Prima/', DescargaPDF.salidaMateriaPrima, name="PDF_Salida_Materia_Prima"), # PDF salida materias primas
+    path('Descarga_PDF_Movimiento_Animales/', DescargaPDF.movimientoAnimales, name="PDF_Movimientos_Animales"), # PDF salida materias primas
 
     # PDF Reportes
     path('Descarga_PDF_Reporte_Movimientos_Servidos/', DescargaPDF.reporteMovimientoServidos, name="PDF_Reportes_Mov_Servidos"), # PDF movimientos servidos

@@ -167,13 +167,18 @@ def TablaMovimientoAnimales(request):
         'Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDMovimiento_id__Descripcion', 
         'Fecha',  'Peso', 'NoPartida', 'No_Guia', 'Notas'
     )
+        if Movimiento == 1 or Movimiento == "1":
+            Movimiento = "Entrada"
+        else:
+            Movimiento = "Sálida"
     else:
          TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = 1).values( 'ID',
         'Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDMovimiento_id__Descripcion', 
         'Fecha', 'Peso', 'NoPartida', 'No_Guia', 'Notas'
     )
+         Movimiento  = "Entrada"
     ServiciosWeb = servicioActivo()
-    return render(request, 'Procesos/MovimientosAnimales/index.html',{'grupos': grupos,
+    return render(request, 'Procesos/MovimientosAnimales/index.html',{'grupos': grupos, 'Movimiento':Movimiento,
     'ServiciosWeb':ServiciosWeb, 'TMovimientoEntradaAnimales': TMovimientoEntradaAnimales})
 
 # -----------------------------------------------DETALLES ANIMALES----------------------------------------------------

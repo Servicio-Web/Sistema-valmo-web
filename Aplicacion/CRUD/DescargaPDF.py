@@ -249,6 +249,48 @@ def salidaMateriaPrima(request):
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="Servidos {formatted_fecha_actual}.pdf"'
     return response
+
+# ---------------------------------------------------------PDF PARA SALIDAS DE MATERIAS PRIMAS---------------------------------------------------------
+def movimientoAnimales(request):
+    valor = 13
+    formatoClave = "F-000000"
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+    
+    dataInput= request.POST.get('movimientoAnimales', '')
+    if dataInput is not None and dataInput != '':
+        Detalle = tblDetalleMovAnimales.objects.filter(IDFolio = dataInput).values('ID', 'IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal', 'PesoPromedio')
+
+        movimientoAnimales = tblMovimientoAnimales.objects.get(Folio = dataInput)
+        Cliente = movimientoAnimales.IDCliente.ID
+        Corral = movimientoAnimales.IDCorral.ID
+        movimiento = movimientoAnimales.IDMovimiento.ID
+        if movimiento == 1 or movimiento == "1":
+            mov = "Entrada"
+        else:
+            mov = "Sálida"
+        # fecha = movimientoAnimales.Fecha
+        FiltradoCliente = tblClientes.objects.get(ID=Cliente)
+        FiltradoCorral = tblCorrales.objects.get(ID=Corral)
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/MovimientoAnimales/index.html', {'logo_url': logo_url, 'Detalle':Detalle, 'corral':FiltradoCorral,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{mov} Movimiento Animales {formatted_fecha_actual}.pdf"'
+    return response
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
