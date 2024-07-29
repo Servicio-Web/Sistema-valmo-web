@@ -39,19 +39,19 @@
                                     <!-- <input type="hidden" value="todos" name="contenedor"> -->
                                     <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha is none %}
-                                        <input type="datetime-local" name="fecha1" class="form-control"
+                                        <input type="date" name="fecha1" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
                                         {% else %}
-                                        <input type="datetime-local" name="fecha1" class="form-control"
+                                        <input type="date" name="fecha1" class="form-control"
                                             style=" border-radius: 0;" value="{{Fecha}}">
                                         {% endif %}
                                     </div>
                                     <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha2 is none %}
-                                        <input type="datetime-local" name="fecha2" class="form-control"
+                                        <input type="date" name="fecha2" class="form-control"
                                             style=" border-radius: 0;" value="{{FechaDeHoy}}">
                                         {% else %}
-                                        <input type="datetime-local" name="fecha2" class="form-control"
+                                        <input type="date" name="fecha2" class="form-control"
                                             style=" border-radius: 0;" value="{{Fecha2}}">
                                         {% endif %}
 

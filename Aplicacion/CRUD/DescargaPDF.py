@@ -95,8 +95,8 @@ def cargamento_tolva(request):
 
 # ------------------------------------------------------------PDF PARA ENTRADA DE PRODUCTOS------------------------------------------------------------
 def entradaBasculas(request):
-    valor = 2
-    formatoClave = cargar_folio(valor)
+    # valor = 2
+    # formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -112,8 +112,8 @@ def entradaBasculas(request):
                     'IDPresentacion_id__Descripcion', 'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas'
         )
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/EntradaProductos/index.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'entradaBascula':entradaBascula, 'chofer':chofer})
+    html_string = render_to_string('Descargas/PDF/EntradaProductos/index.html', {'logo_url': logo_url, 'folio':dataInput,
+    'fecha_actual': fecha_actual, 'entradaBascula':entradaBascula, 'chofer':chofer})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -131,8 +131,8 @@ def entradaBasculas(request):
 
 # ------------------------------------------------------------PDF PARA SALIDAS DE PRODUCTOS------------------------------------------------------------
 def salidaBasculas(request):
-    valor = 3
-    formatoClave = cargar_folio(valor)
+    # valor = 3
+    # formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -153,7 +153,7 @@ def salidaBasculas(request):
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/SalidaProductos/index.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'salidaBascula':salidaBascula, 'chofer':chofer,
+    'folio':dataInput, 'fecha_actual': fecha_actual, 'salidaBascula':salidaBascula, 'chofer':chofer,
     'procedencia': procedencia})
 
     # Create a BytesIO buffer to receive the PDF
@@ -172,8 +172,8 @@ def salidaBasculas(request):
 
 # ---------------------------------------------------------PDF PARA ENTRADA DE MATERIAS PRIMAS---------------------------------------------------------
 def entradaMateriaPrima(request):
-    valor = 4
-    formatoClave = cargar_folio(valor)
+    # valor = 4
+    # formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -193,7 +193,7 @@ def entradaMateriaPrima(request):
         
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/EntradaMateriaPrima/index.html', {'logo_url': logo_url, 'procedencia':procedencia, 
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'entradaMatPrima':entradaMatPrima, 'chofer':chofer})
+    'folio':dataInput, 'fecha_actual': fecha_actual, 'entradaMatPrima':entradaMatPrima, 'chofer':chofer})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -211,8 +211,8 @@ def entradaMateriaPrima(request):
 
 # ---------------------------------------------------------PDF PARA SALIDAS DE MATERIAS PRIMAS---------------------------------------------------------
 def salidaMateriaPrima(request):
-    valor = 5
-    formatoClave = cargar_folio(valor)
+    # valor = 5
+    # formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user
@@ -230,10 +230,11 @@ def salidaMateriaPrima(request):
             'ID', 'IDFolio', 'IDCliente_id__Nombre', 'IDAlmacen_id__Cliente', 'IDMateriaPrima_id__Descripcion', 
             'IDPresentacion_id__Descripcion',   'IDPresentacion_id', 'cantidad', 'referencia', 'fecha', 'notas'
         )
+    print(dataInput)
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/SalidaMateriaPrima/index.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'salidaBascula':salidaBascula, 'chofer':chofer,
+    'folio': dataInput, 'fecha_actual': fecha_actual, 'salidaBascula':salidaBascula, 'chofer':chofer,
     'procedencia': procedencia})
 
     # Create a BytesIO buffer to receive the PDF
@@ -350,7 +351,7 @@ def reporteMovimientoServidos(request):
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteServidos/Movimientos.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,
-                                        'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+                                        'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha1': Fecha, 'Fecha2': Fecha2})
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
 
@@ -524,7 +525,7 @@ def reporteLiquidacionServidos(request):
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteServidos/Liquidacion.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,'reportes2': reportes2,
-            'DataToRep':DataToRep, 'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+            'DataToRep':DataToRep, 'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha1': Fecha, 'Fecha2': Fecha2})
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
 
@@ -566,7 +567,7 @@ def reporteEntradaMateriaPrima(request):
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteMateriaPrima/Entrada.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -609,7 +610,7 @@ def reporteSalidaMateriaPrima(request):
         
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteMateriaPrima/Salida.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -658,7 +659,7 @@ def reporteMovimientoAnimales(request):
         
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteAnimales/Movimientos.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -706,7 +707,7 @@ def reporteMovimientoAnimalesCorral(request):
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2])
+                    consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2])
                 reportes = cursor.fetchall()
             Nombre = 'En general'
             Cliente = 'todos'
@@ -732,14 +733,14 @@ def reporteMovimientoAnimalesCorral(request):
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
+                    consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                 reportes = cursor.fetchall()
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
-        
+    
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteAnimales/Corral.html', {'logo_url': logo_url,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -880,10 +881,10 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
 
 # Genera una lista de fechas a partir de una inicial y final
 def GeneraListaFechas(ff, fi):
-    FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
-    FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
+    FechaInicial = datetime.strptime(ff, '%Y-%m-%d')
+    FechaFinal = datetime.strptime(fi, '%Y-%m-%d')
     Fecha = FechaInicial
-    ListaFechas = [Fecha.strftime('%Y-%m-%d %H:%M'), ]
+    ListaFechas = [Fecha.strftime('%Y-%m-%d'), ]
 
     cnt = 0
     while Fecha != FechaFinal:
@@ -891,7 +892,7 @@ def GeneraListaFechas(ff, fi):
         if cnt > 30:
             break
         Fecha = Fecha + timedelta(days=1)
-        ListaFechas.append(Fecha.strftime('%Y-%m-%d %H:%M'))
+        ListaFechas.append(Fecha.strftime('%Y-%m-%d'))
     return ListaFechas
 
 # Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada

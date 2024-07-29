@@ -14,7 +14,7 @@ import sqlite3
 def reporteMovEntradaMP(request):
     FContenedores = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FechaDia = datetime.now().strftime('%Y-%m-%d')
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
 
     if request.method == 'POST':
         Contenedor = request.POST.get('contenedor')
@@ -48,7 +48,7 @@ def reporteMovEntradaMP(request):
 def reporteMovSalidaMP(request):
     FContenedores = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
     FechaDia = datetime.now().strftime('%Y-%m-%d')
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
 
     if request.method == 'POST':
         Contenedor = request.POST.get('contenedor')
@@ -227,11 +227,11 @@ def reportePorClientesCorrales(request):
                 INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id
                 INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
                 WHERE  Aplicacion_tblmovimientoanimales.IDCorral_id IN (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales)
-                GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
+                GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre"""
 
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2])
+                        consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2])
                     reportes = cursor.fetchall()
                 Nombre = 'Se trajeron todos los clientes'
                 Cliente = 'todos'
@@ -258,7 +258,7 @@ def reportePorClientesCorrales(request):
 
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        consulta_sql, [Fecha, Fecha, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
+                        consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                     reportes = cursor.fetchall()
                 TECliente = tblClientes.objects.get(ID=Cliente)
                 Nombre = TECliente.Nombre
@@ -292,7 +292,7 @@ def reportePorClientesCorrales(request):
 # ------------------------------------------------REPORTES SERVIDOS--------------------------------------------------------------------------
 # REPORTES DE SERVIDOS
 def reporteServidosMovimientos(request):
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
 
     if request.method == 'POST':
@@ -360,7 +360,7 @@ def reporteServidosMovimientos(request):
 
 # REPORTES SERVIDOS LIQUIDACION
 def reporteServidosLiquidacion(request):
-    FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).all().order_by('Nombre')
 
     if request.method == 'POST':
@@ -848,10 +848,10 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
 
 #  Genera una lista de fechas a partir de una inicial y final
 def GeneraListaFechas(ff, fi):
-    FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
-    FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
+    FechaInicial = datetime.strptime(ff, '%Y-%m-%d')
+    FechaFinal = datetime.strptime(fi, '%Y-%m-%d')
     Fecha = FechaInicial
-    ListaFechas = [Fecha.strftime('%Y-%m-%d %H:%M'), ]
+    ListaFechas = [Fecha.strftime('%Y-%m-%d'), ]
 
     cnt = 0
     while Fecha != FechaFinal:
@@ -859,7 +859,7 @@ def GeneraListaFechas(ff, fi):
         if cnt > 30:
             break
         Fecha = Fecha + timedelta(days=1)
-        ListaFechas.append(Fecha.strftime('%Y-%m-%d %H:%M'))
+        ListaFechas.append(Fecha.strftime('%Y-%m-%d'))
     return ListaFechas
 
 #   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
