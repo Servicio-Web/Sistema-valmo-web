@@ -99,7 +99,7 @@ def cliente(request):
             # corrales = tblCorrales.objects.filter(IDCliente_id=idCliente).values('').order_by('Descripcion')
             consulta_sql = """SELECT c.ID, c.Descripcion AS CorralDescripcion, e.Descripcion AS EstatusDescripcion, p.Descripcion AS ProductoDescripcion,s.CantidadSolicitada, s.CantidadServida, s.Fecha, s.ID AS ServidoID, s.Folio
                                 FROM aplicacion_tblcorrales c
-                            LEFT JOIN (SELECT IDCorral_id, MAX(ID) AS MaxServidoID FROM aplicacion_tblservido where IDCorral_id = %s GROUP BY IDCorral_id) ms ON c.ID = ms.IDCorral_id
+                            LEFT JOIN (SELECT IDCorral_id, MAX(ID) AS MaxServidoID FROM aplicacion_tblservido where IDCliente_id = %s GROUP BY IDCorral_id) ms ON c.ID = ms.IDCorral_id
                             LEFT JOIN aplicacion_tblservido s ON ms.MaxServidoID = s.ID
                             LEFT JOIN aplicacion_tblestatus e ON s.IDEstatus_id = e.ID
                             LEFT JOIN aplicacion_tblproductos p ON s.IDProducto_id = p.ID
