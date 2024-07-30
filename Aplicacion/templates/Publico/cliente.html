@@ -68,6 +68,32 @@
     .capitalizar::first-letter {
         text-transform: uppercase;
     }
+
+    .contenedor-datos-modal {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .datos-modal {
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+
+    @media (max-width: 1250px) {
+        .datos-modal {
+            justify-content: center;
+            text-align: left;
+            align-items: center;
+        }
+
+        .contenedor-datos-modal {
+            display: flex;
+            flex-direction: column;
+        }
+    }
 </style>
 
 {% if messages %}
@@ -143,12 +169,12 @@
                 <span id="closeModalBtn" class="close">&times;</span>
                 <h1 style="margin-bottom: 30px; text-align: center; text-transform: capitalize;">Ultimo registro del
                     corral: {{corral.1}}</h1>
-                <div class="row">
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                <div class="contenedor-datos-modal">
+                    <div class="datos-modal">
                         <h4>Folio</h4>
                         <p>{{corral.8}}</p>
                     </div>
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="datos-modal">
                         <h4>Estatus</h4>
                         {% if corral.2 == None %}
                         <p class="capitalizar">SIN REGISTRO</p>
@@ -156,25 +182,26 @@
                         <p class="capitalizar">{{corral.2}}</p>
                         {% endif %}
                     </div>
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="datos-modal">
                         <h4>Producto</h4>
                         <p>{{corral.3}}</p>
                     </div>
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="datos-modal">
                         <h4>Cantidad Solicitada</h4>
                         <p>{{corral.4}} kg</p>
                     </div>
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="datos-modal">
                         <h4>Cantidad Servida</h4>
                         <p>{{corral.5}} kg</p>
                     </div>
-                    <div class="col-2" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="datos-modal">
                         <h4>Fecha Solicitada</h4>
                         <p>{{corral.6}}</p>
                     </div>
                 </div>
                 <hr>
-                <h1 style="margin-bottom: 30px; text-align: center; text-transform: capitalize;">Historial de registro</h1>
+                <h1 style="margin-bottom: 30px; text-align: center; text-transform: capitalize;">Historial de registro
+                </h1>
                 <!-- {{servidos.IDCliente_id__Nombre}} -->
                 <div class="table-responsive py-1">
                     <table class="tabla_id">

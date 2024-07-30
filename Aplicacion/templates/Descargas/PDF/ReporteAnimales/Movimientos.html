@@ -137,7 +137,7 @@
                         {% if Nombre == "En general" %}
                             <th class="th columna-contenido" colspan="2">Cliente</th>
                         {% endif %}
-                        <th class="th columna-contenido" colspan="2">Corral</th>
+                        <!-- <th class="th columna-contenido" colspan="2">Corral</th> -->
                         <th class="th columna-contenido" colspan="2">Movimiento</th>
                         <th class="th columna-contenido" colspan="2">Fecha</th>
                     </tr>
@@ -150,9 +150,9 @@
                             {{ reporte.IDCliente__Nombre }}
                         </td>
                         {% endif %}
-                        <td class="td columna-base" colspan="2">
+                        <!-- <td class="td columna-base" colspan="2">
                             {{ reporte.IDCorral__Descripcion }}
-                        </td>
+                        </td> -->
                         <td class="td columna-base" colspan="2">
                             {{ reporte.IDMovimiento__Descripcion }}
                         </td>
