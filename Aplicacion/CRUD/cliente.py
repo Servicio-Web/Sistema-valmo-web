@@ -7,10 +7,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, date
 from django.utils import timezone
 from datetime import timedelta
+from django.db import connection
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE CATALOGOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # --------------------------------------------------------CLIENTES---------------------------------------------------------
-
 
 def formulario(request):
     corrales = []
@@ -54,7 +54,6 @@ def formulario(request):
     return render(request, 'Publico/form.html', {'corrales': corrales, 'Nombre': Nombre, 'email': email_v,
                                                  'FEProductos': FEProductos, 'ultimo_folio': ultimo_folio, 'FechaDeHoy': FechaDeHoy, 'idCliente': idCliente})
 
-
 def servidos(request):
     servidos = []
     Nombre = []
@@ -83,22 +82,35 @@ def servidos(request):
     return render(request, 'Publico/data.html', {'corrales': servidos, 'Nombre': Nombre, 'email': email_v,
                                                  'idCliente': idCliente})
 
-
 def cliente(request):
     corrales = []
     Nombre = []
+    corrales_filtro = []
+
     email_v = ''
     idCliente = 0
     if request.method == 'POST' and 'email' in request.POST:
         email_v = request.POST.get('email')
         try:
-
             cliente = tblClientes.objects.get(Email=email_v)
             idCliente = cliente.ID
             Nombre = cliente.Nombre
-            corrales = tblCorrales.objects.filter(
-                IDCliente_id=idCliente).order_by('Descripcion')
-
+            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            # corrales = tblCorrales.objects.filter(IDCliente_id=idCliente).values('').order_by('Descripcion')
+            consulta_sql = """SELECT c.ID, c.Descripcion AS CorralDescripcion, e.Descripcion AS EstatusDescripcion, p.Descripcion AS ProductoDescripcion,s.CantidadSolicitada, s.CantidadServida, s.Fecha, s.ID AS ServidoID, s.Folio
+                                FROM aplicacion_tblcorrales c
+                            LEFT JOIN (SELECT IDCorral_id, MAX(ID) AS MaxServidoID FROM aplicacion_tblservido GROUP BY IDCorral_id) ms ON c.ID = ms.IDCorral_id
+                            LEFT JOIN aplicacion_tblservido s ON ms.MaxServidoID = s.ID
+                            LEFT JOIN aplicacion_tblestatus e ON s.IDEstatus_id = e.ID
+                            LEFT JOIN aplicacion_tblproductos p ON s.IDProducto_id = p.ID
+                            WHERE c.IDCliente_id = %s ORDER BY c.Descripcion;"""
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [idCliente])
+                corrales = cursor.fetchall()
+            corrales_filtro = tblServido.objects.filter(IDCliente_id  = idCliente).values('ID', 'Folio','IDCorral_id',
+                            'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
+                            'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'FechaAServir')
+            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             # messages.success(
             #     request, f'El email "{email_v}" se ha encontrado exitosamente')
 
@@ -108,8 +120,7 @@ def cliente(request):
 
         # Renderiza la vista con el contexto
     return render(request, 'Publico/cliente.html', {'corrales': corrales, 'Nombre': Nombre, 'email': email_v,
-                                                    'idCliente': idCliente})
-
+                                                        'idCliente': idCliente, 'corrales_filtro':corrales_filtro})
 
 def guardarSolicitudServidoCliente(request):
     if request.method == 'POST':

@@ -39,7 +39,6 @@ def obtener_clientes(request, id):
     except tblClientes.DoesNotExist:
         return JsonResponse({'error': 'El cliente asociado al corral no fue encontrado.'})
 
-
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # ----------------------------------------------MOVIMIENTOS ENTRADA ANMIMALES----------------------------------------------
 def TablaEntradaMateriasPrimas(request):
