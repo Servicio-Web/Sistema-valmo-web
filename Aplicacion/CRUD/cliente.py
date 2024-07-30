@@ -99,13 +99,13 @@ def cliente(request):
             # corrales = tblCorrales.objects.filter(IDCliente_id=idCliente).values('').order_by('Descripcion')
             consulta_sql = """SELECT c.ID, c.Descripcion AS CorralDescripcion, e.Descripcion AS EstatusDescripcion, p.Descripcion AS ProductoDescripcion,s.CantidadSolicitada, s.CantidadServida, s.Fecha, s.ID AS ServidoID, s.Folio
                                 FROM aplicacion_tblcorrales c
-                            LEFT JOIN (SELECT IDCorral_id, MAX(ID) AS MaxServidoID FROM aplicacion_tblservido GROUP BY IDCorral_id) ms ON c.ID = ms.IDCorral_id
+                            LEFT JOIN (SELECT IDCorral_id, MAX(ID) AS MaxServidoID FROM aplicacion_tblservido where IDCorral_id = %s GROUP BY IDCorral_id) ms ON c.ID = ms.IDCorral_id
                             LEFT JOIN aplicacion_tblservido s ON ms.MaxServidoID = s.ID
                             LEFT JOIN aplicacion_tblestatus e ON s.IDEstatus_id = e.ID
                             LEFT JOIN aplicacion_tblproductos p ON s.IDProducto_id = p.ID
                             WHERE c.IDCliente_id = %s ORDER BY c.Descripcion;"""
             with connection.cursor() as cursor:
-                cursor.execute(consulta_sql, [idCliente])
+                cursor.execute(consulta_sql, [idCliente, idCliente])
                 corrales = cursor.fetchall()
             corrales_filtro = tblServido.objects.filter(IDCliente_id  = idCliente).values('ID', 'Folio','IDCorral_id',
                             'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
