@@ -1688,3 +1688,138 @@
     transform: translate(200%)
   }
 }
+
+/* estilos para los tecnicos */
+
+.add-button-tecnico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(0, 68, 255);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+
+.add-button-tecnico:hover {
+  width: 110px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 38, 161);
+  align-items: center;
+}
+
+
+
+.add-button-tecnico::before {
+  display: none;
+  content: "Agregados";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.add-button-tecnico:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+.edit-button-tecnico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(185, 62, 5);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+
+.edit-button-tecnico:hover {
+  width: 100px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 38, 0);
+  align-items: center;
+}
+
+.edit-button-tecnico:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button-tecnico::before {
+  display: none;
+  content: "Editados";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.edit-button-tecnico:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+/* boton para la edicion de usuarios */
+.edit-svgIcon {
+  width: 14px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button-user {
+  width: 150px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 176, 26);
+  align-items: center;
+}
+
+.edit-button-user:hover {
+  width: 150px;
+  border-radius: 50px;
+  background-color: rgb(2, 110, 18);
+  align-items: center;
+}
+
+.edit-button-user::before {
+  content: "Editar usuarios";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 0.9rem;
+}

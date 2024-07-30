@@ -1,4 +1,7 @@
-/* estilos para los circulos de servidos  */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< estilos para los circulos de servidos >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
 @keyframes rellenar {
   to {
     stroke-dasharray: var(--porcentaje) 100;
@@ -14,7 +17,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* margin-bottom: 15%; */
 }
 
 .porcentajes span {
@@ -46,6 +48,9 @@
   animation: rellenar 1s linear forwards;
 }
 
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
 /* checkbox modo de vista */
 .theme-switch {
@@ -982,24 +987,6 @@
 }
 
 /* -------------------------------------------------------------------------------- BOTON PARA EDITAR -------------------------------------------------------------------------------- */
-/* .pdf-red-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: rgba(21, 115, 71);
-  border: none;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 20px rgba(0, 255, 8, 0.416);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  position: relative;
-  text-decoration: none !important;
-} */
-
 .edit-svgIcon {
   width: 14px;
 
@@ -1028,17 +1015,6 @@
 
   align-items: center;
 }
-
-/* .pdf-red-button:hover .edit-svgIcon {
-  width: 15px;
-  transition-duration: 0.3s;
-  transform: translateY(60%);
-  -webkit-transform: rotate(360deg);
-  -moz-transform: rotate(360deg);
-  -o-transform: rotate(360deg);
-  -ms-transform: rotate(360deg);
-  transform: rotate(360deg);
-} */
 
 .pdf-red-button::before {
   content: "PDF";
@@ -1313,6 +1289,26 @@
 }
 
 /* animacion para tolva */
+.loaderTolvaBasculaEntrada {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scaleX(-1);
+}
+
+.truckWrapperBascula {
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  overflow-x: hidden;
+}
+
 .loaderTolva {
   width: fit-content;
   height: fit-content;
@@ -1490,6 +1486,340 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  /* height: 100vh; */
-  /* Ajusta según sea necesario */
+}
+
+/* animaciones para basculas */
+@keyframes rellenar {
+  to {
+    stroke-dasharray: var(--porcentaje) 100;
+  }
+}
+
+.porcentajeBascula {
+  position: relative;
+  top: 0%;
+  left: 0%;
+  bottom: 0%;
+  right: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.porcentajeBascula span {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  bottom: 0%;
+  right: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 25px/1em Verdana;
+}
+
+.circleBascula {
+  fill: none;
+  stroke-width: 20;
+  transform: rotate(-90deg);
+  transform-origin: 50%;
+  stroke-dasharray: 100 100;
+  stroke: #AAA;
+  filter: drop-shadow(3px 3px 6px #434343);
+}
+
+.circleBascula:nth-child(2) {
+  stroke: var(--color);
+  filter: drop-shadow(3px 3px 6px var(--color));
+  stroke-dasharray: 0 100;
+  animation: rellenar 1s linear forwards;
+}
+
+/* ENTRADA DE PRODCUTOS */
+.entradaProductos {
+  width: 90px;
+  height: 30px;
+  box-shadow: 0 3px 0 #2c2c2c;
+  --g: repeat-x repeating-linear-gradient(90deg, #636363 0 16px, #0000 0 18px, #636363 0 34px, #0000 0 100%);
+  background: var(--g), var(--g);
+  background-size: 60px 14px, 60px 14px;
+  animation: l8 1s infinite linear;
+}
+
+@keyframes l8 {
+  0% {
+    background-position: 0 0, 0 100%
+  }
+
+  100% {
+    background-position: 60px 0, 60px 100%
+  }
+}
+
+/* ENTRADA MATERIAS PRIMAS */
+.entradaMP {
+  width: 90px;
+  height: 14px;
+  box-shadow: 0 3px 0 #2c2c2c;
+  display: grid;
+}
+
+.entradaMP:before,
+.entradaMP:after {
+  content: "";
+  grid-area: 1/1;
+  background: radial-gradient(circle closest-side, var(--c, red) 92%, #0000) 0 0/calc(100%/4) 100%;
+  animation: l4 1s infinite linear;
+}
+
+.entradaMP:after {
+  --c: #000;
+  background-color: #fff;
+  box-shadow: 0 -2px 0 0 #fff;
+  clip-path: inset(-2px calc(50% - 10px));
+}
+
+@keyframes l4 {
+  100% {
+    background-position: calc(100%/3) 0
+  }
+}
+
+/* SALIDA DE MATERIAS PRIMAS  */
+.salidaMp {
+  width: 90px;
+  height: 14px;
+  box-shadow: 0 3px 0 #2c2c2c;
+  position: relative;
+  display: grid;
+  clip-path: inset(-30px 0 -5px)
+}
+
+.salidaMp:after {
+  content: "";
+  position: relative;
+  background: repeating-linear-gradient(90deg, #0000 0 calc(50% - 8px), #636363 0 calc(50% + 8px), #0000 0 100%) 0 0/calc(100%/3) 100%;
+  animation: l6-1 1s infinite;
+}
+
+.salidaMp:before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  aspect-ratio: 1;
+  left: calc(50% - 7px);
+  bottom: 0;
+  border-radius: 50%;
+  background: rgb(255, 0, 0);
+  animation: l6-2 1s infinite;
+}
+
+@keyframes l6-1 {
+
+  50%,
+  100% {
+    background-position: calc(100%/2) 0
+  }
+}
+
+@keyframes l6-2 {
+
+  0%,
+  50% {
+    transform: translateY(-50px)
+  }
+}
+
+/* salida de productos */
+.salidaProductos {
+  width: 90px;
+  height: 14px;
+  box-shadow: 0 3px 0 #2c2c2c;
+  position: relative;
+  clip-path: inset(-40px 0 -5px)
+}
+
+.salidaProductos:before {
+  content: "";
+  position: absolute;
+  inset: auto calc(50% - 17px) 0;
+  height: 50px;
+  --g: no-repeat linear-gradient(#636363 0 0);
+  background: var(--g), var(--g), var(--g), var(--g);
+  background-size: 16px 14px;
+  animation:
+    l7-1 2s infinite linear,
+    l7-2 2s infinite linear;
+}
+
+@keyframes l7-1 {
+
+  0%,
+  100% {
+    background-position: 0 -50px, 100% -50px
+  }
+
+  17.5% {
+    background-position: 0 100%, 100% -50px, 0 -50px, 100% -50px
+  }
+
+  35% {
+    background-position: 0 100%, 100% 100%, 0 -50px, 100% -50px
+  }
+
+  52.5% {
+    background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% -50px
+  }
+
+  70%,
+  98% {
+    background-position: 0 100%, 100% 100%, 0 calc(100% - 16px), 100% calc(100% - 16px)
+  }
+}
+
+@keyframes l7-2 {
+
+  0%,
+  70% {
+    transform: translate(0)
+  }
+
+  100% {
+    transform: translate(200%)
+  }
+}
+
+/* estilos para los tecnicos */
+
+.add-button-tecnico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(0, 68, 255);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+
+.add-button-tecnico:hover {
+  width: 110px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 38, 161);
+  align-items: center;
+}
+
+
+
+.add-button-tecnico::before {
+  display: none;
+  content: "Agregados";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.add-button-tecnico:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+.edit-button-tecnico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(185, 62, 5);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+
+.edit-button-tecnico:hover {
+  width: 100px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 38, 0);
+  align-items: center;
+}
+
+.edit-button-tecnico:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button-tecnico::before {
+  display: none;
+  content: "Editados";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.edit-button-tecnico:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+/* boton para la edicion de usuarios */
+.edit-svgIcon {
+  width: 14px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button-user {
+  width: 150px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 176, 26);
+  align-items: center;
+}
+
+.edit-button-user:hover {
+  width: 150px;
+  border-radius: 50px;
+  background-color: rgb(2, 110, 18);
+  align-items: center;
+}
+
+.edit-button-user::before {
+  content: "Editar usuarios";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 0.9rem;
 }
