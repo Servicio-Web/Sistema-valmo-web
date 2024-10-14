@@ -19,7 +19,7 @@ import logging
 
 # WEBHOOKS
 import os
-from twilio.rest import Client
+
 import json
 import time
 
