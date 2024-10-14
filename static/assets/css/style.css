@@ -803,6 +803,7 @@ p {
 
 .izquierda {
   flex: 1;
+  padding: 10px 0 10px 0;
   /* El contenido de la izquierda tomará todo el espacio disponible */
 }
 

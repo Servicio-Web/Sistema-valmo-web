@@ -446,4 +446,5 @@ urlpatterns = [
 
      # Descarga pdf
      # path('DescargaPDF2/',DescargaPDF.descargarPDF, name="DescargaPDFJorge" )
+     # path('mensajes/', views.webhook, name="webhook"),
 ]
