@@ -651,43 +651,6 @@ def actualizarPermiso(request):
 
 
 
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-# def webhook(request):
-#     print(request)
-#     account_sid = "AC7416e88501b5972bbff878355849c53e"
-#     auth_token = "2142593f913800716e29c9e115a25d24"
-#     client = Client(account_sid, auth_token)
-#     message = client.messages.create(
-#         content_sid=template,
-#         to="whatsapp:+5216624532905",
-#         from_="MGc25956df10ac6c16e9702d21da7dd049",
-#         content_variables=json.dumps({"1": "Luis Arellano", "2": "Apagado"}),
-#     )
-#     template = "HX0502f3d3b0bac8ce717f5bb0903dc921"
-#     return HttpResponse(status=200)
-
-# conversacion = 0
-# Enviar mensaje "whatsapp:+5216624532905"
-# def enviar_mensaje(template, telefono):    
-#     message = client.messages.create(
-#         content_sid=template,
-#         to=telefono,
-#         from_="MGc25956df10ac6c16e9702d21da7dd049",
-#         content_variables=json.dumps({"1": "Luis Arellano", "2": "Apagado"}),
-#     )
-#     template = "HX0502f3d3b0bac8ce717f5bb0903dc921"
-      
-#     template = "HXd7c9cf75b8778514aec15fa9455ffd91"
-#     print(f"Mensaje enviado")
-#     return message.sid
-
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
 
 
 
