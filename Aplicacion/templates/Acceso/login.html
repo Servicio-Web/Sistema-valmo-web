@@ -12,7 +12,19 @@
     <title>INICIO DE SESIÓN</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link href="{% static 'css/estilos3.css' %}" rel="stylesheet">
+    <style>
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
+        .password-container {
+            position: relative;
+        }
+    </style>
 </head>
 
 <body class="bg-primary">
@@ -45,8 +57,13 @@
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg col-xl">
                                             <h5>CONTRASEÑA</h5>
-                                            <input type="password" name="password" class="form-control input"
-                                                placeholder="Ingrese su contraseña" autocomplete="off" required>
+                                            <div class="password-container">
+                                                <input type="password" name="password" id="password_login"
+                                                    class="form-control input" placeholder="Ingrese su contraseña"
+                                                    autocomplete="off" required>
+                                                <span class="password-toggle"
+                                                    onclick="togglePassword('password_login')">👁️</span>
+                                            </div>
                                             <br>
                                         </div>
                                         <div class="d-grid">
@@ -67,6 +84,16 @@
         </div>
     </div>
 </body>
+<script>
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+</script>
 
 </html>
 {% endblock %}
