@@ -6,7 +6,7 @@ from Aplicacion.CRUD import mostrarCatalogos, mostrarProcesos, mostrarSubTabla
 from Aplicacion.CRUD import guardarCatalogos, guardarProcesos, guardarSubTabla
 from Aplicacion.CRUD import editarCatalogos, editarProcesos, editarSubTabla
 from Aplicacion.CRUD import reportes, DescargaPDF, DescargaExcel, CopiaDeSeguridad, CopiaAMysql, cliente
-from Aplicacion.CRUD import presentacion
+from Aplicacion.CRUD import presentacion, Correo
 
 # from .views import PDFView formularioCatalogos
 from django.contrib.auth.views import LoginView, LogoutView
@@ -447,4 +447,6 @@ urlpatterns = [
      # Descarga pdf
      # path('DescargaPDF2/',DescargaPDF.descargarPDF, name="DescargaPDFJorge" )
      # path('mensajes/', views.webhook, name="webhook"),
+
+     path('Correo/', Correo.index, name="correos"),
 ]

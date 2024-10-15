@@ -58,7 +58,7 @@ WSGI_APPLICATION = 'Valmo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'valmo_db',
+        'NAME': 'valmo',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
@@ -107,3 +107,10 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'Sistema'
+
+
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'servicioweb22@gmail.com'
+EMAIL_HOST_PASSWORD = 'twsfzoljecexxtdk'
+EMAIL_USE_TLS = True
