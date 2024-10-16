@@ -79,9 +79,6 @@ def guardarCliente(request):
     else:
         return redirect('T-Cliente')
     
-    
-
-
 # -------------------------------------------------------PROVEEDORES-------------------------------------------------------
 def guardarProveedor(request):
     clave = request.POST['clave']

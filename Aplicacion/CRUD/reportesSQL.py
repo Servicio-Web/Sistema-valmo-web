@@ -342,7 +342,6 @@ def reportePorClientesCorrales(request):
         'FechaDeHoy':FechaDeHoy, 'FClientes':FClientes, 'Nombre':Nombre, 'Cliente':Cliente})
     
 # ------------------------------------------------REPORTES SERVIDOS--------------------------------------------------------------------------
-
 def reporteServidosMovimientos(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d %H:%M')
     FClientes = tblClientes.objects.exclude(ID=1)

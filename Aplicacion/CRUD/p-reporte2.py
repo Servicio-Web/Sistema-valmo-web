@@ -108,8 +108,6 @@ def CalculaDiasAnimal(IDCliente, IDCorral, FechaInicial, FechaFinal):
 
 #  Saca el rango de fechas de cuando se asigno y libero un corral con un cliente, si el segundo dato es 0 significa que sigue asignado
 #  al cliente. si es diferente de 0 es la ultima fecha cuando se libero a este cliente
-
-
 def RangoFechasOcupaCorral(IDCorral, IDCliente):
     query = """SELECT FECHAS.FECHA_ASIGNA,(SELECT(CASE WHEN FECHAS.FECHA_LIBERA > FECHAS.FECHA_ASIGNA THEN FECHAS.FECHA_LIBERA ELSE 0 END)) AS FECHA_LIBERA
         FROM ( SELECT 
@@ -125,8 +123,6 @@ def RangoFechasOcupaCorral(IDCorral, IDCliente):
     return Datos
 
 #  Genera una lista de fechas a partir de una inicial y final
-
-
 def GeneraListaFechas(ff, fi):
     FechaInicial = datetime.strptime(ff, '%Y-%m-%dT%H:%M')
     FechaFinal = datetime.strptime(fi, '%Y-%m-%dT%H:%M')
@@ -142,10 +138,7 @@ def GeneraListaFechas(ff, fi):
         ListaFechas.append(Fecha.strftime('%Y-%m-%d %H:%M'))
     return ListaFechas
 
-
 #   Obtiene  la cantidad de animales en el corral desde la fecha de asignacion hasta la fecha proporcionada
-
-
 def CantidadActualAnimales(IDCorral, fecha):
     query = """SELECT  SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 0  THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) -
     SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1  THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SUMA
@@ -162,7 +155,6 @@ def CantidadActualAnimales(IDCorral, fecha):
         return -1
     else:
         return Cantidad[0][0]
-
 
 def run_query2(query, parameters=()):
     conn = sqlite3.connect("respaldo.sqlite3")
