@@ -11,7 +11,8 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
             EDITAR CANTIDAD MOVIMIENTOS ANIMALES # {{ TCantidadMovimientoAnimales.Folio }}
         </h1>
         <form action="/ActualizarCantidadMovimientosAnimales/" method="POST" autocomplete="off">{% csrf_token %}
@@ -21,7 +22,18 @@
                 <input type="hidden" class="form-control" name="tecnico"
                     value="{{ user.first_name }} {{user.last_name}}">
                 <div class="row mr-1 ml-1 fila">
-                    <div class="col-sm-12 col-md-12 col-lg-9 col-xl-6 columna">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="corral" required>
+                            <option value="{{FiltradoCorral.ID}}">
+                                --------{{FiltradoCorral.Descripcion}}--------
+                            </option>
+                            {% for corral in FECorral %}
+                            <option value="{{ corral.ID }}">{{ corral.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
                         <h6 class="h6-form">TIPO ANIMAL <label>*</label></h6>
                         <select class="select2 form-control col-12" name="animal" required>
                             <option value="{{FiltradoAnimales.ID}}">

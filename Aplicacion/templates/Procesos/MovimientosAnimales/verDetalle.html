@@ -10,7 +10,8 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
             MOVIMIENTO DE ANIMALES - ANIMALES
         </h1>
 
@@ -26,14 +27,18 @@
 
         {% if perms.Aplicacion.view_tbldetallemovanimales %}
         <div class=" table-responsive py-1">
-            <table class="tabla_id">
+            <table class="tabla_id" style="table-layout: auto;">
                 <thead>
                     <tr>
-                        <th scope="col">FOLIO</th>
-                        <th scope="col">Animal</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Peso promedio</th>
-                        <th scope="col">Peso total</th>
+                        <th style=" width: 100px;">FOLIO</th>
+                        <th style="width: 100px;">Corral</th>
+                        <th style="width: 100px;">Animal</th>
+                        <th style="width: 100px;">Cantidad</th>
+                        <th style="width: 100px;">Peso promedio</th>
+                        <th style="width: 100px;">Peso total</th>
+                        <!-- <th style="width: 100px;">No. Guia</th>
+                        <th style="width: 100px;">Observacion</th> -->
+
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <th scope="col">Acciones</th>
                         {% endif %}
@@ -43,15 +48,18 @@
                     {% for animales in Detalle%}
                     <tr>
                         <th scope="row">{{ animales.IDFolio }}</th>
-                        <td>{{ animales.IDAnimales_id__Descripcion}}</td>
+                        <td>{{ animales.IDCorral_id__Descripcion }} </td>
+                        <td>{{ animales.IDAnimales_id__Descripcion }}</td>
                         <td>{{ animales.Cantidad }}</td>
                         <td>{{ animales.PesoPromedio }} Kg</td>
                         <td>{{ animales.PesoTotal }} Kg</td>
+                        <!-- <td>{{ animales.No_Guia }} </td>
+                        <td>{{ animales.Notas }} </td> -->
+
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <td>
                             {% if perms.Aplicacion.change_tbldetallemovanimales %}
-                            <a style="display: inline-block;"
-                                href="Editar/{{animales.ID}}" role="button">
+                            <a style="display: inline-block;" href="Editar/{{animales.ID}}" role="button">
                                 <button class="edit-button">
                                     <svg class="edit-svgIcon" viewBox="0 0 512 512">
                                         <path

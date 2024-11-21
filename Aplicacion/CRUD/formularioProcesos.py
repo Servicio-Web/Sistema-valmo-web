@@ -156,7 +156,7 @@ def FormularioMovimientoAnimales(request):
     
     FMovimiento = tblTipoMov.objects.filter(ID__in=[1, 2])
     FTipoAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/MovimientosAnimales/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb,  

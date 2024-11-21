@@ -59,26 +59,27 @@
             <table class="tabla_id">
                 <thead>
                     <tr>
-                        <th class="th-responsive">AGREGAR / VER ANIMALES</th>
-                        <th class="th-responsive">CLAVES
+                        <th class="th-responsive" colspan="2">AGREGAR / VER ANIMALES</th>
+                        <th class="th-responsive" colspan="2">CLAVES
+                            <h6 style="color: transparent; display: inline;">.</h6>
+                        </th>
+                        <th class="th-responsive" colspan="2">CLIENTE
+                            <h6 style="color: transparent; display: inline;">.</h6>
+                        </th>
+                        <th class="th-responsive" colspan="2">FECHA
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th>
                         <!-- <th class="th-responsive">MOVIMIENTO
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th> -->
-                        <th class="th-responsive">CLIENTE
+                        <!-- <th class="th-responsive">CORRAL
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
-                        <th class="th-responsive">CORRAL
+                        </th> -->
+
+                        <!-- <th class="th-responsive">PESO
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
-                        <th class="th-responsive">FECHA
-                            <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
-                        <th class="th-responsive">PESO
-                            <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
-                        <th class="th-responsive">PARTIDA
+                        </th> -->
+                        <!-- <th class="th-responsive">PARTIDA
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th>
                         <th class="th-responsive">NO. GUIA
@@ -86,9 +87,9 @@
                         </th>
                         <th class="th-responsive">NOTAS
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
+                        </th> -->
                         {% if perms.Aplicacion.change_tblmovimientoanimales or perms.Aplicacion.delete_tblmovimientoanimales %}
-                        <th class="th-responsive">ACCIÓN
+                        <th class="th-responsive" colspan="2">ACCIÓN
                             <h6 style="color: transparent; display: inline;">.</h6>
                         </th>
                         {% endif %}
@@ -99,7 +100,7 @@
                 <tbody>
                     {% for Moviemientos in TMovimientoEntradaAnimales %}
                     <tr>
-                        <td>
+                        <td colspan="2">
                             <h6 class="td-responsive">AGREGAR / VER ANIMALES:</h6>
                             <a class="btn btn-primary btn-sm" style="display: inline-block;"
                                 href="Agregar/{{Moviemientos.Folio}}" role="button"><i class="fas fa-plus">Agregar</i>
@@ -108,47 +109,46 @@
                                 href="Detalle/{{Moviemientos.Folio}}" role="button"><i class="fas fa-eye">Ver</i>
                             </a>
                         </td>
-                        <td>
+                        <td colspan="2">
                             <h6 class="td-responsive">CLAVES:</h6>
                             {{ Moviemientos.Folio}}
+                        </td>
+                        <td colspan="2">
+                            <h6 class="td-responsive">CLIENTE:</h6>
+                            {{ Moviemientos.IDCliente_id__Nombre}}
+                        </td>
+                        <td colspan="2">
+                            <h6 class="td-responsive">FECHA:</h6>
+                            {{ Moviemientos.Fecha}}
                         </td>
                         <!-- <td>
                             <h6 class="td-responsive">MOVIMIENTO:</h6>
                             {{ Moviemientos.IDMovimiento_id__Descripcion}}
                         </td> -->
-                        <td>
-                            <h6 class="td-responsive">CLIENTE:</h6>
-                            {{ Moviemientos.IDCliente_id__Nombre}}
-                        </td>
-                        <td>
+                        <!-- <td>
                             <h6 class="td-responsive">CORRAL:</h6>
                             {{ Moviemientos.IDCorral_id__Descripcion}}
-                        </td>
-                        <td>
-                            <h6 class="td-responsive">FECHA:</h6>
-                            {{ Moviemientos.Fecha}}
-                        </td>
-                        <td>
+                        </td> -->
+                        <!-- <td>
                             <h6 class="td-responsive">PESO:</h6>
                             {{ Moviemientos.Peso}}
-                        </td>
-                        <td>
+                        </td> -->
+                        <!-- <td>
                             <h6 class="td-responsive">PARTIDA:</h6>
                             {{ Moviemientos.NoPartida}}
-                        </td>
-                        <td>
+                        </td> -->
+                        <!-- <td>
                             <h6 class="td-responsive">NO. GUIA:</h6>
                             {{ Moviemientos.No_Guia}}
-                        </td>
-                        <td>
+                        </td> -->
+                        <!-- <td>
                             <h6 class="td-responsive">NOTAS:</h6>
                             {{ Moviemientos.Notas}}
-                        </td>
+                        </td> -->
                         {% if perms.Aplicacion.change_tblmovimientoanimales or perms.Aplicacion.delete_tblmovimientoanimales %}
-                        <td>
+                        <td colspan="2">
                             {% if perms.Aplicacion.change_tblmovimientoanimales %}
-                            <a style="display: inline-block;"
-                                href="Editar/{{Moviemientos.ID}}" role="button">
+                            <a style="display: inline-block;" href="Editar/{{Moviemientos.ID}}" role="button">
                                 <button class="edit-button">
                                     <svg class="edit-svgIcon" viewBox="0 0 512 512">
                                         <path
@@ -161,7 +161,7 @@
                                 <input type="hidden" value="{{Moviemientos.Folio}}" name="movimientoAnimales">
                                 <button class="pdf-red-button" type="submit"></button>
                             </form>
-                            {% endif %}                            
+                            {% endif %}
                         </td>
                         {% endif %}
                         <td class="td-salto"></td>

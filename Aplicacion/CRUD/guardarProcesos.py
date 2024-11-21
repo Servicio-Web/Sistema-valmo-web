@@ -455,6 +455,10 @@ def guardarMovimientos(request):
     folio_Existe = tblMovimientoAnimales.objects.filter(Folio=formatoClave).exists()
     ServiciosWeb = servicioActivo()
     
+    guia = 0
+    partida = 0
+    notas = "Observaciones pendientes"
+    corral = request.POST['corral']
     animal = request.POST['animal']
     cantidad = request.POST['cantidad']
     pesoTotal = request.POST['pesoTotal']
@@ -478,21 +482,28 @@ def guardarMovimientos(request):
     
     AgMovimientos = tblMovimientoAnimales.objects.get(ID=clave)
     Cliente = AgMovimientos.IDCliente.ID
-    Corral = AgMovimientos.IDCorral.ID
     #Corral = tblCorrales.objects.get(IDCliente_ID=Cliente).ID
     Movimiento = AgMovimientos.IDMovimiento.ID
     FiltradoCliente = tblClientes.objects.get(ID=Cliente)
-    FiltradoCorral = tblCorrales.objects.get(ID=Corral)
+    FiltradoCorral = tblCorrales.objects.filter(IDCliente=Cliente).order_by('Descripcion')
     FiltradoMovimiento = tblTipoMov.objects.get(ID=Movimiento)
     FTipoAnimal = tblAnimalesTipo.objects.all()
 
-    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).values('IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoPromedio', 'PesoTotal')
+    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).values('IDFolio', 'IDAnimales_id__Descripcion', 
+    'Cantidad', 'PesoPromedio', 'PesoTotal', 'IDCorral_id__Descripcion', 'No_Guia', 'Notas')
 
-    tblDetalleMovAnimales.objects.create(
-        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio
-    )
+    folio_count = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).count()
+    if folio_count < 7:
+        tblDetalleMovAnimales.objects.create(
+            IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio,
+            No_Guia = guia, Notas = notas, IDCorral_id = corral
+        )
+        messages.success(request, f'Se ha agregado exitosamente el registro de {cantidad} animal(es)')
+    else:
+        messages.error(request, f'No se pueden registrar mas de 7 campos por movimiento')   
+
     agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
-    messages.success(request, f'Se ha agregado exitosamente el registro de {cantidad} animal(es)')
+  
     
     if request.method == 'POST':
         if 'salir' in request.POST:
@@ -514,10 +525,10 @@ def guardarMovimientoAniamles(request):
     corral = request.POST['corral']
     movimiento = request.POST['movimiento']
     peso = float(request.POST['peso'])
-    guia = request.POST['guia']
-    partida = request.POST['partida']
+    guia = 0
+    partida = 0
     fecha = request.POST['fecha']
-    notas = request.POST['notas']
+    notas = "Observaciones pendientes"
 
     animal = request.POST['animal']
     cantidad = request.POST['cantidad']
@@ -538,22 +549,28 @@ def guardarMovimientoAniamles(request):
     IDFila_v = clave
 
     FTipoAnimal = tblAnimalesTipo.objects.all()
+    FCorral = tblCorrales.objects.filter(IDCliente_id = cliente).order_by('Descripcion')
     Agrego_aniamles = { 'clave':clave, 'cliente':cliente, 'corral':corral, 'movimiento':movimiento,
         'peso':peso, 'guia':guia, 'partida':partida, 'fecha':fecha, 'notas':notas }
     ServiciosWeb = servicioActivo()
-    
+    folio_count = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).count()
+
     if request.method == 'POST':
         if 'salir' in request.POST:
             if folio_Existe:
-                if cantidad != '':
-                    tblDetalleMovAnimales.objects.create(
-                        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio
-                    )
-                    actualizarPeso(peso, formatoClave)
+                if folio_count < 7:
+                    if cantidad != '0' or cantidad != 0 or cantidad != '':
+                        tblDetalleMovAnimales.objects.create(
+                            IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio,
+                            No_Guia = guia, Notas = notas, IDCorral_id = corral
+                        )
+                        actualizarPeso(peso, formatoClave)
+                else:
+                     messages.error(request, f'No se pueden registrar mas de 7 campos por movimiento')
             else:
                 tblMovimientoAnimales.objects.create(
-                Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
-                Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
+                Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
+                Fecha = fecha, Peso = peso, NoPartida = partida
             )
 
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
@@ -562,15 +579,19 @@ def guardarMovimientoAniamles(request):
         
         elif 'agregar' in request.POST:
             if folio_Existe:
-                if cantidad != '0' or cantidad != 0 or cantidad != '':
-                    tblDetalleMovAnimales.objects.create(
-                    IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio
-                    )
-                    actualizarPeso(peso, formatoClave)
+                if folio_count < 7:
+                    if cantidad != '0' or cantidad != 0 or cantidad != '':
+                        tblDetalleMovAnimales.objects.create(
+                        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio,
+                        No_Guia = guia, Notas = notas, IDCorral_id = corral
+                        )
+                        actualizarPeso(peso, formatoClave)
+                else:
+                     messages.error(request, f'No se pueden registrar mas de 7 campos por movimiento')
             else:
                 tblMovimientoAnimales.objects.create(
-                    Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
-                    Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
+                    Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
+                    Fecha = fecha, Peso = peso, NoPartida = partida
                 )
 
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
@@ -578,30 +599,39 @@ def guardarMovimientoAniamles(request):
             return redirect('F-MovAnimales')
         
         elif 'guardarAnimal' in request.POST:
+            
             folio_Existe = tblMovimientoAnimales.objects.filter(Folio=formatoClave).exists()
-            Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).values('IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal')
+            Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=formatoClave).values('IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal',
+            'IDCorral_id__Descripcion', 'No_Guia', 'Notas')
             FiltradoCliente= tblClientes.objects.get(ID=cliente)
             FiltradoCorral= tblCorrales.objects.get(ID=corral)
             FiltradoMovimiento = tblTipoMov.objects.get(ID=movimiento)
             if folio_Existe:
-                tblDetalleMovAnimales.objects.create(
-                    IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio
-                )
-                
-                messages.success(request, f'El animal se guardo el animal correctamente')
+                if folio_count < 7:                
+                    tblDetalleMovAnimales.objects.create(
+                        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio,
+                        No_Guia = guia, Notas = notas, IDCorral_id = corral
+                    )
+                    
+                    messages.success(request, f'El animal se guardo el animal correctamente')
+                else:
+                     messages.error(request, f'No se pueden registrar mas de 7 campos por movimiento')                
             else:
                 tblMovimientoAnimales.objects.create(
-                    Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id = corral, IDMovimiento_id = movimiento,  
-                    Fecha = fecha, Peso = peso, NoPartida = partida, No_Guia = guia, Notas = notas
+                    Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
+                    Fecha = fecha, Peso = peso, NoPartida = partida
                 )
-                tblDetalleMovAnimales.objects.create(
-                    IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio
-                )
-
+                if folio_count < 7:                
+                    tblDetalleMovAnimales.objects.create(
+                        IDFolio = formatoClave, IDAnimales_id = animal, Cantidad = cantidad, PesoTotal = pesoTotal, PesoPromedio = pesoPromedio,
+                        No_Guia = guia, Notas = notas, IDCorral_id = corral
+                    )
+                else:
+                     messages.error(request, f'No se pueden registrar mas de 7 campos por movimiento')
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
             messages.success(request, f'El movimiento se ha registrado exitosamente')
             return render(request, "Procesos/MovimientosAnimales/form.html", {'formatoClave':formatoClave,'Agrego_aniamles':Agrego_aniamles, 
-                    'Detalle':Detalle,'ultimo_folio': clave, 'folio_Existe':folio_Existe, 'FTipoAnimal':FTipoAnimal, 'ServiciosWeb': ServiciosWeb, 
+                    'Detalle':Detalle,'ultimo_folio': clave, 'folio_Existe':folio_Existe,'FCorral':FCorral, 'FTipoAnimal':FTipoAnimal, 'ServiciosWeb': ServiciosWeb, 
                     'FiltradoCliente':FiltradoCliente,'FiltradoCorral':FiltradoCorral,'FiltradoMovimiento':FiltradoMovimiento })
     else:
         return redirect('T-MovAnimales')

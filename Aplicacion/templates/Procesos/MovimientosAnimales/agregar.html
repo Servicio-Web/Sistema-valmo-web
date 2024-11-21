@@ -12,62 +12,68 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
             AGREGAR MOVIMIENTO ANIMALES
         </h1>
         <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="col-sm-12 col-md-12 col-lg-12">
                 <form action="/Guardar-Movimiento-De-Amimales/" method="POST" autocomplete="off">{% csrf_token %}
                     <input type="hidden" class="form-control" name="clave" value="{{AgMovimientos.ID}}">
                     <input type="hidden" class="form-control" name="tecnico"
                         value="{{ user.first_name }} {{user.last_name}}">
                     <div class="row mr-1 ml-1 pt-3 fila">
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna" style="text-align: center;">
                             <h6 class="h6-form">CLIENTE:</h6>
                             <label> {{ FiltradoCliente.Nombre }}</label>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
-                            <h6 class="h6-form">CORRAL:</h6>
-                            <label>{{ FiltradoCorral.Descripcion }}</label>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna" style="text-align: center;">
                             <h6 class="h6-form">MOVIMIENTO:</h6>
                             <label>{{ FiltradoMovimiento.Descripcion }}</label>
                         </div>
-                    </div>
-                    <hr>
-                    <div class="row mr-1 ml-1 fila">
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
-                            <h6 class="h6-form">PESO:</h6>
-                            <input type="hidden" value="{{AgMovimientos.Peso}}" name="peso">
-                            <label> {{AgMovimientos.Peso}}</label>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
-                            <h6 class="h6-form">No. GUIA</h6>
-                            <label>{{AgMovimientos.No_Guia}}</label>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
-                            <h6 class="h6-form">No. PART.</h6>
-                            <label>{{AgMovimientos.NoPartida}}</label>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row mr-1 ml-1 fila">
-                        <div class="col-sm-12 col-md-12 col-lg-5 col-xl-5 columna">
+                        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna" style="text-align: center;">
                             <h6 class="h6-form">FECHA</h6>
                             <label>{{AgMovimientos.Fecha}}</label>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-7 col-xl-7 columna">
-                            <h6 class="h6-form">NOTAS</h6>
-                            <label>{{AgMovimientos.Notas}}</label>
+                        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna" style="text-align: center;">
+                            <h6 class="h6-form">PESO POR LOTE:</h6>
+                            <input type="hidden" value="{{AgMovimientos.Peso}}" name="peso">
+                            <label> {{AgMovimientos.Peso}}</label>
                         </div>
                     </div>
+                    <!-- <hr> -->
+                    <!-- <div class="row mr-1 ml-1 fila"> -->
+
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                            <h6 class="h6-form">No. GUIA</h6>
+                            <label>{{AgMovimientos.No_Guia}}</label>
+                        </div> -->
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                            <h6 class="h6-form">No. PART.</h6>
+                            <label>{{AgMovimientos.NoPartida}}</label>
+                        </div> -->
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-7 col-xl-7 columna">
+                            <h6 class="h6-form">NOTAS</h6>
+                            <label>{{AgMovimientos.Notas}}</label>
+                        </div> -->
+                    <!-- </div> -->
+
             </div>
             <div class="col-sm-12 col-md col-sm" style="border: 1px rgb(124, 124, 124) solid;">
                 <div class="row mr-1 ml-1 pt-3">
                     <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="corral" required id="select-corral">
+                            <option value="">Selecciona corral</option>
+                            {% for Corral in FiltradoCorral %}
+                            <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
                         <h6 class="h6-form">TIPO ANIMAL <label>*</label></h6>
                         <select class="select2 form-control" style="width: 100%;" name="animal" required>
+                            <option value="">Selecciona animal</option>
                             {% for TipoAnimal in FTipoAnimal %}
                             <option value="{{ TipoAnimal.ID }}">{{ TipoAnimal.Descripcion }}</option>
                             {% endfor %}
@@ -112,6 +118,7 @@
                     <thead>
                         <tr>
                             <th scope="col" class="th-responsive">FOLIO</th>
+                            <th scope="col" class="th-responsive">Corral</th>
                             <th scope="col" class="th-responsive">Animal</th>
                             <th scope="col" class="th-responsive">Cantidad</th>
                             <th scope="col" class="th-responsive">Peso Promedio</th>
@@ -124,6 +131,10 @@
                             <th scope="row" style="border-bottom: 1px white solid;">
                                 <h6 class="td-responsive">ID:</h6>{{ animales.IDFolio }}
                             </th>
+                            <td>
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                {{ animales.IDCorral_id__Descripcion}}
+                            </td>
                             <td class="td-agregar">
                                 <h6 class="td-responsive">ANIMAL:</h6>
                                 {{ animales.IDAnimales_id__Descripcion}}
@@ -139,6 +150,15 @@
                             <td class="td-agregar">
                                 <h6 class="td-responsive">PESO TOTAL:</h6>
                                 {{ animales.PesoTotal }} KG
+                            </td>
+
+                            <!-- <td>
+                                <h6 class="td-responsive">NO. GUIA:</h6>
+                                {{ animales.No_Guia}}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">NOTAS:</h6>
+                                {{ animales.Notas}} -->
                             </td>
                         </tr>
                         {% endfor %}

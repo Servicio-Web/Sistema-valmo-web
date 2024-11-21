@@ -246,8 +246,22 @@ class tblDetalleAnimales(models.Model):
     Fecha = models.DateTimeField(null=True)
     Peso = models.FloatField(null=True)
     NoPartida = models.IntegerField(null=True)
-    No_Guia = models.IntegerField(null=True)
+    No_Guia = models.CharField(max_length=30,null=True)
     
+
+class tblMovimientoAnimales(models.Model):
+    ID = models.AutoField(primary_key=True)
+    Folio = models.CharField(max_length=15, null=True)
+    IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
+    IDMovimiento = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
+    Fecha = models.DateField(null=True)
+    Peso = models.FloatField(null=True)
+    NoPartida = models.CharField(max_length=30, null=True)
+    # modificaciones agregadas el 161124
+    #IDCorral = models.ForeignKey(tblCorrales, on_delete=models.DO_NOTHING, null=True)
+    #No_Guia = models.CharField(max_length=30, null=True)
+    #Notas = models.CharField(max_length=150, null=True) 
+
 class tblDetalleMovAnimales(models.Model):
     ID = models.AutoField(primary_key=True)
     IDFolio = models.CharField(max_length=150,null=True)
@@ -255,19 +269,12 @@ class tblDetalleMovAnimales(models.Model):
     Cantidad = models.IntegerField(null=True)
     PesoTotal = models.FloatField(null=True)
     PesoPromedio = models.FloatField(null=True)
-    
-class tblMovimientoAnimales(models.Model):
-    ID = models.AutoField(primary_key=True)
-    Folio = models.CharField(max_length=15, null=True)
-    IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
+    # modificaciones agregadas el 161124
     IDCorral = models.ForeignKey(tblCorrales, on_delete=models.DO_NOTHING, null=True)
-    IDMovimiento = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
-    Fecha = models.DateTimeField(null=True)
-    Peso = models.FloatField(null=True)
-    NoPartida = models.IntegerField(null=True)
-    No_Guia = models.IntegerField(null=True)
-    Notas = models.CharField(max_length=150, null=True)  
-   
+    No_Guia = models.CharField(max_length=30, null=True)
+    Notas = models.CharField(max_length=150, null=True) 
+
+    
 class tblInventarioInicialesMP(models.Model):
     ID = models.AutoField(primary_key=True)
     Folio = models.CharField(max_length=15, null=True)

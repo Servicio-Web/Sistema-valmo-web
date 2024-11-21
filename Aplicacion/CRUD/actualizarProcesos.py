@@ -189,6 +189,7 @@ def actualizarCantidadAnimales(request):
     id_v = request.POST['id']
     folio_v = request.POST['folio']
     animal_v = request.POST['animal']
+    corral_v = request.POST['corral']
     cantidad_v = request.POST['cantidad']
     pesoTotal_v = request.POST['pesoTotal']
     pesoPromedio = round(float(pesoTotal_v) / float(cantidad_v), 2)
@@ -200,8 +201,10 @@ def actualizarCantidadAnimales(request):
     
     cantidadAnimales = tblDetalleMovAnimales.objects.get(ID=id_v)
     animal_instancia = tblAnimalesTipo.objects.get(ID=animal_v)
+    corral_instancia = tblCorrales.objects.get(ID=corral_v)
    
     cantidadAnimales.IDAnimales = animal_instancia
+    cantidadAnimales.IDCorral = corral_instancia
     cantidadAnimales.Cantidad = cantidad_v
     cantidadAnimales.PesoPromedio = pesoPromedio
     cantidadAnimales.PesoTotal = pesoTotal_v
@@ -219,19 +222,9 @@ def actualizarCantidadAnimales(request):
 
 def actualizarMovimientosAniamales(request):
     id_v = request.POST['id']
-    folio_v = request.POST['folio']
     cliente_v = request.POST['cliente']
-    corral_v = request.POST['corral']
-    peso_v = request.POST['peso']
-    guia_v = request.POST['guia']
-    partida_v = request.POST['partida']
     fecha_v = request.POST['fecha']
-    notas_v = request.POST['notas']
 
-    if guia_v == '':
-        guia_v = 0
-    if partida_v == '':
-        partida_v = 0
 
     # tecnicos
     TecnicoEditor_v = request.POST['tecnico'].upper()
@@ -240,15 +233,9 @@ def actualizarMovimientosAniamales(request):
 
     movimiento_animales_save = tblMovimientoAnimales.objects.get(ID=id_v)
     Cliente_instancia = tblClientes.objects.get(ID=cliente_v)
-    Corral_instancia = tblCorrales.objects.get(ID=corral_v)
 
     movimiento_animales_save.IDCliente = Cliente_instancia
-    movimiento_animales_save.IDCorral = Corral_instancia
-    movimiento_animales_save.Peso = peso_v
-    movimiento_animales_save.No_Guia = guia_v
-    movimiento_animales_save.NoPartida = partida_v
     movimiento_animales_save.Fecha = fecha_v
-    movimiento_animales_save.Notas = notas_v
     movimiento_animales_save.save()
     try:
         editarDatosTecnicos(request, TecnicoEditor_v, NombreTabla_v, IDFilaTabla_v)

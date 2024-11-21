@@ -8,7 +8,7 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
 from django.db import connection
-
+from django.db.models import Sum
 # IMPORT PARA CORREOS ELECTRONICOS
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -259,18 +259,24 @@ def salidaMateriaPrima(request):
 def movimientoAnimales(request):
     valor = 13
     formatoClave = "F-000000"
-    fecha_actual = datetime.today()
-    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    fecha_actual = date.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d")
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     
     dataInput= request.POST.get('movimientoAnimales', '')
     if dataInput is not None and dataInput != '':
-        Detalle = tblDetalleMovAnimales.objects.filter(IDFolio = dataInput).values('ID', 'IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal', 'PesoPromedio')
+        Detalle = tblDetalleMovAnimales.objects.filter(IDFolio = dataInput).values('ID', 'IDFolio', 
+        'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal', 'PesoPromedio', 'IDCorral_id__Descripcion', 'No_Guia', 'Notas')
+        # Realizar las sumas de los campos deseados
+        suma_detalles = Detalle.aggregate( suma_cantidad=Sum('Cantidad'), suma_peso_total=Sum('PesoTotal'), suma_peso_promedio=Sum('PesoPromedio'))
+
+        suma_cantidad = suma_detalles['suma_cantidad']
+        suma_peso_total = suma_detalles['suma_peso_total']
+        suma_peso_promedio = suma_detalles['suma_peso_promedio']
 
         movimientoAnimales = tblMovimientoAnimales.objects.get(Folio = dataInput)
         Cliente = movimientoAnimales.IDCliente.ID
-        Corral = movimientoAnimales.IDCorral.ID
         movimiento = movimientoAnimales.IDMovimiento.ID
         if movimiento == 1 or movimiento == "1":
             mov = "Entrada"
@@ -278,10 +284,11 @@ def movimientoAnimales(request):
             mov = "Sálida"
         # fecha = movimientoAnimales.Fecha
         FiltradoCliente = tblClientes.objects.get(ID=Cliente)
-        FiltradoCorral = tblCorrales.objects.get(ID=Corral)
-    # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/MovimientoAnimales/index.html', {'logo_url': logo_url, 'Detalle':Detalle, 'corral':FiltradoCorral,
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente})
+    # Render the HTML template with the data}
+    imprimir = 3
+    html_string = render_to_string('Descargas/PDF/MovimientoAnimales/index.html', {'logo_url': logo_url, 'Detalle':Detalle, 'imprimir': range(imprimir),
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente,
+    'suma_cantidad':suma_cantidad, 'suma_peso_total':suma_peso_total, 'suma_peso_promedio':suma_peso_promedio})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
@@ -928,156 +935,3 @@ def CantidadActualAnimales(IDCorral, fecha):
     else:
         return Cantidad[0][0]
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
-# # ESTE CODIGO VA ABAJO DE LA FUNCION DEL PDF
-# def Enviar_PDF_email(nombre_user, correo, nombre_Reporte, nombre_archivo, pdf_file, formatted_fecha_actual):
-#     subject = nombre_Reporte
-#     body = f'Hola {nombre_user}, aqui se le adjunta un archivo con el reporte del movimiento de servidos en sus respectivos corrales'
-
-#     email = EmailMultiAlternatives(
-#         subject,
-#         body,
-#         settings.EMAIL_HOST_USER,
-#         [correo]
-#     )
-
-#     # Attach the PDF to the email
-#     email.attach(f'{nombre_archivo}.pdf', pdf_file, 'application/pdf')
-
-#     # Send the email
-#     email.send()
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
-
-
-
-# CODIGO PARA ENVIAR CORREO ELECTRONICO
-
-# ESTE CODIGO VA EN LA FUNCION DEL PDF
-    # Send the PDF via email
-    # email_to = "servicioweb22@gmail.com"
-    # send_pdf_email(email_to, pdf_file, formatted_fecha_actual)
-
-# ESTE CODIGO VA ABAJO DE LA FUNCION DEL PDF
-# def send_pdf_email(email_to, pdf_file, formatted_fecha_actual):
-#     subject = 'Reporte de Cargamento Tolva'
-#     body = 'Por favor, encuentra adjunto el reporte generado.'
-
-#     email = EmailMultiAlternatives(
-#         subject,
-#         body,
-#         settings.EMAIL_HOST_USER,
-#         [email_to]
-#     )
-
-#     # Attach the PDF to the email
-#     email.attach(f'Servidos_{formatted_fecha_actual}.pdf', pdf_file, 'application/pdf')
-
-#     # Send the email
-#     email.send()
-
-
-#impresion directa
-# import win32ui
-# import win32print
-# import win32con
-# import os
-# import subprocess
-# import time
-
-# INCH = 1440
-
-# def reporteMovimientoServidos(request):
-#     valor = 6
-#     formatoClave = cargar_folio(valor)
-#     fecha_actual = datetime.today()
-#     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
-#     user = request.user
-#     Cliente = request.POST['cliente']
-#     Fecha = request.POST['fechaInicial']
-#     Fecha2 = request.POST['fechaFinal']
-#     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
-
-#     dataInput = request.POST.get('reporte-movimientos-servidos', '')
-#     if dataInput is not None and dataInput != '':
-#         if Cliente == 'todos':
-#             consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
-#                 Aplicacion_tblcorrales.Descripcion, Aplicacion_tblproductos.Descripcion,
-#                 Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
-#                 Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
-#                 FROM Aplicacion_tblservido
-#                 LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
-#                 LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
-#                 LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
-#                 LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
-#                 WHERE Aplicacion_tblservido.Fecha BETWEEN %s AND %s AND Aplicacion_tblservido.IDCliente_id != 1 
-#                 AND Aplicacion_tblservido.IDEstatus_id = 10"""
-#             with connection.cursor() as cursor:
-#                 cursor.execute(consulta_sql, [Fecha, Fecha2])
-#                 reportes = cursor.fetchall()
-#             Nombre = 'En general'
-#             Cliente = 'todos'
-#         else:
-#             consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
-#                 Aplicacion_tblcorrales.Descripcion, Aplicacion_tblproductos.Descripcion,
-#                 Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
-#                 Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
-#                 FROM Aplicacion_tblservido
-#                 LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
-#                 LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
-#                 LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
-#                 LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
-#                 WHERE Aplicacion_tblclientes.ID = %s AND Aplicacion_tblservido.Fecha BETWEEN %s AND %s
-#                 AND Aplicacion_tblservido.IDCliente_id != 1 AND Aplicacion_tblservido.IDEstatus_id = 10"""
-#             with connection.cursor() as cursor:
-#                 cursor.execute(consulta_sql, [Cliente, Fecha, Fecha2])
-#                 reportes = cursor.fetchall()
-#             TECliente = tblClientes.objects.get(ID=Cliente)
-#             Nombre = TECliente.Nombre
-
-#     # Renderizar el HTML con los datos
-#     html_string = render_to_string('Descargas/PDF/ReporteServidos/Movimientos.html', {
-#         'logo_url': logo_url, 
-#         'fecha_actual': fecha_actual, 
-#         'formatoClave': formatoClave, 
-#         'reportes': reportes, 
-#         'Nombre': Nombre, 
-#         'Cliente': Cliente, 
-#         'Fecha1': Fecha, 
-#         'Fecha2': Fecha2
-#     })
-
-#     # Crear un archivo PDF temporal en el sistema
-#     pdf_buffer = BytesIO()
-#     pisa.CreatePDF(html_string, dest=pdf_buffer)
-#     pdf_file = pdf_buffer.getvalue()
-
-#     # Guardar el PDF en un archivo temporal
-#     pdf_file_path = f"Servidos_{formatted_fecha_actual}.pdf"  # Cambia esta ruta según tu sistema
-#     with open(pdf_file_path, 'wb') as f:
-#         f.write(pdf_file)
-
-#     # Imprimir el PDF utilizando el visor de PDF por defecto del sistema
-#     print_pdf(pdf_file_path)
-
-#     # Cerrar el buffer
-#     pdf_buffer.close()
-
-#     # Crear una respuesta HTTP para descargar el PDF
-#     response = HttpResponse(pdf_file, content_type='application/pdf')
-#     response['Content-Disposition'] = f'attachment; filename="Servidos_{formatted_fecha_actual}.pdf"'
-#     return response
-
-
-# def print_pdf(pdf_path):
-#     sumatra_path = r"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe"  # Cambia esta ruta según la instalación
-
-#     if os.path.exists(sumatra_path):
-#         try:
-#             # El parámetro '-print-to-default' imprime el archivo directamente en la impresora predeterminada
-#             subprocess.run([sumatra_path, '-print-to-default', pdf_path])
-#         except Exception as e:
-#             print(f"Error al imprimir el PDF: {e}")
-#     else:
-#         print(f"La aplicación SumatraPDF no se encuentra en la ruta especificada: {sumatra_path}")
- 
-

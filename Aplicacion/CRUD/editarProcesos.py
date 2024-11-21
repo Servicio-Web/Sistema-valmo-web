@@ -141,25 +141,26 @@ def editarCantidadMovimientosAnimales(request, ID):
     grupos = grupo_user(request)
     TCantidadMovimientoAnimales = tblDetalleMovAnimales.objects.get(ID=ID)
     animal = TCantidadMovimientoAnimales.IDAnimales.ID
+    corral = TCantidadMovimientoAnimales.IDCorral.ID
     FiltradoAnimales = tblAnimalesTipo.objects.get(ID=animal)
-    FEAnimal = tblAnimalesTipo.objects.all()
+    FiltradoCorral = tblCorrales.objects.get(ID=corral)
+    FEAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
+    FECorral = tblCorrales.objects.all().order_by('Descripcion')
 
     return render(request, "Procesos/MovimientosAnimales/editCantAni.html",{'grupos': grupos,
-    'TCantidadMovimientoAnimales': TCantidadMovimientoAnimales,
-    'FiltradoAnimales': FiltradoAnimales, 'FEAnimal': FEAnimal })
+    'TCantidadMovimientoAnimales': TCantidadMovimientoAnimales, 'FiltradoCorral':FiltradoCorral,
+    'FiltradoAnimales': FiltradoAnimales, 'FEAnimal': FEAnimal, 'FECorral':FECorral })
 
 def editarMovimientosAnimales(request, ID):
     grupos = grupo_user(request)
     TMovimientoAnimales= tblMovimientoAnimales.objects.get(ID=ID)
     Cliente = TMovimientoAnimales.IDCliente.ID
-    Corral = TMovimientoAnimales.IDCorral.ID
     fecha = TMovimientoAnimales.Fecha
     FiltradoCliente = tblClientes.objects.get(ID=Cliente)
-    FiltradoCorral = tblCorrales.objects.get(ID=Corral)
     FECliente = tblClientes.objects.all().exclude(ID=0).order_by('Nombre')
     FECorral = tblCorrales.objects.all().order_by('Descripcion')
     return render(request, "Procesos/MovimientosAnimales/edit.html",{'grupos': grupos,'TMovimientoAnimales': TMovimientoAnimales,
-    'FiltradoCliente': FiltradoCliente, 'FiltradoCorral': FiltradoCorral, 'fecha':fecha,
+    'FiltradoCliente': FiltradoCliente, 'fecha':fecha,
     'FECliente': FECliente, 'FECorral': FECorral})
 
 def editarSolicitudServidos(request, ID):

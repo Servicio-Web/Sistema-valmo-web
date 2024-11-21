@@ -138,23 +138,24 @@ def AgregarMovimientoAnimales(request, ID):
     AgMovimientos = tblMovimientoAnimales.objects.get(Folio=ID)
     folio = AgMovimientos.Folio
     Cliente = AgMovimientos.IDCliente.ID
-    Corral = AgMovimientos.IDCorral.ID
     Movimiento = AgMovimientos.IDMovimiento.ID
     FiltradoCliente = tblClientes.objects.get(ID=Cliente)
-    FiltradoCorral = tblCorrales.objects.get(ID=Corral)
     FiltradoMovimiento = tblTipoMov.objects.get(ID=Movimiento)
+    FiltradoCorrales = tblCorrales.objects.filter(IDCliente=Cliente).order_by('Descripcion')
     FTipoAnimal = tblAnimalesTipo.objects.all()
-    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=folio).values('IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoPromedio', 'PesoTotal' )
+    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=folio).values('IDFolio', 'IDAnimales_id__Descripcion', 
+    'Cantidad', 'PesoPromedio', 'PesoTotal', 'IDCorral_id__Descripcion', 'No_Guia', 'Notas' )
     ServiciosWeb = servicioActivo()
     return render(request, "Procesos/MovimientosAnimales/agregar.html",{'grupos': grupos,'AgMovimientos': AgMovimientos,
-    'FiltradoCliente':FiltradoCliente, 'FiltradoCorral':FiltradoCorral, 'FiltradoMovimiento':FiltradoMovimiento,
+    'FiltradoCliente':FiltradoCliente, 'FiltradoMovimiento':FiltradoMovimiento, 'FiltradoCorral':FiltradoCorrales,
     'ServiciosWeb':ServiciosWeb, 'FTipoAnimal':FTipoAnimal, 'Detalle':Detalle})
 
 def detalleAnimales(request, ID):
     grupos = grupo_user(request)
     AgMovimientos = tblMovimientoAnimales.objects.get(Folio=ID)
     folio = AgMovimientos.Folio
-    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=folio).values('ID', 'IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal', 'PesoPromedio')
+    Detalle = tblDetalleMovAnimales.objects.filter(IDFolio=folio).values('ID', 'IDFolio', 'IDAnimales_id__Descripcion', 'Cantidad',
+    'PesoTotal', 'PesoPromedio', 'IDCorral_id__Descripcion', 'No_Guia', 'Notas')
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/MovimientosAnimales/verDetalle.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb,'Detalle': Detalle})
 
@@ -163,8 +164,8 @@ def TablaMovimientoAnimales(request):
     Movimiento = request.POST.get('mov', '')
     if Movimiento is not None and Movimiento != '':
         TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = Movimiento).values( 'ID',
-        'Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDMovimiento_id__Descripcion', 
-        'Fecha',  'Peso', 'NoPartida', 'No_Guia', 'Notas'
+        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 
+        'Fecha',  'Peso', 'NoPartida'
     )
         if Movimiento == 1 or Movimiento == "1":
             Movimiento = "Entrada"
@@ -172,8 +173,7 @@ def TablaMovimientoAnimales(request):
             Movimiento = "Sálida"
     else:
          TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = 1).values( 'ID',
-        'Folio', 'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDMovimiento_id__Descripcion', 
-        'Fecha', 'Peso', 'NoPartida', 'No_Guia', 'Notas'
+        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 'Fecha', 'Peso', 'NoPartida'
     )
          Movimiento  = "Entrada"
     ServiciosWeb = servicioActivo()
