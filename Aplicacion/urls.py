@@ -405,9 +405,12 @@ urlpatterns = [
          reportes.reporteMovEntradaMP, name='Reportes-Entrada-Materia-Prima'),
     path('Reporte-Movimientos-Salida-Materia-Prima/',
          reportes.reporteMovSalidaMP, name='Reportes-Salida-Materia-Prima'),
-    # animales
+    # animales nuevos
     path('Reporte-Movimientos-Animales/', reportes.reporteAnimalesMovimientos,
          name='Reportes-Movimientos-Animales'),
+    # animales
+#     path('Reporte-Movimientos-Animales/', reportes.reporteAnimalesMovimientos,
+#          name='Reportes-Movimientos-Animales'),
     path('Reporte-Animales-Clientes/', reportes.reportePorClientes,
          name='Reportes-Animales-Clientes'),
     path('Reporte-Animales-Clientes-Corrales/', reportes.reportePorClientesCorrales,

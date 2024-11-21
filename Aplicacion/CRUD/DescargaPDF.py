@@ -652,6 +652,76 @@ def reporteSalidaMateriaPrima(request):
 def reporteMovimientoAnimales(request):
     valor = 10
     formatoClave = cargar_folio(valor)
+    fecha_actual = date.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+
+    Cliente = request.POST['cliente']
+    Movimiento_v = request.POST['mov']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+    
+    TEMov = tblTipoMov.objects.get(ID=Movimiento_v)
+    Movimiento = TEMov.Descripcion  
+    dataInput = request.POST.get('reporte-movimiento-animales', '')
+    if dataInput is not None and dataInput != '':
+        if Cliente == 'todos':
+            consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
+            Aplicacion_tblAnimalesTipo.Descripcion,Aplicacion_tbldetallemovanimales.PesoTotal, Aplicacion_tblcorrales.Descripcion
+            FROM  Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+            INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id 
+            WHERE DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN %s AND %s AND Aplicacion_tblmovimientoanimales.IDMovimiento_id = %s
+            ORDER by Aplicacion_tbldetallemovanimales.IDFolio DESC"""
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    consulta_sql, [Fecha, Fecha2, Movimiento_v])
+                reportes = cursor.fetchall()
+            Nombre = 'En general'
+            Cliente = 'todos'
+        else:
+            consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
+            Aplicacion_tblAnimalesTipo.Descripcion,Aplicacion_tbldetallemovanimales.PesoTotal, Aplicacion_tblcorrales.Descripcion
+            FROM  Aplicacion_tblmovimientoanimales
+            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+            INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+            INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id 
+            WHERE Aplicacion_tblmovimientoanimales.IDCliente_id = %s AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN %s AND %s 
+            AND Aplicacion_tblmovimientoanimales.IDMovimiento_id = %s
+            ORDER by Aplicacion_tbldetallemovanimales.IDFolio DESC"""
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    consulta_sql, [Cliente, Fecha, Fecha2, Movimiento_v])
+                reportes = cursor.fetchall()
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+        
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Movimientos2.html', {'logo_url': logo_url, 'Movimiento':Movimiento,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Movimientos Animales {formatted_fecha_actual}.pdf"'
+    return response
+
+def reporteMovimientoAnimales2(request):
+    valor = 10
+    formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
     user = request.user

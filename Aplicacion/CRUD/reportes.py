@@ -83,9 +83,78 @@ def reporteMovSalidaMP(request):
         })
 
 # ------------------------------------------------REPORTES ANIMALES--------------------------------------------------------------------------
-
-# REPORTES DE ANIMALES
+# NUEVO REPORTE DE ANIMALES
 def reporteAnimalesMovimientos(request):
+    FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
+    FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
+    FMovimientos = tblTipoMov.objects.filter(ID__range=(1, 2))
+
+    if request.method == 'POST':
+        if 'reportes' in request.POST:
+            Cliente = request.POST.get('cliente')
+            Movimiento_v = request.POST.get('mov')
+            Fecha = request.POST.get('fecha1')
+            Fecha2 = request.POST.get('fecha2')
+            TEMov = tblTipoMov.objects.get(ID=Movimiento_v)
+            Movimiento = TEMov.Descripcion            
+            if Cliente == 'todos':
+                consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
+                Aplicacion_tblAnimalesTipo.Descripcion,Aplicacion_tbldetallemovanimales.PesoTotal, Aplicacion_tblcorrales.Descripcion
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id 
+                WHERE DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN %s AND %s AND Aplicacion_tblmovimientoanimales.IDMovimiento_id = %s
+                ORDER by Aplicacion_tbldetallemovanimales.IDFolio ASC"""
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        consulta_sql, [Fecha, Fecha2, Movimiento_v])
+                    reportes = cursor.fetchall()
+                Nombre = 'Se trajeron todos los clientes'
+                Cliente = 'todos'
+                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+                'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2, 'Movimiento':Movimiento, 'Movimiento_v':Movimiento_v})
+            else:
+                consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
+                Aplicacion_tblAnimalesTipo.Descripcion,Aplicacion_tbldetallemovanimales.PesoTotal, Aplicacion_tblcorrales.Descripcion
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id 
+                WHERE Aplicacion_tblmovimientoanimales.IDCliente_id = %s AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN %s AND %s 
+                AND Aplicacion_tblmovimientoanimales.IDMovimiento_id = %s
+                ORDER by Aplicacion_tbldetallemovanimales.IDFolio ASC"""
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        consulta_sql, [Cliente, Fecha, Fecha2, Movimiento_v])
+                    reportes = cursor.fetchall()
+                TECliente = tblClientes.objects.get(ID=Cliente)
+                Nombre = TECliente.Nombre
+                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+                'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2, 'Movimiento':Movimiento, 'Movimiento_v':Movimiento_v})
+    else:
+        consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
+        Aplicacion_tblAnimalesTipo.Descripcion,Aplicacion_tbldetallemovanimales.PesoTotal, Aplicacion_tblcorrales.Descripcion
+        FROM  Aplicacion_tblmovimientoanimales
+        INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+        INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+        INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+        INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id 
+        ORDER by Aplicacion_tbldetallemovanimales.IDFolio ASC"""
+        with connection.cursor() as cursor:
+            cursor.execute(consulta_sql)
+            reportes = cursor.fetchall()
+        Nombre = 'Buscar cliente'
+        Cliente = ''
+        return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+                'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
+    
+# REPORTES DE ANIMALES
+def reporteAnimalesMovimientos2(request):
     FechaDia = datetime.now().strftime('%Y-%m-%d')
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
