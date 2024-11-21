@@ -645,15 +645,3 @@ def actualizarPermiso(request):
         permiso.save()
         messages.success(request, f'El Grupo "{descripcion_v}" se ha actualizado exitosamente.')
     return redirect('T-Permisos')
-
-
-
-
-
-
-
-
-
-
-
-
