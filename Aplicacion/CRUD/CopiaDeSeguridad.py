@@ -1,121 +1,102 @@
-import sqlite3
 import os
-from django.shortcuts import redirect
-from django.contrib import messages
-import mysql.connector
 import pandas as pd
 import csv
+import mysql.connector
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib import messages
 from django.utils import timezone
-from Aplicacion.forms import *
-from Aplicacion.models import *
+from Aplicacion.models import tblConfiguracion
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 
-# Obtiene la ruta absoluta del directorio actual (donde se encuentra copiadeseguridad.py)
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Retrocede dos niveles para llegar al directorio raíz del proyecto
-project_dir = os.path.dirname(os.path.dirname(current_dir))
-
-# Carga el archivo .env desde el directorio raíz del proyecto
-load_dotenv(os.path.join(project_dir, '.env'))
+# Carga variables de entorno desde el archivo .env
+load_dotenv()
 
 @login_required
 def copiaDeSeguridad(request):
-    # Conexión a la base de datos MySQL
-    mysql_conn = mysql.connector.connect(
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD'),
-        host=os.environ.get('DB_HOST'),
-        port=os.environ.get('DB_PORT')
+    # Conexión a la base de datos MySQL origen
+    mysql_conn_origen = mysql.connector.connect(
+        database=os.environ.get('DB_ORIGEN_NAME'),
+        user=os.environ.get('DB_ORIGEN_USER'),
+        password='',
+        host=os.environ.get('DB_ORIGEN_HOST'),
+        port=os.environ.get('DB_ORIGEN_PORT')
     )
 
-    # Conexión a la base de datos SQLite3
-    sqlite_conn = sqlite3.connect('Respaldo_MYSQL.sqlite3')
+    # Conexión a la base de datos MySQL destino
+    mysql_conn_destino = mysql.connector.connect(
+        database=os.environ.get('DB_DESTINO_NAME'),
+        user=os.environ.get('DB_DESTINO_USER'),
+        password='',
+        host=os.environ.get('DB_DESTINO_HOST'),
+        port=os.environ.get('DB_DESTINO_PORT')
+    )
 
-    FechaEditor_v = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
-    user = request.user
-    # Acceder a los campos del usuario
-    usuario = user.first_name + " " + user.last_name
-    Movimiento = 'Actualización'
-    configuracion_editor = tblConfiguracion.objects.get(ID=1)
-    configuracion_editor.FechaActualizacion = FechaEditor_v
-    configuracion_editor.Usuario = usuario
-    configuracion_editor.BaseDeDatos = Movimiento
-    configuracion_editor.save()
+    # # Actualiza el registro de configuración
+    # FechaEditor_v = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    # user = request.user
+    # usuario = f"{user.first_name} {user.last_name}"
+    # Movimiento = 'Actualización'
+    # configuracion_editor = tblConfiguracion.objects.get(ID=1)
+    # configuracion_editor.FechaActualizacion = FechaEditor_v
+    # configuracion_editor.Usuario = usuario
+    # configuracion_editor.BaseDeDatos = Movimiento
+    # configuracion_editor.save()
 
-    # Función para exportar datos de MySQL a CSV
-    def export_mysql_data_to_csv(mysql_conn, table_name):
-        try:
-            # Obtiene el directorio actual de trabajo
-            current_directory = os.getcwd()
-
-            # Cambia el directorio actual de trabajo a la ubicación de 'temp_csv_data'
-            os.chdir(temp_dir)
-
-            query = f"SELECT * FROM {table_name};"
-            data = pd.read_sql_query(query, mysql_conn)
-            data.to_csv(f'{table_name}.csv', index=False)
-            messages.success(request, f'La exportación a CSV de la tabla {table_name} se ha actualizado exitosamente.')
-        except mysql.connector.Error as err:
-            messages.error(request, f"Error al exportar datos de {table_name}: {err}")
-        finally:
-            # Restaura el directorio actual de trabajo
-            os.chdir(current_directory)
-
-    # Directorio temporal para archivos CSV
+    # Directorio temporal para los CSV
     temp_dir = 'temp_csv_data'
     os.makedirs(temp_dir, exist_ok=True)
 
-    # Función para importar datos desde CSV a SQLite3 y actualizar registros existentes
-    def import_csv_to_sqlite(sqlite_conn, table_name):
-        cursor = sqlite_conn.cursor()
+    def export_mysql_data_to_csv(mysql_conn, table_name):
+        try:
+            query = f"SELECT * FROM {table_name};"
+            data = pd.read_sql_query(query, mysql_conn)
+            data.to_csv(os.path.join(temp_dir, f'{table_name}.csv'), index=False)
+            messages.success(request, f'Datos de {table_name} exportados a CSV.')
+        except mysql.connector.Error as err:
+            messages.error(request, f"Error al exportar datos de {table_name}: {err}")
+
+    def import_csv_to_mysql(mysql_conn, table_name):
+        cursor = mysql_conn.cursor()
         try:
             csv_filename = os.path.join(temp_dir, f'{table_name}.csv')
-
-            # Inserta o actualiza registros
             with open(csv_filename, 'r', newline='', encoding='utf-8') as csv_file:
                 csv_reader = csv.reader(csv_file)
-                header = next(csv_reader)  # Lee la primera fila (cabecera)
+                header = next(csv_reader)
                 columns = ', '.join(header)
-                placeholders = ', '.join(['?'] * len(header))
+                placeholders = ', '.join(['%s'] * len(header))
                 for row in csv_reader:
-                    # Preparar los valores para el comando de inserción
-                    values = tuple(row)
-                    # Construir la consulta de actualización
-                    update_query = f"""
+                    query = f"""
                         INSERT INTO {table_name} ({columns}) VALUES ({placeholders})
-                        ON CONFLICT(ID) DO UPDATE SET {', '.join([f'{col}=excluded.{col}' for col in header if col != 'ID'])};
+                        ON DUPLICATE KEY UPDATE {', '.join([f'{col}=VALUES({col})' for col in header])};
                     """
-                    cursor.execute(update_query, values)
-            messages.success(request, f'La exportación a SQLITE3 de la tabla {table_name} se ha actualizado exitosamente.')
-        except sqlite3.Error as err:
+                    cursor.execute(query, row)
+            mysql_conn.commit()
+            messages.success(request, f'Datos importados a {table_name} en la base destino.')
+        except mysql.connector.Error as err:
             messages.error(request, f"Error al importar datos a {table_name}: {err}")
 
-    # Obtener la lista de tablas presentes en la base de datos MySQL
-    cursor = mysql_conn.cursor()
-    cursor.execute("SHOW TABLES;")
-    tables = [table[0] for table in cursor.fetchall()]
+    # Obtener las tablas de la base de datos origen
+    cursor_origen = mysql_conn_origen.cursor()
+    cursor_origen.execute("SHOW TABLES;")
+    tables = [table[0] for table in cursor_origen.fetchall()]
 
-    # Iterar sobre las tablas y realizar exportación e importación
+    # Exportar e importar datos
     for table_name in tables:
-        export_mysql_data_to_csv(mysql_conn, table_name)
-        import_csv_to_sqlite(sqlite_conn, table_name)
+        export_mysql_data_to_csv(mysql_conn_origen, table_name)
+        import_csv_to_mysql(mysql_conn_destino, table_name)
 
-    # Cierra las conexiones
-    mysql_conn.close()
-    sqlite_conn.commit()
-    sqlite_conn.close()
-
+    # Limpieza de archivos temporales
     for csv_file in os.listdir(temp_dir):
-        file_path = os.path.join(temp_dir, csv_file)
-        os.remove(file_path)
-
+        os.remove(os.path.join(temp_dir, csv_file))
     os.rmdir(temp_dir)
 
-    messages.success(request, f"Proceso de exportación e importación completado.")
+    # Cerrar conexiones
+    mysql_conn_origen.close()
+    mysql_conn_destino.close()
+
+    messages.success(request, "Proceso completado con éxito.")
     return redirect('Base-de-datos')
 
 
@@ -157,3 +138,4 @@ def descargar_backup(request):
         messages.error(request, "El archivo no existe.")
         # O redirige a la página correspondiente
         return redirect('Base-de-datos')
+
