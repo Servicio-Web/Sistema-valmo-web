@@ -23,7 +23,7 @@ def FormularioEntradaMateriasPrimas(request):
     FOperadores = tblOperadores.objects.all().order_by('Descripcion')
     FTransporteMP = tblOtrosDatosMovMP.objects.all()
     FTransporte = tblOtrosDatosSalXBas.objects.all()
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
 
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/EntradasMateriasPrimas/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
@@ -56,7 +56,7 @@ def FormularioSalidaMateriasPrimas(request):
     FTipoMov= tblTipoMov.objects.all().order_by('Descripcion')
     FOperadores = tblOperadores.objects.all().order_by('Descripcion')
     FTransporte = tblOtrosDatosSalXBas.objects.all()
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
 
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/SalidasMateriasPrimas/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
@@ -90,7 +90,7 @@ def FormularioEntradaProductos(request):
     FOperadores = tblOperadores.objects.all().order_by('Descripcion')
     FTransporte = tblOtrosDatosMovMP.objects.all()
     ServiciosWeb = servicioActivo()
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/EntradaProductos/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
@@ -126,7 +126,7 @@ def FormularioSalidaProductos(request):
     FTransporte = tblOtrosDatosSalXBas.objects.all()
     
     ServiciosWeb = servicioActivo()
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     return render(request, 'Procesos/SalidasProductos/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
     'ultimo_folio': ultimo_folio,'FCliente':FCliente, 'FMovimiento':FMovimiento,'FechaDeHoy':FechaDeHoy,
     'FMateriaPrima':FMateriaPrima, 'FProductos':FProductos, 'FPresentacion':FPresentacion,'FOperadores':FOperadores,
@@ -189,7 +189,7 @@ def FormularioSolicitudServido(request):
     FECorrales = tblCorrales.objects.exclude(Q(IDCliente= 1)).order_by('Descripcion')
     FEProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
 
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/Solicitud Servido/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb,  'FECorrales': FECorrales, 'ultimo_folio':ultimo_folio,
@@ -206,7 +206,7 @@ def FormularioServidoAnimales(request):
     FECorrales = tblCorrales.objects.exclude(IDCliente = 1).all().order_by('Descripcion')
     FEProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/Servido Manual/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb,  'FECorrales': FECorrales, 'ultimo_folio':ultimo_folio,
@@ -221,7 +221,7 @@ def FormularioInventarioMateriaPrima(request):
         ultimo_folio = 1
     FMateriaPrima = tblMateriaPrima.objects.all().order_by('Descripcion')
     FAlmacen = tblContenedoresMateriaPrima.objects.all().order_by('Cliente')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
 
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/InventarioMateriaPrima/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 'FAlmacen': FAlmacen,
@@ -236,7 +236,7 @@ def FormularioInventarioProducto(request):
         ultimo_folio = 1
     FProductos= tblProductos.objects.all().order_by('Descripcion')
     FAlmacen = tblContenedoresProductos.objects.all().order_by('Proveedor')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
 
     ServiciosWeb = servicioActivo()
     return render(request, 'Procesos/InventarioProductos/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 'FAlmacen': FAlmacen,

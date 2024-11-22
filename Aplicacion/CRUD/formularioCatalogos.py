@@ -84,7 +84,7 @@ def FormualrioCorrales(request):
         ultimo_folio = 1
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FClientes = tblClientes.objects.all().exclude(ID=1).order_by('Nombre')
-    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     ServiciosWeb = servicioActivo()
     return render(request, 'Catalogos/Corral/form.html',{'grupos': grupos,'ServiciosWeb': ServiciosWeb,
     'ultimo_folio': ultimo_folio, 'FechaDeHoy':FechaDeHoy, 'FClientes': FClientes, 'FEstatus': FEstatus})

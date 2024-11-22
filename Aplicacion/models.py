@@ -127,7 +127,7 @@ class tblCorrales(models.Model):
     IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     Capacidad = models.FloatField(null=True)
-    FechaAsigna = models.DateTimeField(max_length=150, null=True)
+    FechaAsigna = models.DateField(max_length=150, null=True)
        
 class tblAnimalesTipo(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -168,7 +168,7 @@ class tblAsignaCorrales(models.Model):
     Clave = models.CharField(max_length=15, null=True)
     IDCorral = models.ForeignKey(tblCorrales, on_delete=models.DO_NOTHING, null=True)
     IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)
+    Fecha = models.DateField(max_length=150, null=True)
     TipoMov = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
 
 # -------------------------------------------------------PROCESOS-------------------------------------------------------
@@ -181,7 +181,7 @@ class tblEntradaMP(models.Model):
     IDPresentacion = models.ForeignKey(tblTipoPresentacion, on_delete=models.DO_NOTHING, null=True)
     cantidad = models.FloatField(null=True)
     referencia = models.IntegerField(null=True)
-    fecha = models.DateTimeField(max_length=150, null=True)
+    fecha = models.DateField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
 class tblSalidaMP(models.Model):
@@ -193,7 +193,7 @@ class tblSalidaMP(models.Model):
     IDPresentacion = models.ForeignKey(tblTipoPresentacion, on_delete=models.DO_NOTHING, null=True)
     cantidad = models.FloatField(null=True)
     referencia = models.IntegerField(null=True)
-    fecha = models.DateTimeField(max_length=150, null=True)
+    fecha = models.DateField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
 class tblServido(models.Model):
@@ -207,9 +207,9 @@ class tblServido(models.Model):
     CantidadSolicitada = models.IntegerField(null=True)
     CantidadServida = models.IntegerField(null=True)
     Prioridad = models.CharField(max_length=100, null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)
+    Fecha = models.DateField(max_length=150, null=True)
     FechaAServir = models.DateField(max_length=150, null=True)
-    FechaServida = models.DateTimeField(max_length=150, null=True)
+    FechaServida = models.DateField(max_length=150, null=True)
 
 class tblEntradaProductos(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -221,7 +221,7 @@ class tblEntradaProductos(models.Model):
     IDTipoMov = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
     cantidad = models.FloatField(null=True) 
     referencia = models.IntegerField(null=True)
-    fecha = models.DateTimeField(max_length=150, null=True)
+    fecha = models.DateField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
 class tblSalidaProductos(models.Model):
@@ -234,7 +234,7 @@ class tblSalidaProductos(models.Model):
     IDTipoMov = models.ForeignKey(tblTipoMov, on_delete=models.DO_NOTHING, null=True)
     cantidad = models.FloatField(null=True) 
     referencia = models.IntegerField(null=True)
-    fecha = models.DateTimeField(max_length=150, null=True)
+    fecha = models.DateField(max_length=150, null=True)
     notas = models.CharField(max_length=120,  null=True)
     
 class tblDetalleAnimales(models.Model):
@@ -243,7 +243,7 @@ class tblDetalleAnimales(models.Model):
     IDCliente = models.ForeignKey(tblClientes, on_delete=models.DO_NOTHING, null=True)
     IDCorral = models.ForeignKey(tblCorrales, on_delete=models.DO_NOTHING, null=True)
     IDAnimal = models.ForeignKey(tblAnimalesTipo, on_delete=models.DO_NOTHING, null=True)
-    Fecha = models.DateTimeField(null=True)
+    Fecha = models.DateField(null=True)
     Peso = models.FloatField(null=True)
     NoPartida = models.IntegerField(null=True)
     No_Guia = models.CharField(max_length=30,null=True)
@@ -281,7 +281,7 @@ class tblInventarioInicialesMP(models.Model):
     IDContenedor = models.ForeignKey(tblContenedoresMateriaPrima, on_delete=models.DO_NOTHING, null=True)
     IDMateriaPrima = models.ForeignKey(tblMateriaPrima, on_delete=models.DO_NOTHING, null=True)
     Cantidad = models.FloatField(null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)
+    Fecha = models.DateField(max_length=150, null=True)
     Notas = models.CharField(max_length=150, null=True)
     
 class tblInventarioInicialesProductos(models.Model):
@@ -290,7 +290,7 @@ class tblInventarioInicialesProductos(models.Model):
     IDContenedor = models.ForeignKey(tblContenedoresProductos, on_delete=models.DO_NOTHING, null=True)
     IDProducto = models.ForeignKey(tblProductos, on_delete=models.DO_NOTHING, null=True)
     Cantidad = models.FloatField(null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)
+    Fecha = models.DateField(max_length=150, null=True)
     Notas = models.CharField(max_length=150, null=True)
      
 # -------------------------------------------------------SUBTABLAS-------------------------------------------------------
