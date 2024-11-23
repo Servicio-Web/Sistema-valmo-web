@@ -10,20 +10,22 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
-            REPORTES - MOVIMIENTOS DE ANIMALES - POR CORRAL
+            <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
+            REPORTES - MOVIMIENTOS DE ANIMALES - POR ANIMAL
         </h1>
         <div class="card card-hdr-procesos">
             <div class="card-header">
                 <div class="row">
                     <h5 class="h6-form">Filtrar datos de movimientos de animales</h5>
                     <div class="col-10">
-                        <form action="/Reporte-Animales-Clientes-Corrales/" class="pr-5 pl-5" method="POST">
+                        <form action="/Reporte-Por-Animales/" class="pr-5 pl-5" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-xl-5">
-                                        <select name="cliente" class="select2" style="width: 100%;" required onchange="ocultarPDF()">
+                                        <select name="cliente" class="select2" style="width: 100%;" required
+                                            onchange="ocultarPDF()">
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">-------{{Nombre}}-------</option>
@@ -48,7 +50,7 @@
                                     <div class="col-sm-12 col-md-12 col-xl-3 p-0 m-0">
                                         {% if Fecha2 is none %}
                                         <input type="date" name="fecha2" class="form-control" style=" border-radius: 0;"
-                                            value="{{FechaDeHoy}}">     
+                                            value="{{FechaDeHoy}}">
                                         {% else %}
                                         <input type="date" name="fecha2" class="form-control" style=" border-radius: 0;"
                                             value="{{Fecha2}}">
@@ -64,11 +66,11 @@
                         </form>
                     </div>
                     <div class="col-2">
-                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales_Corral/" method="POST">{% csrf_token %}
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Por_Animales/" method="POST">{% csrf_token %}
                             <input type="hidden" value="{{ Cliente }}" name="cliente">
                             <input type="hidden" value="{{Fecha}}" name="fechaInicial">
                             <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
-                            <input type="hidden" value="0" name="reporte-movimiento-animales-corral">
+                            <input type="hidden" value="0" name="reporte-por-animales">
                             <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
                         </form>
                     </div>
@@ -81,6 +83,7 @@
                     <tr>
                         <th>CLIENTE</th>
                         <th>CORRAL</th>
+                        <th>ANIMAL</th>
                         <th>ENTRADA</th>
                         <th>SÁLIDA</th>
                         <th>ACTUAL</th>
@@ -91,6 +94,7 @@
                     <tr>
                         <td>{{ reporte.0 }}</td>
                         <td>{{ reporte.1 }}</td>
+                        <td>{{ reporte.5 }}</td>
                         <td>{{ reporte.3 }}</td>
                         <td>{{ reporte.4 }}</td>
                         <td>{{ reporte.2 }}</td>

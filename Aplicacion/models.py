@@ -21,6 +21,7 @@ class tblConfiguracion(models.Model):
     FolioRepMovAnim = models.CharField(max_length=10, null=True)
     FolioRepMovAnCo = models.CharField(max_length=10, null=True)
     FolioRepMovAnCl = models.CharField(max_length=10, null=True)
+    FolioRePorMovAn = models.CharField(max_length=10, null=True)
 
 class tblEventosValmoSys(models.Model):
     ID = models.AutoField(primary_key=True)

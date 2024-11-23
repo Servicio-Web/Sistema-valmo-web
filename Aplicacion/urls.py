@@ -415,6 +415,8 @@ urlpatterns = [
          name='Reportes-Animales-Clientes'),
     path('Reporte-Animales-Clientes-Corrales/', reportes.reportePorClientesCorrales,
          name='Reportes-Animales-Clientes-Corrales'),
+    path('Reporte-Por-Animales/', reportes.reportePorAnimales,
+         name='Reportes-Por-Animales'),
     # servidos
     path('Reporte-Movimientos-Servidos/', reportes.reporteServidosMovimientos,
          name='Reportes-Movimientos-Servidos'),
@@ -439,6 +441,7 @@ urlpatterns = [
     path('Descarga_PDF_Reporte_Movimientos_Animales/', DescargaPDF.reporteMovimientoAnimales, name="PDF_Reportes_Movimiento_Animales"), # PDF movimiento animales
     path('Descarga_PDF_Reporte_Movimientos_Animales_Corral/', DescargaPDF.reporteMovimientoAnimalesCorral, name="PDF_Reportes_Movimiento_Animales_Corral"), # PDF movimiento aniamles corrales
     path('Descarga_PDF_Reporte_Movimientos_Animales_Cliente/', DescargaPDF.reporteMovimientoAnimalesCliente, name="PDF_Reportes_Movimiento_Animales_Cliente"), # PDF movimiento animales cliente
+    path('Descarga_PDF_Reporte_Movimientos_Por_Animales/', DescargaPDF.reporteMovimientoPorAnimales, name="PDF_Reportes_Movimiento_Por_Animales"), # PDF movimiento animales cliente
 
     # EXCEL
     path('EXCEL/', DescargaExcel.xlsx, name="Excel"),

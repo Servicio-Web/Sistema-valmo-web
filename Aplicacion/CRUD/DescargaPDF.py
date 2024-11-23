@@ -38,7 +38,8 @@ def cargar_folio(valor):
         9: 'FolioRepMovSalM',
         10: 'FolioRepMovAnim',
         11: 'FolioRepMovAnCo',
-        12: 'FolioRepMovAnCl'
+        12: 'FolioRepMovAnCl',
+        13: 'FolioRePorMovAn'
     }
     
     if valor in folio_map:
@@ -792,10 +793,10 @@ def reporteMovimientoAnimalesCorral(request):
                 BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
             FROM  Aplicacion_tblmovimientoanimales
             INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
-            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id
             INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
-            WHERE  Aplicacion_tblmovimientoanimales.IDCorral_id IN (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales)
-            GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
+            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+            WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales)
+            GROUP BY Aplicacion_tbldetallemovanimales.IDCorral_id, Aplicacion_tblclientes.Nombre"""
 
             with connection.cursor() as cursor:
                 cursor.execute(
@@ -806,23 +807,22 @@ def reporteMovimientoAnimalesCorral(request):
            
         else:
             consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
-            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
-                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
-            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
-                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
-            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
-                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
-            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
-                BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
-            FROM  Aplicacion_tblmovimientoanimales
-            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
-            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id
-            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
-            WHERE  Aplicacion_tblmovimientoanimales.IDCorral_id IN 
-                (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
-                            AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
-            GROUP BY Aplicacion_tblmovimientoanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
-
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                    BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                    BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                    BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
+                    (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
+                                AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+                GROUP BY Aplicacion_tbldetallemovanimales.IDCorral_id, Aplicacion_tblclientes.Nombre """
             with connection.cursor() as cursor:
                 cursor.execute(
                     consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
@@ -865,17 +865,18 @@ def reporteMovimientoAnimalesCliente(request):
     if dataInput is not None and dataInput != '':
         if Cliente == 'todos':
             consulta_sql = """SELECT TT.CLIENTE, TT.CORRALES, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
-            FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRALES,
-            SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
-            AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
-            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
-            AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS SALIDAS
-            FROM  Aplicacion_tblmovimientoanimales
-            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales. IDCliente_id 
-            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tblmovimientoanimales.IDCorral_id 
-            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
-            WHERE  Aplicacion_tblmovimientoanimales. IDCliente_id IN (SELECT Aplicacion_tblcorrales.IDCliente_id FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id  > 1 )
-            GROUP BY Aplicacion_tblmovimientoanimales. IDCliente_id) AS  TT ORDER BY TT.CLIENTE"""
+                FROM (SELECT  Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRALES,
+                SUM(case WHEN Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
+                AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
+                SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
+                AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS SALIDAS
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales. IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id 
+                WHERE  Aplicacion_tblmovimientoanimales.IDCliente_id IN (SELECT Aplicacion_tblcorrales.IDCliente_id FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id  > 1 )
+                GROUP BY Aplicacion_tblmovimientoanimales.IDCliente_id) AS  TT ORDER BY TT.CLIENTE"""
+
             with connection.cursor() as cursor:
                 cursor.execute(consulta_sql, [Fecha, Fecha])
                 reportes = cursor.fetchall()
@@ -884,23 +885,22 @@ def reporteMovimientoAnimalesCliente(request):
         
         else:
             consulta_sql = """SELECT TT.CLIENTE, TT.CORRAL, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
-            FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL, DATE(Aplicacion_tblcorrales.FechaAsigna) AS FECHA,
-            SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
-                AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
-            SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
-                AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS SALIDAS
-            FROM   Aplicacion_tblmovimientoanimales
-            INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID =  Aplicacion_tblmovimientoanimales.IDCliente_id 
-            INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID =  Aplicacion_tblmovimientoanimales.IDCorral_id
-            INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
-            WHERE   Aplicacion_tblmovimientoanimales.IDCorral_id IN 
-                (SELECT Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id = %s) 
-                AND  Aplicacion_tblmovimientoanimales.IDCliente_id = %s
-            GROUP BY  Aplicacion_tblmovimientoanimales.IDCorral_id) AS  TT
-            ORDER BY TT.CORRAL"""
+                FROM (SELECT Aplicacion_tblclientes.Nombre AS CLIENTE, Aplicacion_tblcorrales.Descripcion AS CORRAL , DATE(Aplicacion_tblcorrales.FechaAsigna) AS FECHA,
+                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
+                    AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADAS,
+                SUM(case WHEN   Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND  DATE(Aplicacion_tblmovimientoanimales.Fecha) BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) 
+                    AND %s THEN   Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS SALIDAS
+                FROM   Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID =  Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID =  Aplicacion_tbldetallemovanimales.IDCorral_id
+                WHERE   Aplicacion_tbldetallemovanimales.IDCorral_id IN 
+                    (SELECT Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales WHERE Aplicacion_tblcorrales.IDCliente_id = %s) 
+                    AND  Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+                GROUP BY  Aplicacion_tblmovimientoanimales.IDCliente_id) AS  TT
+                ORDER BY TT.CORRAL"""
             with connection.cursor() as cursor:
-                cursor.execute(
-                    consulta_sql, [Fecha, Fecha, Cliente, Cliente])
+                cursor.execute(consulta_sql, [Fecha, Fecha, Cliente, Cliente])
                 reportes = cursor.fetchall()
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
@@ -921,6 +921,89 @@ def reporteMovimientoAnimalesCliente(request):
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="Movimientos Animales Por Cliente {formatted_fecha_actual}.pdf"'
+    return response
+
+# ---------------------------------------------------- PDF PARA MOVIMIENTO DE ANIMALES POR ANIMAL ---------------------------------------------------- 
+def reporteMovimientoPorAnimales(request):
+    valor = 13
+    formatoClave = cargar_folio(valor)
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    user = request.user
+    logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
+
+    Cliente = request.POST['cliente']
+    Fecha = request.POST['fechaInicial']
+    Fecha2 = request.POST['fechaFinal']    
+
+    dataInput = request.POST.get('reporte-por-animales', '')
+    if dataInput is not None and dataInput != '':
+        if Cliente == 'todos':
+            consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA, 
+                    Aplicacion_tblAnimalesTipo.Descripcion
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                INNER JOIN Aplicacion_tblAnimalesTipo ON  Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id
+                WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales)
+                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre"""
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2])
+                reportes = cursor.fetchall()
+            Nombre = 'En general'
+            Cliente = 'todos'
+        
+        else:
+            consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) AS ENTRADA,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN %s AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad  ELSE 0 END) AS SALIDA,
+                    Aplicacion_tblAnimalesTipo.Descripcion  
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                INNER JOIN Aplicacion_tblAnimalesTipo ON  Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id
+                WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
+                    (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
+                                AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre """
+            with connection.cursor() as cursor:
+                cursor.execute(consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
+                reportes = cursor.fetchall()
+            TECliente = tblClientes.objects.get(ID=Cliente)
+            Nombre = TECliente.Nombre
+        
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Animal.html', {'logo_url': logo_url,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Movimientos Animales Por Animal {formatted_fecha_actual}.pdf"'
     return response
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
 
