@@ -105,7 +105,9 @@
 <body>
     {% for i in imprimir %}
     {% if i == 1 %}
-    <label style="font-size: 10px;">Recortar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Recortar</label>
+    <label style="font-size: 10px;">Recortar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        - - - - - - - - - - Recortar</label>
     {% endif %}
     {% if i == 2 %}
     <div class="contenido no-brake page-break">
@@ -204,6 +206,15 @@
                                     {{ reporte.PesoTotal }} Kg
                                 </td>
 
+                            </tr>
+                            {% endfor %}
+                            {% for _ in FilasNecesarias %}
+                            <tr>
+                                <td class="td columna-base" colspan="2">&nbsp;</td>
+                                <td class="td columna-base" colspan="2">&nbsp;</td>
+                                <td class="td columna-base" colspan="2">&nbsp;</td>
+                                <td class="td columna-base" colspan="2">&nbsp;</td>
+                                <td class="td columna-base" colspan="2">&nbsp;</td>
                             </tr>
                             {% endfor %}
                             <tr>

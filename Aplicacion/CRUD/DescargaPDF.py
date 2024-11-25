@@ -285,11 +285,12 @@ def movimientoAnimales(request):
             mov = "Sálida"
         # fecha = movimientoAnimales.Fecha
         FiltradoCliente = tblClientes.objects.get(ID=Cliente)
+        filas_necesarias = max(0, 7 - len(Detalle))
     # Render the HTML template with the data}
     imprimir = 3
     html_string = render_to_string('Descargas/PDF/MovimientoAnimales/index.html', {'logo_url': logo_url, 'Detalle':Detalle, 'imprimir': range(imprimir),
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente,
-    'suma_cantidad':suma_cantidad, 'suma_peso_total':suma_peso_total, 'suma_peso_promedio':suma_peso_promedio})
+    'suma_cantidad':suma_cantidad, 'suma_peso_total':suma_peso_total, 'suma_peso_promedio':suma_peso_promedio, 'FilasNecesarias': range(filas_necesarias)})
 
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
