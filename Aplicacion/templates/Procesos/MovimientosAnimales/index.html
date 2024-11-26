@@ -159,6 +159,7 @@
                             </a>
                             <form action="/Descarga_PDF_Movimiento_Animales/" method="POST">{% csrf_token %}
                                 <input type="hidden" value="{{Moviemientos.Folio}}" name="movimientoAnimales">
+                                <input type="hidden" value="{{Moviemientos.Fecha}}" name="fechaMovimiento">
                                 <button class="pdf-red-button" type="submit"></button>
                             </form>
                             {% endif %}

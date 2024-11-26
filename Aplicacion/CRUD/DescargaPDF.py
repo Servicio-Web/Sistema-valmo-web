@@ -267,6 +267,7 @@ def movimientoAnimales(request):
     
     dataInput= request.POST.get('movimientoAnimales', '')
     if dataInput is not None and dataInput != '':
+        fechaMovimiento = request.POST['fechaMovimiento']
         Detalle = tblDetalleMovAnimales.objects.filter(IDFolio = dataInput).values('ID', 'IDFolio', 
         'IDAnimales_id__Descripcion', 'Cantidad', 'PesoTotal', 'PesoPromedio', 'IDCorral_id__Descripcion', 'No_Guia', 'Notas')
         # Realizar las sumas de los campos deseados
@@ -289,7 +290,7 @@ def movimientoAnimales(request):
     # Render the HTML template with the data}
     imprimir = 3
     html_string = render_to_string('Descargas/PDF/MovimientoAnimales/index.html', {'logo_url': logo_url, 'Detalle':Detalle, 'imprimir': range(imprimir),
-    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente,
+    'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'movimientoAnimales':movimientoAnimales, 'procedencia': FiltradoCliente, 'fechaMovimiento':fechaMovimiento,
     'suma_cantidad':suma_cantidad, 'suma_peso_total':suma_peso_total, 'suma_peso_promedio':suma_peso_promedio, 'FilasNecesarias': range(filas_necesarias)})
 
     # Create a BytesIO buffer to receive the PDF
@@ -773,8 +774,8 @@ def reporteMovimientoAnimales2(request):
 def reporteMovimientoAnimalesCorral(request):
     valor = 11
     formatoClave = cargar_folio(valor)
-    fecha_actual = datetime.today()
-    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    fecha_actual = date.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d")
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
     Cliente = request.POST['cliente']
@@ -853,8 +854,8 @@ def reporteMovimientoAnimalesCorral(request):
 def reporteMovimientoAnimalesCliente(request):
     valor = 12
     formatoClave = cargar_folio(valor)
-    fecha_actual = datetime.today()
-    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    fecha_actual = date.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d")
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
 
@@ -907,7 +908,7 @@ def reporteMovimientoAnimalesCliente(request):
             Nombre = TECliente.Nombre
         
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Cliente.html', {'logo_url': logo_url,
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Cliente.html', {'logo_url': logo_url, 'Fecha':Fecha,
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
 
     # Create a BytesIO buffer to receive the PDF
@@ -928,8 +929,8 @@ def reporteMovimientoAnimalesCliente(request):
 def reporteMovimientoPorAnimales(request):
     valor = 13
     formatoClave = cargar_folio(valor)
-    fecha_actual = datetime.today()
-    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    fecha_actual = date.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d")
     user = request.user
     logo_url = request.build_absolute_uri(static('assets/img/inicio/valmo.png'))
 
@@ -982,7 +983,7 @@ def reporteMovimientoPorAnimales(request):
                 WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
                     (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
                                 AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
-                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre """
+                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre"""
             with connection.cursor() as cursor:
                 cursor.execute(consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                 reportes = cursor.fetchall()

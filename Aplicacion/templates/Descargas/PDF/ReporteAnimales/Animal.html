@@ -73,7 +73,13 @@
         width: 25%;
     }
 
-    @page { size: letter; margin-left: 0.5in; margin-right: 0.5in; margin-top: 0.7in; margin-bottom: 0.3in; }
+    @page {
+        size: letter;
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+        margin-top: 0.7in;
+        margin-bottom: 0.3in;
+    }
 </style>
 
 <body>
@@ -85,8 +91,14 @@
                         <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
                             style="padding-right: 30px;">
                     </th>
-                    <th colspan="6" style="padding-top: 20px;">
-                        <h2 style="font-size: 35px; text-align: right;">Movimientos Animales/Animal</h2>
+                    <th colspan="6" style="padding-top: 18px;">
+                        <h2 style="font-size: 20px; text-align: center;">REPORTE DE GANADO POR ANIMAL</h2>
+                    </th>
+                    <th colspan="2" style="padding-top: 30px;">
+                        <h1 class="title"
+                            style="font-size: 12px; font-weight: normal; text-align: center;margin:0; padding:0">
+                            Reporte del <br> {{Fecha1}} al {{Fecha2}}
+                        </h1>
                     </th>
                 </tr>
             </thead>
@@ -102,10 +114,12 @@
                             Folio:
                             <label style="font-weight: normal; font-size: 14px;">{{formatoClave}}</label>
                         </h1>
+                        {% if Nombre != "En general" %}
                         <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
                             Cliente:
                             <label style="font-weight: normal; font-size: 14px;">{{Nombre}}</label>
                         </h1>
+                        {% endif %}
                         <h1 style="font-size: 14px; font-weight: normal; text-align: left;margin:0; padding:0">
                             {{fecha_actual}}</h1>
                     </th>
@@ -118,24 +132,18 @@
                             style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
                             Blvd. de los Ganaderos Vaso de la presa <br> Hermosillo, Sonora
                         </h1>
-                        <h1 class="title"
-                            style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0; margin-top: 2px;">
-                            Reporte del {{Fecha1}} al {{Fecha2}}
-                        </h1>
                     </th>
                 </tr>
-
             </thead>
         </table>
     </div>
-    <br>
     <div class="contenedor cuerpo">
         <div class="table">
             <table>
                 <thead style="font-size: 14px;">
                     <tr style="font-size: 2rem;">
                         {% if Nombre == "En general" %}
-                            <th class="th columna-contenido" colspan="2">CLIENTE</th>
+                        <th class="th columna-contenido" colspan="2">CLIENTE</th>
                         {% endif %}
                         <th class="th columna-contenido" colspan="2">CORRAL</th>
                         <th class="th columna-contenido" colspan="2">ANIMAL</th>
@@ -169,6 +177,7 @@
                         </td>
                     </tr>
                     {% endfor %}
+                   
                 </tbody>
             </table>
         </div>

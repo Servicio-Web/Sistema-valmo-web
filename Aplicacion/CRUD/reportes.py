@@ -88,7 +88,7 @@ def reporteAnimalesMovimientos(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
     FMovimientos = tblTipoMov.objects.filter(ID__range=(1, 2))
-
+    total_actual = 0
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')
@@ -112,9 +112,11 @@ def reporteAnimalesMovimientos(request):
                     cursor.execute(
                         consulta_sql, [Fecha, Fecha2, Movimiento_v])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_actual += reporte[2]                    
                 Nombre = 'Se trajeron todos los clientes'
                 Cliente = 'todos'
-                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos, 'total_actual':total_actual,
                 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2, 'Movimiento':Movimiento, 'Movimiento_v':Movimiento_v})
             else:
                 consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
@@ -132,9 +134,11 @@ def reporteAnimalesMovimientos(request):
                     cursor.execute(
                         consulta_sql, [Cliente, Fecha, Fecha2, Movimiento_v])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_actual += reporte[2]  
                 TECliente = tblClientes.objects.get(ID=Cliente)
                 Nombre = TECliente.Nombre
-                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+                return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos, 'total_actual':total_actual,
                 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2, 'Movimiento':Movimiento, 'Movimiento_v':Movimiento_v})
     else:
         consulta_sql = """SELECT Aplicacion_tbldetallemovanimales.IDFolio, Aplicacion_tblclientes.Nombre, Aplicacion_tbldetallemovanimales.Cantidad,
@@ -148,9 +152,11 @@ def reporteAnimalesMovimientos(request):
         with connection.cursor() as cursor:
             cursor.execute(consulta_sql)
             reportes = cursor.fetchall()
+        for reporte in reportes:
+            total_actual += reporte[2]              
         Nombre = 'Buscar cliente'
         Cliente = ''
-        return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos,
+        return render(request, 'Reportes/NuevoAnimales/MovimientoAnimales.html', {'reportes': reportes, 'FMovimientos':FMovimientos, 'total_actual':total_actual,
                 'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
     
 # REPORTES DE ANIMALES
@@ -199,7 +205,9 @@ def reporteAnimalesMovimientos2(request):
 def reportePorClientes(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
-
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')
@@ -222,9 +230,13 @@ def reportePorClientes(request):
                 with connection.cursor() as cursor:
                     cursor.execute(consulta_sql, [Fecha, Fecha])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_entrada += reporte[2] 
+                    total_salida += reporte[3]  
+                    total_actual += reporte[4]                    
                 Nombre = 'Se trajeron todos los clientes'
                 Cliente = 'todos'
-                return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,
+                return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                                       'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha})
             else:
                 consulta_sql = """SELECT TT.CLIENTE, TT.CORRAL, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
@@ -247,9 +259,13 @@ def reportePorClientes(request):
                     cursor.execute(
                         consulta_sql, [Fecha, Fecha, Cliente, Cliente])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_entrada += reporte[2] 
+                    total_salida += reporte[3]  
+                    total_actual += reporte[4]                    
                 TECliente = tblClientes.objects.get(ID=Cliente)
                 Nombre = TECliente.Nombre
-                return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,
+                return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                                       'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha})
     else:
         consulta_sql = """SELECT TT.CLIENTE, 0, TT.ENTRADAS, TT.SALIDAS, TT.ENTRADAS-TT.SALIDAS AS TOTA
@@ -267,9 +283,13 @@ def reportePorClientes(request):
         with connection.cursor() as cursor:
             cursor.execute(consulta_sql, [FechaDeHoy, FechaDeHoy])
             reportes = cursor.fetchall()
+        for reporte in reportes:
+            total_entrada += reporte[2] 
+            total_salida += reporte[3]  
+            total_actual += reporte[4]            
         Nombre = 'Buscar cliente'
         Cliente = ''
-        return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,
+        return render(request, 'Reportes/Animales/MovimientosClientes.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                               'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
 
 # REPORTES ANIMALES
@@ -353,6 +373,9 @@ def reportePorClientes2(request):
 def reportePorClientesCorrales(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')
@@ -379,9 +402,13 @@ def reportePorClientesCorrales(request):
                     cursor.execute(
                         consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_entrada += reporte[3] 
+                    total_salida += reporte[4]  
+                    total_actual += reporte[2]      
                 Nombre = 'Se trajeron todos los clientes'
                 Cliente = 'todos'
-                return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,
+                return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                                    'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
             else:
                 consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
@@ -406,9 +433,13 @@ def reportePorClientesCorrales(request):
                     cursor.execute(
                         consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                     reportes = cursor.fetchall()
+                for reporte in reportes:
+                    total_entrada += reporte[3] 
+                    total_salida += reporte[4]  
+                    total_actual += reporte[2]                          
                 TECliente = tblClientes.objects.get(ID=Cliente)
                 Nombre = TECliente.Nombre
-                return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,
+                return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                                    'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
     else:
         consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
@@ -430,15 +461,23 @@ def reportePorClientesCorrales(request):
             cursor.execute(consulta_sql, [
                            FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy])
             reportes = cursor.fetchall()
+        for reporte in reportes:
+            total_entrada += reporte[3] 
+            total_salida += reporte[4]  
+            total_actual += reporte[2]                  
         Nombre = 'Buscar cliente'
         Cliente = ''
-        return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,
+        return render(request, 'Reportes/Animales/PorClienteCorral.html', {'reportes': reportes,'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
                                                                            'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
 
 # NUEVO REPORTES DE ANIMALES
 def reportePorAnimales(request):
     FechaDeHoy = datetime.now().strftime('%Y-%m-%d')
     FClientes = tblClientes.objects.exclude(ID=1).order_by('Nombre')
+        # Inicializa variables para los totales
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
     if request.method == 'POST':
         if 'reportes' in request.POST:
             Cliente = request.POST.get('cliente')
@@ -467,10 +506,17 @@ def reportePorAnimales(request):
                     cursor.execute(
                         consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2])
                     reportes = cursor.fetchall()
+                
+                # Recorre los resultados para sumar los totales
+                for reporte in reportes:
+                    total_entrada += reporte[3]
+                    total_salida += reporte[4] 
+                    total_actual += reporte[2] 
+      
                 Nombre = 'Se trajeron todos los clientes'
                 Cliente = 'todos'
-                return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes,
-                                                                                   'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+                return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes,  'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
+                'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
             else:
                 consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,
                     SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
@@ -490,16 +536,22 @@ def reportePorAnimales(request):
                 WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
                     (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
                                 AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
-                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre """
+                GROUP BY Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre"""
 
                 with connection.cursor() as cursor:
                     cursor.execute(
                         consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                     reportes = cursor.fetchall()
+
+                for reporte in reportes:
+                    total_entrada += reporte[3] 
+                    total_salida += reporte[4]  
+                    total_actual += reporte[2]  
+                
                 TECliente = tblClientes.objects.get(ID=Cliente)
                 Nombre = TECliente.Nombre
-                return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes,
-                                                                                   'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
+                return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes, 'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
+                'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha': Fecha, 'Fecha2': Fecha2})
     else:
         consulta_sql = """SELECT Aplicacion_tblclientes.Nombre, Aplicacion_tblcorrales.Descripcion,                
         SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
@@ -521,10 +573,16 @@ def reportePorAnimales(request):
             cursor.execute(consulta_sql, [
                            FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy])
             reportes = cursor.fetchall()
+                # Recorre los resultados para sumar los totales
+        for reporte in reportes:
+            total_entrada += reporte[3] 
+            total_salida += reporte[4]  
+            total_actual += reporte[2]  
+    
         Nombre = 'Buscar cliente'
         Cliente = ''
-        return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes,
-                                                                           'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
+        return render(request, 'Reportes/Animales/PorAnimales.html', {'reportes': reportes, 'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
+        'FechaDeHoy': FechaDeHoy, 'FClientes': FClientes, 'Nombre': Nombre, 'Cliente': Cliente})
 
 
 # REPORTES DE ANIMALES

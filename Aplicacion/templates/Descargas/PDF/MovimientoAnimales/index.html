@@ -122,8 +122,8 @@
                                 <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
                                     style="padding-right: 30px;">
                             </th>
-                            <th colspan="6" style="padding-top: 20px;">
-                                <h4 style="font-size: 25px; text-align: center;">
+                            <th colspan="5" style="padding-top: 15px;">
+                                <h4 style="font-size: 30px; text-align: center;">
                                     {% if movimientoAnimales.IDMovimiento_id == 1 %}
                                     ENTRADA
                                     {% else %}
@@ -132,10 +132,13 @@
                                     DE GANADO
                                 </h4>
                             </th>
-                            <th colspan="2" style="padding-top: 20px;">
-                                <h4 style="font-size: 15px; text-align: center;">Folio:
+                            <th colspan="3" style="padding-top: 20px;">
+                                <h4 style="font-size: 13px; text-align: right ;padding: 0; margin: 0;">Folio:
                                     <label
-                                        style="font-weight: normal; font-size: 14px;">{{movimientoAnimales.Folio}}</label>
+                                        style="font-weight: normal; font-size: 13px;">{{movimientoAnimales.Folio}}</label>
+                                </h4>
+                                <h4 style="font-size: 13px; text-align: right; padding: 0; margin: 0;">Fecha:
+                                    <label style="font-weight: normal; font-size: 13px;">{{fecha_actual}}</label>
                                 </h4>
                             </th>
                         </tr>
@@ -167,8 +170,8 @@
                                     <label style="font-weight: normal; font-size: 12px;">{{procedencia.Nombre}}</label>
                                 </h1>
                                 <h1 class="title" style="font-size: 12px; text-align: right; margin: -25px 0 0 0;">
-                                    Fecha:
-                                    <label style="font-weight: normal; font-size: 12px;"> {{fecha_actual}}</label>
+                                    Fecha del movimiento:
+                                    <label style="font-weight: normal; font-size: 12px;"> {{fechaMovimiento}}</label>
                                 </h1>
                             </th>
                         </tr>
@@ -222,7 +225,7 @@
                                 <td class="td columna-base" colspan="2">
                                     <h3><b>Total</b></h3>
                                 </td>
-                                <td class="td columna-base" colspan="2">{{suma_cantidad|floatformat:2 }}</td>
+                                <td class="td columna-base" colspan="2">{{suma_cantidad|floatformat:0 }}</td>
                                 <td class="td columna-base" colspan="2">{{suma_peso_promedio|floatformat:2 }} Kg</td>
                                 <td class="td columna-base" colspan="2">{{suma_peso_total|floatformat:2 }} Kg</td>
                             </tr>

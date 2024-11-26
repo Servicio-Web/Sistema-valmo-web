@@ -10,7 +10,8 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
             REPORTES - MOVIMIENTOS DE ANIMALES - POR CLIENTE
         </h1>
         <div class="card card-hdr-procesos">
@@ -23,7 +24,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12 col-sm-8 col-xl-8">
-                                        <select name="cliente" class="select2" style="width: 100%;" required onchange="ocultarPDF()">
+                                        <select name="cliente" class="select2" style="width: 100%;" required
+                                            onchange="ocultarPDF()">
                                             {% if Nombre is none %}
                                             {% else %}
                                             <option value="{{ Cliente }}">
@@ -57,7 +59,8 @@
                         </form>
                     </div>
                     <div class="col-2">
-                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales_Cliente/" method="POST">{% csrf_token %}
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales_Cliente/" method="POST">
+                            {% csrf_token %}
                             <input type="hidden" value="{{ Cliente }}" name="cliente">
                             <input type="hidden" value="{{Fecha}}" name="fechaInicial">
                             <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
@@ -89,6 +92,21 @@
                         <td>{{ reporte.4 }}</td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <td class="td columna-base">
+                            <strong>TOTAL GENERAL</strong>
+                        </td>
+
+                        <td class="td columna-base">
+                            {{ total_entrada }}
+                        </td>
+                        <td class="td columna-base">
+                            {{ total_salida }}
+                        </td>
+                        <td class="td columna-base">
+                            {{ total_actual }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
