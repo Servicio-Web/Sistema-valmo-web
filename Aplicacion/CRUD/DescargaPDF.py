@@ -664,7 +664,7 @@ def reporteMovimientoAnimales(request):
     Movimiento_v = request.POST['mov']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
-    
+    total_actual = 0
     TEMov = tblTipoMov.objects.get(ID=Movimiento_v)
     Movimiento = TEMov.Descripcion  
     dataInput = request.POST.get('reporte-movimiento-animales', '')
@@ -702,10 +702,11 @@ def reporteMovimientoAnimales(request):
                 reportes = cursor.fetchall()
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
-        
+    for reporte in reportes:
+        total_actual += reporte[2] 
         
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Movimientos2.html', {'logo_url': logo_url, 'Movimiento':Movimiento,
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Movimientos2.html', {'logo_url': logo_url, 'Movimiento':Movimiento, 'total_actual':total_actual,
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
@@ -781,6 +782,9 @@ def reporteMovimientoAnimalesCorral(request):
     Cliente = request.POST['cliente']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
     dataInput = request.POST.get('reporte-movimiento-animales-corral', '')
     if dataInput is not None and dataInput != '':
         if Cliente == 'todos':
@@ -831,9 +835,12 @@ def reporteMovimientoAnimalesCorral(request):
                 reportes = cursor.fetchall()
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
-    
+    for reporte in reportes:
+        total_entrada += reporte[3] 
+        total_salida += reporte[4]  
+        total_actual += reporte[2]
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Corral.html', {'logo_url': logo_url,
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Corral.html', {'logo_url': logo_url, 'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF
@@ -862,7 +869,9 @@ def reporteMovimientoAnimalesCliente(request):
     Cliente = request.POST['cliente']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
-
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
     dataInput = request.POST.get('reporte-movimiento-animales-cliente', '')
     if dataInput is not None and dataInput != '':
         if Cliente == 'todos':
@@ -906,9 +915,12 @@ def reporteMovimientoAnimalesCliente(request):
                 reportes = cursor.fetchall()
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
-        
+    for reporte in reportes:
+        total_entrada += reporte[2] 
+        total_salida += reporte[3]  
+        total_actual += reporte[4]        
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Cliente.html', {'logo_url': logo_url, 'Fecha':Fecha,
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Cliente.html', {'logo_url': logo_url, 'Fecha':Fecha, 'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre})
 
     # Create a BytesIO buffer to receive the PDF
@@ -937,6 +949,10 @@ def reporteMovimientoPorAnimales(request):
     Cliente = request.POST['cliente']
     Fecha = request.POST['fechaInicial']
     Fecha2 = request.POST['fechaFinal']    
+
+    total_entrada = 0
+    total_salida = 0
+    total_actual = 0
 
     dataInput = request.POST.get('reporte-por-animales', '')
     if dataInput is not None and dataInput != '':
@@ -987,11 +1003,16 @@ def reporteMovimientoPorAnimales(request):
             with connection.cursor() as cursor:
                 cursor.execute(consulta_sql, [Fecha2, Fecha2, Fecha, Fecha2, Fecha, Fecha2, Cliente, Cliente])
                 reportes = cursor.fetchall()
+                
             TECliente = tblClientes.objects.get(ID=Cliente)
             Nombre = TECliente.Nombre
         
+    for reporte in reportes:
+        total_entrada += reporte[3] 
+        total_salida += reporte[4]  
+        total_actual += reporte[2]  
     # Render the HTML template with the data
-    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Animal.html', {'logo_url': logo_url,
+    html_string = render_to_string('Descargas/PDF/ReporteAnimales/Animal.html', {'logo_url': logo_url, 'total_entrada':total_entrada, 'total_salida':total_salida, 'total_actual':total_actual,
     'formatoClave':formatoClave, 'fecha_actual': fecha_actual, 'reportes': reportes, 'Nombre': Nombre, 'Fecha1': Fecha, 'Fecha2': Fecha2})
 
     # Create a BytesIO buffer to receive the PDF

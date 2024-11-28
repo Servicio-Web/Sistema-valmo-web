@@ -192,7 +192,12 @@ def actualizarCantidadAnimales(request):
     corral_v = request.POST['corral']
     cantidad_v = request.POST['cantidad']
     pesoTotal_v = request.POST['pesoTotal']
-    pesoPromedio = round(float(pesoTotal_v) / float(cantidad_v), 2)
+    if cantidad_v == '0':
+        cantidad_v = 0
+        pesoPromedio = 0
+        pesoTotal_v = 0
+    else:
+        pesoPromedio = round(float(pesoTotal_v) / float(cantidad_v), 2)
 
     # tecnicos
     TecnicoEditor_v = request.POST['tecnico'].upper()

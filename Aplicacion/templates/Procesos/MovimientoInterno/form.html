@@ -1,0 +1,191 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} ASIGNAR Y LIBERAR CORRALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PROCESOS - MOVIMIENTO INTERNO DE CORRALES</h1>
+        {% if perms.Aplicacion.view_tblasignacorrales %}
+        <div class="card card-hdr">
+            <div class="card-body">
+                <form action="/Formulario-Movimientos-En-Animales/" class="pr-5 pl-5" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="folioEntrada" value="{{formatoEntrada}}">
+                    <input type="hidden" name="folioSalida" value="{{formatoSalida}}">
+                    <div class="form-group" style="justify-content: center; display: flex;">
+                        <select name="cliente" class="select2" style="width: 35%; " required>
+                            {% if FClietneSelect != "None" %}
+                            <option value="{{ FClietneSelect.ID }}">
+                                --------------{{ FClietneSelect.Nombre }}--------------
+                            </option>
+                            {% else %}
+                            {% endif %}
+
+                            <option value="">Seleccione el cliente</option>
+                            {% for Clientes in FCliente %}
+                            <option value="{{ Clientes.IDCliente_id}}">{{Clientes.IDCliente_id__Nombre}}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn button-add"
+                            style="padding: 1px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class=" table-responsive py-1">
+            <form action="/Guardar-Movimiento-Interno-De-Amimales/" method="POST">{% csrf_token %}
+                {% if FClietneSelect != "None" %}
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <input type="hidden" value="{{formatoEntrada}}" name="clave">
+                <input type="hidden" value="{{formatoEntrada}}" name="claveEntrada">
+                <input type="hidden" value="{{formatoSalida}}" name="claveSalida">
+                <input type="hidden" value="{{ FClietneSelect.ID }}" name="cliente">
+
+                <div class="row" style="justify-content: right;">
+                    <div class="col-2">
+                        <input type="date" name="fecha" value="{{fecha}}" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary btn-sm col-12 mb-3"
+                            style="padding: 7px 14px 7px 14px;">
+                            GUARDAR MOVIMIENTO
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <table class="tabla_id">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">ANIMAL</th>
+                            <th colspan="1">ORIGEN ({{ formatoEntrada }})</th>
+                            <th rowspan="2">CANTIDAD</th>
+                            <th rowspan="2">PESO</th>
+                            <th colspan="1">DESTINO ({{ formatoSalida }})</th>
+                        </tr>
+                        <tr>
+                            <th >CORRAL</th>
+                            <th >CORRAL</th>
+                            
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">ANIMAL:</h6>
+                                <select class="select2 form-control" style="width: 100%;" name="animal" required>
+                                    <option value="">Selecciona animal</option>
+                                    {% for TipoAnimal in FAnimal %}
+                                    <option value="{{ TipoAnimal.0 }}">
+                                        {{ TipoAnimal.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                <select class="select2 form-control col-12" name="corralOrigen" required>
+                                    {% if Agrego_aniamles %}
+                                    <option value="{{FiltradoCorral.ID}}">----{{FiltradoCorral.Descripcion}}----
+                                    </option>
+                                    {% endif %}
+                                    <option value="">Selecciona corral origen</option>
+                                    {% for Corral in FCorral %}
+                                    <option value="{{ Corral.0 }}">{{ Corral.1 }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD ANIMAL:</h6>
+                                <input type="number" name="cantidadOrigen" autofocus class="form-control"
+                                    placeholder="Cantidad" step="1">
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO TOTAL:</h6>
+                                <input type="text" name="pesoTotalOrigen" class="form-control" placeholder="Peso"
+                                    step="1">
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                <select class="select2 form-control col-12" name="corralDestino" required>
+                                    {% if Agrego_aniamles %}
+                                    <option value="{{FiltradoCorral.ID}}">----{{FiltradoCorral.Descripcion}}----
+                                    </option>
+                                    {% endif %}
+                                    <option value="">Selecciona corral destino</option>
+                                    {% for Corral in FCorralDestino %}
+                                    <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        {% for animales in Detalle%}
+                        <tr>
+                            <th scope="row" style="border-bottom: 1px white solid;">
+                                <h6 class="td-responsive">ID:</h6>{{ animales.IDFolio }}
+                            </th>
+                            <td>
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                {{ animales.IDCorral_id__Descripcion}}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">TIPO ANIMAL:</h6>
+                                {{ animales.IDAnimales_id__Descripcion}}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ animales.Cantidad }}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO TOTAL:</h6>
+                                {{ animales.PesoTotal }}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ animales.Cantidad }}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ animales.Cantidad }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row centrar">
+        <h6 class="h6-form">
+            <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+            No tienes los permisos necesarios para ver el contenido de la tabla
+            <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+        </h6>
+    </div>
+    {% endif %}
+</div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}

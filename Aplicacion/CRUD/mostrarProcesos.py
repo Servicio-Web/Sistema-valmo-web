@@ -165,7 +165,7 @@ def TablaMovimientoAnimales(request):
     if Movimiento is not None and Movimiento != '':
         TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = Movimiento).values( 'ID',
         'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 
-        'Fecha',  'Peso', 'NoPartida'
+        'Fecha',  'Peso', 'NoPartida', 'Notas'
     )
         if Movimiento == 1 or Movimiento == "1":
             Movimiento = "Entrada"
@@ -173,7 +173,7 @@ def TablaMovimientoAnimales(request):
             Movimiento = "Sálida"
     else:
          TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = 1).values( 'ID',
-        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 'Fecha', 'Peso', 'NoPartida'
+        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 'Fecha', 'Peso', 'NoPartida', 'Notas'
     )
          Movimiento  = "Entrada"
     ServiciosWeb = servicioActivo()

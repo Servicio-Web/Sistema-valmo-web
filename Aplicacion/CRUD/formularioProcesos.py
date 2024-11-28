@@ -6,6 +6,7 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from Aplicacion.views import servicioActivo, grupo_user
 from django.db.models import Q
+from django.db import connection
 
 def FormularioEntradaMateriasPrimas(request):
     grupos = grupo_user(request)
@@ -141,6 +142,60 @@ def FormularioOperadoresSalidaProductos(request, ID):
     ServiciosWeb = servicioActivo()
     return render(request, "Procesos/SalidasProductos/agregar.html",{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
     'usuarioOperador':usuarioOperador, 'tblOperador': tblOperador})
+
+def FormularioMovimientoInterno(request):
+    grupos = grupo_user(request)
+    ultimo_contacto = tblMovimientoAnimales.objects.order_by('-ID').first()
+    if ultimo_contacto:
+        folio_entrada = ultimo_contacto.ID + 1
+        folio_salida = ultimo_contacto.ID + 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+    else:
+        folio_entrada = 1
+        folio_salida = 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+    
+
+    FCorral = []
+    FAnimal = []
+    FCorralDestino = []
+    FTipoAnimal = []
+    if request.method == 'POST':
+        cliente = request.POST['cliente']
+        consulta_corral = """SELECT Aplicacion_tblcorrales.ID, Aplicacion_tblcorrales.Descripcion FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id           
+                WHERE Aplicacion_tblmovimientoanimales.IDCliente_id = %s GROUP BY Aplicacion_tblcorrales.Descripcion"""
+        with connection.cursor() as cursor:
+            cursor.execute(
+                consulta_corral, [cliente])
+            FCorral = cursor.fetchall()
+
+        consulta_animal = """SELECT Aplicacion_tblAnimalesTipo.ID, Aplicacion_tblAnimalesTipo.Descripcion FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblAnimalesTipo ON Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id  
+                WHERE Aplicacion_tblmovimientoanimales.IDCliente_id = %s GROUP BY Aplicacion_tblAnimalesTipo.Descripcion"""
+        with connection.cursor() as cursor:
+            cursor.execute(
+                consulta_animal, [cliente])
+            FAnimal = cursor.fetchall()
+
+        FCorralDestino = tblCorrales.objects.filter(IDCliente_id = cliente).order_by('Descripcion')
+    
+        FTipoAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
+        FClietneSelect = tblClientes.objects.get(ID  = cliente)
+    else:
+        FClietneSelect = "None"
+
+    FCliente = tblMovimientoAnimales.objects.values('IDCliente_id', 'IDCliente_id__Nombre').distinct().order_by('IDCliente_id__Nombre')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
+
+    ServiciosWeb = servicioActivo()
+    return render(request, 'Procesos/MovimientoInterno/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 'FClietneSelect':FClietneSelect,
+    'formatoEntrada': formatoEntrada,'FCliente':FCliente,'FCorral':FCorral, 'FechaDeHoy':FechaDeHoy, 'FAnimal':FAnimal,
+    'FTipoAnimal':FTipoAnimal, 'formatoSalida':formatoSalida, 'fecha':FechaDeHoy, 'FCorralDestino':FCorralDestino})
 
 def FormularioMovimientoAnimales(request):
     grupos = grupo_user(request)

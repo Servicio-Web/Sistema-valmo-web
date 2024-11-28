@@ -284,11 +284,26 @@
             </li>
             <li class="nav-heading">Contenido-Procesos</li>
             <li class="nav-item">
-                {% if perms.Aplicacion.add_tblmovimientoanimales or perms.Aplicacion.view_tblmovimientoanimales %}
-                    <a class="nav-link collapsed" href="{% url 'T-MovAnimales' %}">
-                        <span>Animales</span>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <span>Movimiento animales</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
-                {% endif %}
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        {% if perms.Aplicacion.add_tblmovimientoanimales or perms.Aplicacion.view_tblmovimientoanimales %}
+                        <li>
+                            <a href="{% url 'T-MovAnimales' %}">
+                                <span>En báscula</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'F-Mov-Interno' %}">
+                                <span>En corrales</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+
                 {% if perms.Aplicacion.add_tblasignacorrales or perms.Aplicacion.view_tblasignacorrales %}
                     <a class="nav-link collapsed" href="{% url 'T-Asignacion' %}">
                         <span>Asignacion Corral</span>
