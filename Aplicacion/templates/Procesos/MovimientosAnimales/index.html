@@ -84,10 +84,10 @@
                         </th>
                         <th class="th-responsive">NO. GUIA
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th>
+                        </th>-->
                         <th class="th-responsive">NOTAS
                             <h6 style="color: transparent; display: inline;">.</h6>
-                        </th> -->
+                        </th> 
                         {% if perms.Aplicacion.change_tblmovimientoanimales or perms.Aplicacion.delete_tblmovimientoanimales %}
                         <th class="th-responsive" colspan="2">ACCIÓN
                             <h6 style="color: transparent; display: inline;">.</h6>
@@ -141,10 +141,10 @@
                             <h6 class="td-responsive">NO. GUIA:</h6>
                             {{ Moviemientos.No_Guia}}
                         </td> -->
-                        <!-- <td>
+                        <td>
                             <h6 class="td-responsive">NOTAS:</h6>
                             {{ Moviemientos.Notas}}
-                        </td> -->
+                        </td>
                         {% if perms.Aplicacion.change_tblmovimientoanimales or perms.Aplicacion.delete_tblmovimientoanimales %}
                         <td colspan="2">
                             {% if perms.Aplicacion.change_tblmovimientoanimales %}

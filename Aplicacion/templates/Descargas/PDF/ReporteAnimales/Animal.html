@@ -177,7 +177,28 @@
                         </td>
                     </tr>
                     {% endfor %}
-                   
+                    <tr>
+                        <td class="td columna-base" colspan="2">
+                            <strong>TOTAL GENERAL</strong>
+                        </td>
+                        <td class="td columna-base" colspan="2">
+
+                        </td>
+                        {% if Nombre == "En general" %}
+                        <td class="td columna-base" colspan="2">
+
+                        </td>
+                        {% endif %}
+                        <td class="td columna-base" colspan="1">
+                            {{ total_entrada }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ total_salida }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ total_actual }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

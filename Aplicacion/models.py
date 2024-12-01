@@ -261,7 +261,7 @@ class tblMovimientoAnimales(models.Model):
     # modificaciones agregadas el 161124
     #IDCorral = models.ForeignKey(tblCorrales, on_delete=models.DO_NOTHING, null=True)
     #No_Guia = models.CharField(max_length=30, null=True)
-    #Notas = models.CharField(max_length=150, null=True) 
+    Notas = models.CharField(max_length=150, null=True) 
 
 class tblDetalleMovAnimales(models.Model):
     ID = models.AutoField(primary_key=True)

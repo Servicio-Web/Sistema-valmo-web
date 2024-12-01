@@ -165,7 +165,7 @@ def TablaMovimientoAnimales(request):
     if Movimiento is not None and Movimiento != '':
         TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = Movimiento).values( 'ID',
         'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 
-        'Fecha',  'Peso', 'NoPartida'
+        'Fecha',  'Peso', 'NoPartida', 'Notas'
     )
         if Movimiento == 1 or Movimiento == "1":
             Movimiento = "Entrada"
@@ -173,7 +173,7 @@ def TablaMovimientoAnimales(request):
             Movimiento = "Sálida"
     else:
          TMovimientoEntradaAnimales = tblMovimientoAnimales.objects.filter(IDMovimiento = 1).values( 'ID',
-        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 'Fecha', 'Peso', 'NoPartida'
+        'Folio', 'IDCliente_id__Nombre', 'IDMovimiento_id__Descripcion', 'Fecha', 'Peso', 'NoPartida', 'Notas'
     )
          Movimiento  = "Entrada"
     ServiciosWeb = servicioActivo()
@@ -491,7 +491,7 @@ def asignacionCorral(request):
             corral = request.POST['corral']
             capacidad = 0
             clienteAsigna = request.POST['cliente']
-            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
             Clientes_instancia = tblClientes.objects.get(ID=clienteAsigna)
             Nombre = Clientes_instancia.Nombre
             
@@ -523,7 +523,7 @@ def asignacionCorral(request):
             clienteAsigna = request.POST['cliente']
             corral = request.POST['corral']
             capacidad = request.POST['capacidad']
-            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+            Fecha =  timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
             Clientes_Cero = tblClientes.objects.get(ID=clienteCero)
             
             Clientes_instancia = tblClientes.objects.get(ID=clienteAsigna)

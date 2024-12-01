@@ -6,6 +6,7 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from Aplicacion.views import servicioActivo, grupo_user
 from django.db.models import Q
+from django.db import connection
 
 def FormularioEntradaMateriasPrimas(request):
     grupos = grupo_user(request)
@@ -141,6 +142,67 @@ def FormularioOperadoresSalidaProductos(request, ID):
     ServiciosWeb = servicioActivo()
     return render(request, "Procesos/SalidasProductos/agregar.html",{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 
     'usuarioOperador':usuarioOperador, 'tblOperador': tblOperador})
+
+def FormularioMovimientoInterno(request):
+    grupos = grupo_user(request)
+    ultimo_contacto = tblMovimientoAnimales.objects.order_by('-ID').first()
+    if ultimo_contacto:
+        folio_entrada = ultimo_contacto.ID + 1
+        folio_salida = ultimo_contacto.ID + 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+    else:
+        folio_entrada = 1
+        folio_salida = 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+    
+
+    FCorralDestino = []
+    FTipoAnimal = []
+    tabla_contenido = []
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
+    if request.method == 'POST':
+        cliente = request.POST['cliente']
+        consulta_contenido = """SELECT  Aplicacion_tblcorrales.Descripcion, Aplicacion_tblAnimalesTipo.Descripcion,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.PesoTotal ELSE 0 END) - 
+                    SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                        BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.PesoTotal ELSE 0 END) AS peso,
+                        Aplicacion_tblcorrales.ID, Aplicacion_tblAnimalesTipo.ID
+                FROM  Aplicacion_tblmovimientoanimales
+                INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+                INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+                INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+                INNER JOIN Aplicacion_tblAnimalesTipo ON  Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id
+                WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
+                    (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
+                                AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+                GROUP BY Aplicacion_tbldetallemovanimales.IDCorral_id, Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre"""
+      
+        with connection.cursor() as cursor:
+            cursor.execute(
+                consulta_contenido, [FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy,  cliente, cliente])
+            tabla_contenido = cursor.fetchall()
+
+        FCorralDestino = tblCorrales.objects.filter(IDCliente_id = cliente).order_by('Descripcion')
+    
+        FTipoAnimal = tblAnimalesTipo.objects.all().order_by('Descripcion')
+        FClietneSelect = tblClientes.objects.get(ID  = cliente)
+    else:
+        FClietneSelect = "None"
+
+    FCliente = tblMovimientoAnimales.objects.values('IDCliente_id', 'IDCliente_id__Nombre').distinct().order_by('IDCliente_id__Nombre')
+    
+
+    ServiciosWeb = servicioActivo()
+    return render(request, 'Procesos/MovimientoInterno/form.html',{'grupos': grupos, 'ServiciosWeb': ServiciosWeb, 'FClietneSelect':FClietneSelect,
+    'formatoEntrada': formatoEntrada,'FCliente':FCliente,'FechaDeHoy':FechaDeHoy, 'FTipoAnimal':FTipoAnimal, 'formatoSalida':formatoSalida, 'fecha':FechaDeHoy,
+    'FCorralDestino':FCorralDestino, 'tabla_contenido':tabla_contenido})
 
 def FormularioMovimientoAnimales(request):
     grupos = grupo_user(request)

@@ -12,8 +12,7 @@
 <div class="card card-hdr">
     <div class="card-body">
         <h1>
-            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form">
-                <</i>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><</i>
             </a>
             AGREGAR MOVIMIENTOS ANIMALES
         </h1>
@@ -102,6 +101,15 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="row mr-1 ml-1 fila">
+                <div class=" col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                    {% if Agrego_aniamles %}
+                    <textarea name="notas" placeholder="Notas para usuarios de Valmo" class="form-control" readonly>{{Agrego_aniamles.notas}}</textarea>
+                    {% else %}
+                    <textarea name="notas" placeholder="Notas para usuarios de Valmo" class="form-control"></textarea>
+                    {% endif %}
+                </div>
+            </div>
 
 
             <div class="form-group">
@@ -167,7 +175,7 @@
                             <td class="td-agregar">
                                 <h6 class="td-responsive">CANTIDAD ANIMAL:</h6>
                                 <input type="text" name="cantidad" autofocus class="form-control" placeholder="Cantidad"
-                                     step="1"
+                                    step="1"
                                     oninput="checkInputValidity(this, 'cantidadErrorMessage', 'agregarBoton', 'salirBoton')">
                                 <div class="invalid-feedback" id="cantidadErrorMessage" style="display: none;">
                                     No se permiten puntos decimales.
@@ -175,8 +183,7 @@
                             </td>
                             <td class="td-agregar">
                                 <h6 class="td-responsive">PESO TOTAL:</h6>
-                                <input type="text" name="pesoTotal" class="form-control" placeholder="Peso"
-                                    step="1">
+                                <input type="text" name="pesoTotal" class="form-control" placeholder="Peso" step="1">
                             </td>
                             <!-- <td class="td-agregar">
                                 <h6 class="td-responsive">GUIA:</h6>

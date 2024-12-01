@@ -9,6 +9,8 @@ from Aplicacion.views import servicioActivo, grupo_user
 from datetime import datetime, date
 from django.utils import timezone
 from django.db.models import Q
+from django.db import connection
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GUARDAR FORMULARIO PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # -------------------------------------------------ENTRADA MATERIAS PRIMAS-------------------------------------------------
 def guardarEntradaMateriaPrima(request):
@@ -446,6 +448,134 @@ def actualizarPeso(peso, folio):
     guardarPeso.Peso = peso
     guardarPeso.save()
 
+def guardarMovimientosInterno(request):
+    # datos que se registraran solamente una ves
+    claveEntrada_v = request.POST['claveEntrada']
+    claveSalida_v = request.POST['claveSalida']
+    cliente_v = request.POST['cliente']
+    fecha_v = request.POST['fecha']
+
+
+
+    ultimo_id = tblDetalleMovAnimales.objects.order_by('-ID').first()
+    if ultimo_id:
+        ultimo_folio = ultimo_id.ID + 1
+    else:
+        ultimo_folio = 1
+
+    # almacena al usuario que hizo el movimiento
+    Tecnico_v = request.POST['tecnico'].upper()
+    NombreTabla_v = 'Movimiento interno en los corrales'
+    IDFilaTabla_v = claveEntrada_v
+    AreaRegistro_v = 'Procesos'
+    IDFila_v = ultimo_folio
+
+    folio_Existe = tblMovimientoAnimales.objects.filter(Folio=claveEntrada_v).exists()
+    ServiciosWeb = servicioActivo()
+
+
+    notasEntrada = "Entdada por movimiento interno"
+    notasSalida = "Salida por movimiento interno"
+    tblMovimientoAnimales.objects.create(Folio = claveEntrada_v,  IDCliente_id = cliente_v, IDMovimiento_id = 1,   Fecha = fecha_v, Notas = notasEntrada)
+    tblMovimientoAnimales.objects.create(Folio = claveSalida_v,  IDCliente_id = cliente_v, IDMovimiento_id = 2,   Fecha = fecha_v, Notas = notasSalida)
+
+    if request.method == 'POST':
+        if claveEntrada_v is not None and claveEntrada_v != '':
+            FolioEntrada = request.POST.getlist('FolioEntrada')
+            FolioSalida = request.POST.getlist('FolioSalida')
+            animales = request.POST.getlist('animal')
+            corralOrigen = request.POST.getlist('corralOrigen')
+            corralDestino = request.POST.getlist('corralDestino')
+            cantidalDestino = request.POST.getlist('cantidalDestino')
+            pesoTotalDestino = request.POST.getlist('pesoTotalDestino')
+            corralNombre = request.POST.getlist('corralNombre')
+            animalNombre = request.POST.getlist('animalNombre')
+
+            for i in range(len(animales)):
+                folio_count = tblDetalleMovAnimales.objects.filter(IDFolio=claveEntrada_v).count()
+                FolioEntrada_v = FolioEntrada[i]
+                FolioSalida_v = FolioSalida[i]
+                animal_v = animales[i]
+                corralOrigen_v = corralOrigen[i] 
+                corralDestino_v = corralDestino[i]
+                cantidalDestino_v = cantidalDestino[i]
+                pesoTotalDestino_v = pesoTotalDestino[i]
+                corralNombre_v = corralNombre[i]
+                animalNombre_v = animalNombre[i]
+
+                if corralDestino_v != 'Sinmover':
+                    corralDestinoNombre = tblCorrales.objects.get(ID = corralDestino_v) 
+                    nombreCorral = corralDestinoNombre.Descripcion
+                    NotaMovEntrada = f"Entraron {cantidalDestino_v} {animalNombre_v} al corral {nombreCorral} y salieron del corral {corralNombre_v}"
+                    NotaMovSalida = f"Salieron {cantidalDestino_v} {animalNombre_v} del corral {corralNombre_v} y se enviaron al corral {nombreCorral}"
+                    print(corralDestino_v, animal_v ,FolioEntrada_v ,FolioSalida_v ,corralOrigen_v, cantidalDestino_v, pesoTotalDestino_v)
+
+                    pesoPromedioEntrada = round(float(pesoTotalDestino_v) / float(cantidalDestino_v), 2)
+                    tblDetalleMovAnimales.objects.create(
+                        IDFolio = FolioEntrada_v, IDAnimales_id = animal_v, Cantidad = cantidalDestino_v, PesoTotal = pesoTotalDestino_v, PesoPromedio = pesoPromedioEntrada,
+                        Notas = NotaMovEntrada, IDCorral_id = corralDestino_v
+                    )
+                    tblDetalleMovAnimales.objects.create(
+                        IDFolio = FolioSalida_v, IDAnimales_id = animal_v, Cantidad = cantidalDestino_v, PesoTotal = pesoTotalDestino_v, PesoPromedio = pesoPromedioEntrada,
+                        Notas = NotaMovSalida, IDCorral_id = corralOrigen_v
+                    )
+
+    # Aqui se retorna los datos para el formulario 
+    FClietneSelect = tblClientes.objects.get(ID=cliente_v)
+    FiltradoCorral = tblCorrales.objects.filter(IDCliente=cliente_v).order_by('Descripcion')
+    FTipoAnimal = tblAnimalesTipo.objects.all()
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
+    FCliente = tblMovimientoAnimales.objects.values('IDCliente_id', 'IDCliente_id__Nombre').distinct().order_by('IDCliente_id__Nombre')
+    agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
+
+    consulta_contenido = """SELECT  Aplicacion_tblcorrales.Descripcion, Aplicacion_tblAnimalesTipo.Descripcion,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad ELSE 0 END) - 
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.Cantidad   ELSE 0 END) AS INICIAL,
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 1 AND DATE(Aplicacion_tblmovimientoanimales.Fecha) 
+                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.PesoTotal ELSE 0 END) - 
+            SUM(case WHEN  Aplicacion_tblmovimientoanimales.IDMovimiento_id = 2 AND DATE(Aplicacion_tblmovimientoanimales.Fecha)  
+                BETWEEN DATE(Aplicacion_tblcorrales.FechaAsigna) AND %s THEN  Aplicacion_tbldetallemovanimales.PesoTotal ELSE 0 END) AS peso,
+                Aplicacion_tblcorrales.ID, Aplicacion_tblAnimalesTipo.ID
+        FROM  Aplicacion_tblmovimientoanimales
+        INNER JOIN Aplicacion_tblclientes ON Aplicacion_tblclientes.ID = Aplicacion_tblmovimientoanimales.IDCliente_id 
+        INNER JOIN Aplicacion_tbldetallemovanimales ON  Aplicacion_tblmovimientoanimales.Folio = Aplicacion_tbldetallemovanimales.IDFolio
+        INNER JOIN Aplicacion_tblcorrales ON  Aplicacion_tblcorrales.ID = Aplicacion_tbldetallemovanimales.IDCorral_id
+        INNER JOIN Aplicacion_tblAnimalesTipo ON  Aplicacion_tblAnimalesTipo.ID = Aplicacion_tbldetallemovanimales.IDAnimales_id
+        WHERE  Aplicacion_tbldetallemovanimales.IDCorral_id IN 
+            (SELECT  Aplicacion_tblcorrales.ID FROM Aplicacion_tblcorrales where  Aplicacion_tblcorrales.IDCliente_id = %s)
+                        AND Aplicacion_tblmovimientoanimales.IDCliente_id = %s
+        GROUP BY Aplicacion_tbldetallemovanimales.IDCorral_id, Aplicacion_tbldetallemovanimales.IDAnimales_id, Aplicacion_tblclientes.Nombre"""
+      
+    with connection.cursor() as cursor:
+        cursor.execute(
+            consulta_contenido, [FechaDeHoy, FechaDeHoy, FechaDeHoy, FechaDeHoy,  cliente_v, cliente_v])
+        tabla_contenido = cursor.fetchall()
+
+    ultimo_contacto = tblMovimientoAnimales.objects.order_by('-ID').first()
+    if ultimo_contacto:
+        folio_entrada = ultimo_contacto.ID + 1
+        folio_salida = ultimo_contacto.ID + 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+    else:
+        folio_entrada = 1
+        folio_salida = 2
+        formatoEntrada = 'F-{:06d}'.format(folio_entrada)
+        formatoSalida = 'F-{:06d}'.format(folio_salida)
+        
+    if request.method == 'POST':
+        if 'salir' in request.POST:
+            return redirect('F-Mov-Interno')
+        elif 'agregar' in request.POST:
+            messages.success(request, f'Se ha agregado exitosamente el registro de {pesoPromedioEntrada} animal(es)')
+
+            return render(request, "Procesos/MovimientoInterno/form.html", {'FClietneSelect':FClietneSelect,'FiltradoCorral':FiltradoCorral,'FTipoAnimal':FTipoAnimal,
+            'formatoEntrada': formatoEntrada, 'formatoSalida':formatoSalida, 'tabla_contenido':tabla_contenido,'fecha':FechaDeHoy,'FCliente':FCliente})
+    else:
+        return redirect('F-Mov-Interno')
+    
 def guardarMovimientos(request):
     clave = request.POST['clave']
     peso = float(request.POST['peso'])
@@ -457,7 +587,7 @@ def guardarMovimientos(request):
     
     guia = 0
     partida = 0
-    notas = "Observaciones pendientes"
+    notas = "Entrada por bascula"
     corral = request.POST['corral']
     animal = request.POST['animal']
     cantidad = request.POST['cantidad']
@@ -528,8 +658,11 @@ def guardarMovimientoAniamles(request):
     guia = 0
     partida = 0
     fecha = request.POST['fecha']
-    notas = "Observaciones pendientes"
-
+    notas1 = request.POST['notas']
+    if notas1 == "":
+        notas = "Entrada por bascula"
+    else:
+        notas = notas1
     animal = request.POST['animal']
     cantidad = request.POST['cantidad']
     pesoTotal = request.POST['pesoTotal']
@@ -570,7 +703,7 @@ def guardarMovimientoAniamles(request):
             else:
                 tblMovimientoAnimales.objects.create(
                 Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
-                Fecha = fecha, Peso = peso, NoPartida = partida
+                Fecha = fecha, Peso = peso, NoPartida = partida, Notas = notas
             )
 
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
@@ -591,7 +724,7 @@ def guardarMovimientoAniamles(request):
             else:
                 tblMovimientoAnimales.objects.create(
                     Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
-                    Fecha = fecha, Peso = peso, NoPartida = partida
+                    Fecha = fecha, Peso = peso, NoPartida = partida, Notas = notas
                 )
 
             agregarDatosTecnicos(request, Tecnico_v, NombreTabla_v, IDFilaTabla_v, AreaRegistro_v, IDFila_v)
@@ -619,7 +752,7 @@ def guardarMovimientoAniamles(request):
             else:
                 tblMovimientoAnimales.objects.create(
                     Folio = formatoClave,  IDCliente_id = cliente, IDMovimiento_id = movimiento,  
-                    Fecha = fecha, Peso = peso, NoPartida = partida
+                    Fecha = fecha, Peso = peso, NoPartida = partida, Notas = notas
                 )
                 if folio_count < 7:                
                     tblDetalleMovAnimales.objects.create(

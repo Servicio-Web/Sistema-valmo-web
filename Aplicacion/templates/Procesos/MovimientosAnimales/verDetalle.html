@@ -36,8 +36,8 @@
                         <th style="width: 100px;">Cantidad</th>
                         <th style="width: 100px;">Peso promedio</th>
                         <th style="width: 100px;">Peso total</th>
-                        <!-- <th style="width: 100px;">No. Guia</th>
-                        <th style="width: 100px;">Observacion</th> -->
+                        <!-- <th style="width: 100px;">No. Guia</th> -->
+                        <th style="width: 100px;">Observacion</th> 
 
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <th scope="col">Acciones</th>
@@ -53,8 +53,8 @@
                         <td>{{ animales.Cantidad }}</td>
                         <td>{{ animales.PesoPromedio }} Kg</td>
                         <td>{{ animales.PesoTotal }} Kg</td>
-                        <!-- <td>{{ animales.No_Guia }} </td>
-                        <td>{{ animales.Notas }} </td> -->
+                        <!-- <td>{{ animales.No_Guia }} </td>-->
+                        <td>{{ animales.Notas }} </td> 
 
                         {% if perms.Aplicacion.change_tbldetallemovanimales %}
                         <td>

@@ -72,7 +72,7 @@ DATABASES = {
 # DATABASES ={
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'Respaldo_MYSQL.sqlite3',
+#         'NAME': BASE_DIR / 'base_pruebas.sqlite3',
 #     }
 # }
 
