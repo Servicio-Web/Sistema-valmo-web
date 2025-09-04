@@ -654,7 +654,7 @@ def guardarMovimientoAniamles(request):
     cliente = request.POST['cliente']
     corral = request.POST['corral']
     movimiento = request.POST['movimiento']
-    peso = float(request.POST['peso'])
+    peso = float(request.POST['peso'].replace(',', ''))
     guia = 0
     partida = 0
     fecha = request.POST['fecha']
@@ -664,10 +664,25 @@ def guardarMovimientoAniamles(request):
     else:
         notas = notas1
     animal = request.POST['animal']
-    cantidad = request.POST['cantidad']
-    pesoTotal = request.POST['pesoTotal']
-    pesoPromedio = round(float(pesoTotal) / float(cantidad), 2)
-    peso += float(pesoTotal)
+    #cantidad = request.POST['cantidad']
+    peso_str = request.POST.get('pesoTotal', '').replace(',', '')
+    cantidad = request.POST.get('cantidad', '').replace(',', '')
+
+    # Validación básica para evitar errores de conversión
+    try:
+        pesoTotal = float(peso_str) if peso_str else 0.0
+        cantidad = float(cantidad) if cantidad else 0.0
+
+        if cantidad != 0:
+            pesoPromedio = round(pesoTotal / cantidad, 2)
+        else:
+            pesoPromedio = 0.0  # O puedes lanzar error si cantidad no debe ser 0
+    except ValueError:
+        pesoTotal = 0.0
+        cantidad = 0.0
+        pesoPromedio = 0.0
+
+        peso += float(pesoTotal)
 
     if guia == '':
         guia = 0
@@ -778,7 +793,7 @@ def guardarDetallesAniamles(request):
     movimiento = request.POST['movimiento']
     animal = request.POST['animal']
     cantidad = request.POST['cantidad']
-    peso = request.POST['peso']
+    peso = (request.POST['peso'].replace(',', ''))
     guia = request.POST['guia']
     partida = request.POST['partida']
     fecha = request.POST['fecha']
