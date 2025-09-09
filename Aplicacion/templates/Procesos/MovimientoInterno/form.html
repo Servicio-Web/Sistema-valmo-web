@@ -1,0 +1,200 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} ASIGNAR Y LIBERAR CORRALES {% endblock %}
+
+{% block body %}
+<style>
+    .is-invalid {
+        border: 1px solid red;
+    }
+
+    .mensaje-error {
+        color: red;
+        font-size: 0.9em;
+        display: none;
+    }
+</style>
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PROCESOS - MOVIMIENTO INTERNO DE CORRALES</h1>
+        {% if perms.Aplicacion.view_tblasignacorrales %}
+        <div class="card card-hdr">
+            <div class="card-body">
+                <form action="/Formulario-Movimientos-En-Animales/" class="pr-5 pl-5" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="folioEntrada" value="{{formatoEntrada}}">
+                    <input type="hidden" name="folioSalida" value="{{formatoSalida}}">
+                    <div class="form-group" style="justify-content: center; display: flex;">
+                        <select name="cliente" class="select2" style="width: 35%; " required>
+                            {% if FClietneSelect != "None" %}
+                            <option value="{{ FClietneSelect.ID }}">
+                                --------------{{ FClietneSelect.Nombre }}--------------
+                            </option>
+                            {% else %}
+                            {% endif %}
+
+                            <option value="">Seleccione el cliente</option>
+                            {% for Clientes in FCliente %}
+                            <option value="{{ Clientes.IDCliente_id}}">{{Clientes.IDCliente_id__Nombre}}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn button-add"
+                            style="padding: 1px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class=" table-responsive py-1">
+            <form action="/Guardar-Movimiento-Interno-De-Amimales/" method="POST">{% csrf_token %}
+                {% if FClietneSelect != "None" %}
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <input type="hidden" value="{{formatoEntrada}}" name="clave">
+                <input type="hidden" value="{{formatoEntrada}}" name="claveEntrada">
+                <input type="hidden" value="{{formatoSalida}}" name="claveSalida">
+                <input type="hidden" value="{{ FClietneSelect.ID }}" name="cliente">
+
+                <div class="row" style="justify-content: right;">
+                    <div class="col-2">
+                        <input type="date" name="fecha" value="{{fecha}}" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary btn-sm col-12 mb-3"
+                            style="padding: 7px 14px 7px 14px;" name="agregar">
+                            GUARDAR MOVIMIENTO
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <table class="tabla_id">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 15%;">ANIMAL</th>
+                            <th colspan="3" style="width: 42%;">ORIGEN ({{ formatoEntrada }})</th>
+                            <th colspan="3" style="width: 42%;">DESTINO ({{ formatoSalida }})</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">CORRAL</th>
+                            <th style="width: 11%;">CANTIDAD</th>
+                            <th style="width: 11%;">PESO</th>
+                            <th style="width: 20%;">CORRAL</th>
+                            <th style="width: 11%;">CANTIDAD</th>
+                            <th style="width: 11%;">PESO</th>
+                    </thead>
+                    <tbody>
+                        {% for animales in tabla_contenido %}
+                        <tr>
+                            <td class="td-agregar">
+                                <input type="hidden" value="{{ animales.5 }}" name="animal">
+                                {{ animales.1 }}
+                            </td>
+                            <td>
+                                <input type="hidden" value="{{ animales.4 }}" name="corralOrigen">
+                                {{ animales.0 }}
+                            </td>
+                            <td class="td-agregar">
+                                <input type="hidden" value="{{ animales.2 }}" name="cantidadOrigen">
+                                {{ animales.2 }}
+                            </td>
+                            <td class="td-agregar">
+                                <input type="hidden" value="{{ animales.3 }}" name="pesoOrigen">
+                                {{ animales.3|floatformat:2 }} KG
+                            </td>
+                            <td class="td-agregar">
+                                <input type="hidden" value="{{formatoEntrada}}" name="FolioEntrada">
+                                <input type="hidden" value="{{formatoSalida}}" name="FolioSalida">
+                                <input type="hidden" value=" {{ animales.1 }}" name="animalNombre">
+                                <input type="hidden" value="{{ animales.0 }}" name="corralNombre">
+                                <select class="select2 form-control col-12 w-100" name="corralDestino" required>
+                                    {% if Agrego_aniamles %}
+                                    <option value="{{FiltradoCorral.ID}}">----{{FiltradoCorral.Descripcion}}----
+                                    </option>
+                                    {% endif %}
+                                    <option value="Sinmover">Corral destino</option>
+                                    {% for Corral in FCorralDestino %}
+                                    <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="td-agregar">
+                                <input type="number" name="cantidalDestino" autofocus class="form-control cantidad"
+                                    placeholder="Cantidad" step="1" data-max-cantidad="{{ animales.2 }}" value="0" />
+                                <span class="text-danger mensaje-error" style="display: none; font-size: 0.9em;">
+                                    La cantidad no puede exceder {{ animales.2 }}.
+                                </span>
+                            </td>
+                            <td class="td-agregar">
+                                <input type="text" name="pesoTotalDestino" class="form-control peso" placeholder="Peso"
+                                    step="1" value="0" />
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row centrar">
+        <h6 class="h6-form">
+            <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+            No tienes los permisos necesarios para ver el contenido de la tabla
+            <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+        </h6>
+    </div>
+    {% endif %}
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filas = document.querySelectorAll("tbody tr");
+
+        filas.forEach(fila => {
+            // Obtener los valores de cantidad y peso de la fila
+            const cantidad = parseFloat(fila.querySelector("td:nth-child(3)").innerText);  // animales.2
+            const peso = parseFloat(fila.querySelector("td:nth-child(4)").innerText.replace(" KG", ""));  // animales.3
+            const inputCantidadUsuario = fila.querySelector("input[name='cantidalDestino']"); // Campo cantidad ingresado por el usuario
+            const inputPesoEstimado = fila.querySelector("input[name='pesoTotalDestino']");  // Campo de peso estimado
+
+            // Calcular el promedio para esa fila
+            const promedio = peso / cantidad; // Promedio entre peso y cantidad
+
+            // Actualizar el peso estimado al ingresar cantidad
+            inputCantidadUsuario.addEventListener("input", function () {
+                const cantidadIngresada = parseFloat(this.value) || 0;  // Obtener cantidad ingresada por el usuario
+
+                // Validar que la cantidad ingresada no exceda la cantidad máxima (la cantidad original de la fila)
+                if (cantidadIngresada > cantidad) {
+                    this.value = cantidad;  // Limitar la cantidad al valor máximo de la fila
+                }
+
+                // Calcular el peso estimado (cantidad ingresada * promedio)
+                const pesoEstimado = cantidadIngresada * promedio;
+
+                // Asignar el valor calculado al campo de peso estimado
+                inputPesoEstimado.value = pesoEstimado.toFixed(2); // Redondear a 2 decimales
+            });
+        });
+    });
+
+
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}
